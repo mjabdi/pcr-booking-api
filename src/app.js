@@ -7,10 +7,17 @@ const logger = require('morgan');
 const apiRouter = require('./routes/api-router');
 const reactAppRouter = require('./routes/react-app-router');
 const apiSecurity = require('./middleware/api-security');
+const mongodb = require('./mongodb');
+const  cors = require('cors');
 
+const app = express();
 
-var app = express();
+// connect to Database
+mongodb();
 
+app.use(cors({
+  credentials: true,
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,9 +25,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", ".." , "pcr-booking-ui", "build")));
 
 
-// app.use('/api', apiSecurity() ,apiRouter);
+app.use('/api', apiSecurity() ,apiRouter);
 
-app.use('/api', apiRouter);
+// app.use('/api', apiRouter);
 
 app.use('/', reactAppRouter);
 

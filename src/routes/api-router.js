@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
+const timeService = require('./../api/time-service');
+const bookingService = require('./../api/booking-service');
+
 /* GET Apis listing. */
 router.get('/', function(req, res, next) {
   res.send('the list of APIS');
 });
 
 
-/* GET TimeService Endpoint */
-router.get('/time', function(req, res, next) {
-  res.send([{time:"9:00 AM", available:true},{time:"12:00 AM", available:false} ]);
-});
+
+  router.use('/time', timeService);
+
+  router.use('/book', bookingService);
+
 
 
 
