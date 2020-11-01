@@ -23,8 +23,8 @@ app.set('port', port);
 
 var server = https.createServer(
   {
-    key: fs.readFileSync('/home/pcrweb/key.pem'),
-    cert: fs.readFileSync('/app/pcrweb/cert.pem')
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
   }
   , app);
 
