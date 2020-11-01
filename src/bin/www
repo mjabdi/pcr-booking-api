@@ -23,8 +23,8 @@ app.set('port', port);
 
 var server = https.createServer(
   {
-    key: fs.readFileSync('/app/pcr-booking-api/keys/key.pem'),
-    cert: fs.readFileSync('/app/pcr-booking-api/keys/keys/cert.pem')
+    key: fs.readFileSync('/home/pcrweb/key.pem'),
+    cert: fs.readFileSync('/app/pcrweb/cert.pem')
   }
   , app);
 
