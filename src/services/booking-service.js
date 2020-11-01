@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const {Booking} = require('../models/Booking');
 const dateformat = require('dateformat');
+const getNewRef = require('./refgenatator-service');
+const sendEmail = require('./email-service');
+
+router.get('/getnewreference', async function(req, res, next) {
+
+    res.send({ref: await getNewRef()});
+
+});
 
 router.post('/bookappointment', async function(req, res, next) {
 
@@ -25,6 +33,9 @@ router.post('/bookappointment', async function(req, res, next) {
         );
 
         await booking.save();
+        
+        sendEmail(req.body);
+
         res.status(201).send({status: 'OK'});
 
     }catch(err)
