@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Booking} = require('./../models/Booking');
+const {Booking} = require('../models/Booking');
 const dateformat = require('dateformat');
 
 router.post('/bookappointment', async function(req, res, next) {
@@ -107,8 +107,8 @@ const validateBookAppointment = (body) => {
         throw new Error('bookingTime field not present');
     }
 
-    body.bookingDate = dateformat(body.bookingDate, 'dd-mm-yyyy');
-    body.birthDate = dateformat(body.birthDate, 'dd-mm-yyyy');
+    body.bookingDate = dateformat(body.bookingDate, 'yyyy-mm-dd');
+    body.birthDate = dateformat(body.birthDate, 'yyyy-mm-dd');
 
     return true;
 }

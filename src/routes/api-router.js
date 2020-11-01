@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const timeService = require('./../api/time-service');
-const bookingService = require('./../api/booking-service');
+const timeService = require('../services/time-service');
+const bookingService = require('../services/booking-service');
 
 /* GET Apis listing. */
 router.get('/', function(req, res, next) {
