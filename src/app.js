@@ -25,9 +25,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 
-app.use('/api', apiSecurity() ,apiRouter);
+// app.use('/api', apiSecurity() ,apiRouter);
 
-// app.use('/api', apiRouter);
+app.use('/api', apiRouter);
 
 app.use('/', reactAppRouter);
 

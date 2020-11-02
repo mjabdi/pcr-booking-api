@@ -1,6 +1,7 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const dateFormat = require('dateformat');
+const getStream = require('get-stream');
 
 const {Booking} = require('./models/Booking');
 
@@ -15,11 +16,8 @@ function NormalizeAddress(address)
     return address.replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ");
 }
 
-const createPDFForCovid1Form = async (id, filePath) =>
+const createPDFForCovid1Form = async (id) =>
 {
-
-    return new Promise( async (resolve, reject) => 
-    {
         try
         {
             
@@ -30,8 +28,8 @@ const createPDFForCovid1Form = async (id, filePath) =>
             booking.address = NormalizeAddress(booking.address);
             
             const doc = new PDFDocument;
-            const stream = fs.createWriteStream(filePath);
-            doc.pipe(stream);
+            //const stream = fs.createWriteStream(filePath);
+            //doc.pipe(stream);
             doc.image('assets/covid-form1.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'center'});
             
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.surname.toUpperCase() , 100, 187  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
@@ -68,24 +66,17 @@ const createPDFForCovid1Form = async (id, filePath) =>
             }
 
             doc.end();
-            stream.on( 'close' , () =>
-            {
-                resolve();
-            });    
+            return await getStream.buffer(doc);
         }
         catch(err)
         {
             console.log(err);
-            reject(err);
+            throw err;
         }
-    });
 }
 
-const createPDFForCovid2Form = async (id, filePath) =>
+const createPDFForCovid2Form = async (id) =>
 {
-
-    return new Promise( async (resolve, reject) => 
-    {
         try
         {
             
@@ -98,8 +89,8 @@ const createPDFForCovid2Form = async (id, filePath) =>
             booking.address = NormalizeAddress(booking.address);
             
             const doc = new PDFDocument;
-            const stream = fs.createWriteStream(filePath);
-            doc.pipe(stream);
+            //const stream = fs.createWriteStream(filePath);
+            //doc.pipe(stream);
             doc.image('assets/covid-form2.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'top'});
             
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.surname.toUpperCase() , 100, 95  ,{characterSpacing : 4, wordSpacing : 8 , lineGap : 2 } );
@@ -119,39 +110,14 @@ const createPDFForCovid2Form = async (id, filePath) =>
             (booking.gender.toLowerCase() === 'female') ? doc.image('assets/checkbox-tick.jpg', 293, 149,  {scale : 0.6}) 
                                                         : doc.image('assets/checkbox.jpg', 293, 149,  {scale : 0.6});
 
-            // doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.forename.toUpperCase() , 100, 215  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-            //   
-            // doc.fillColor('black').fontSize(9).font('Courier-Bold').text(booking.address , 100, 245  ,{width: 480, characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 1 } );
-
-            // doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.postCode , 100, 272  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-            // doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.email , 290, 272  ,{characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
-
-            // doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.phone , 100, 300  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-            // doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.bookingDate , 360, 313  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-
-
-            // ///check boxes
-            // (booking.gender.toLowerCase() === 'male') ? doc.image('assets/checkbox-tick.jpg', 390, 213,  {scale : 0.55}) 
-            //                                             : doc.image('assets/checkbox.jpg', 390, 213,  {scale : 0.55});
-
-            // (booking.gender.toLowerCase() === 'female') ? doc.image('assets/checkbox-tick.jpg', 452, 213,  {scale : 0.55}) 
-            //                                             : doc.image('assets/checkbox.jpg', 452, 213,  {scale : 0.55});
-         
-            // (booking.gender.toLowerCase() === 'other') ? doc.image('assets/checkbox-tick.jpg', 510, 213,  {scale : 0.55}) 
-            //                                              : doc.image('assets/checkbox.jpg', 510, 213,  {scale : 0.55});
-
             doc.end();
-            stream.on( 'close' , () =>
-            {
-                resolve();
-            });    
+            return await getStream.buffer(doc);
         }
         catch(err)
         {
             console.log(err);
-            reject(err);
+            throw err;
         }
-    });
 }
 
 module.exports = {
