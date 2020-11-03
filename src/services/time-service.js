@@ -10,7 +10,7 @@ const MAX_BOOKING_PER_SLOT = 3;
 router.get('/getfirstavaiabledate', function(req, res, next) {
 
     var someDate = new Date();
-    var duration = 3; //In Days
+    var duration = 0; //In Days
     someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
     
     res.send({date: someDate});
@@ -93,13 +93,56 @@ const getDefaultTimeSlots = (date) =>
 {
     const someDate = new Date(date);
 
+    var results = [];
+    var finalResults = [];
+
     if (someDate.getDay() === 0 || someDate.getDay() === 6) /// Weekend
     {
-        return TIME_SLOTS_WEEKEND;
+        results = TIME_SLOTS_WEEKEND;
     }
     else
     {
-        return TIME_SLOTS_NORMAL;
+        results = TIME_SLOTS_NORMAL;
+    }
+
+    var currentTime = new Date();
+
+    if (someDate.getFullYear() === currentTime.getFullYear() 
+           && someDate.getMonth() === currentTime.getMonth()
+           && someDate.getDate() === currentTime.getDate()
+           ){
+
+                results.forEach( (time) => {
+
+                    if (TimePast(time))
+                    {
+                        finalResults.push(new TimeSlot(timeSlot.time, false));
+                    }
+                    else
+                    {
+                        finalResults.push(time);
+                    }
+                });
+           }
+}
+
+function TimePast(time)
+{
+    const currentTime = new Data();
+    var hour = parseInt(time.substr(0,2));
+    var minute = parseInt(time.substr(3,2));
+    if (time.toLowerCase().indexOf('pm') > 0)
+    {
+        hour += 12;
+    }
+
+    if (time.hour > currentTime.getHours() || (time.hour === currentTime.getHours() && time.minute > currentTime.getMinuts()))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
