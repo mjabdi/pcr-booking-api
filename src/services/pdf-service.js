@@ -24,10 +24,10 @@ router.get('/downloadcovidform1', async function(req, res, next) {
         const pdfBuffer = await createPDFForCovid1Form(id);
         
         res.set( {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename=covidform1.pdf',
-                'Content-Transfer-Encoding': 'Binary'
-              }).status(200).send(pdfBuffer);
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=pcr-reg-form-${id}.pdf`,
+            'Content-Transfer-Encoding': 'Binary'
+          }).status(200).send(pdfBuffer);
         
     }
     catch(err)
@@ -58,7 +58,7 @@ router.get('/downloadcovidform2', async function(req, res, next) {
         
         res.set( {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename=covidform2.pdf',
+                'Content-Disposition': `attachment; filename=pcr-clinic-form-${id}.pdf`,
                 'Content-Transfer-Encoding': 'Binary'
               }).status(200).send(pdfBuffer);
         

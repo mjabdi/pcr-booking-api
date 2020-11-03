@@ -11,6 +11,19 @@ router.get('/getnewreference', async function(req, res, next) {
 
 });
 
+router.get('/getbookingsbyref', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find({bookingRef : req.query.ref});
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+
+});
+
 router.post('/bookappointment', async function(req, res, next) {
 
     try
