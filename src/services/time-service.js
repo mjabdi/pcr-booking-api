@@ -74,7 +74,7 @@ router.get('/gettimeslots', async function(req, res, next) {
     }
     catch(err)
     {
-        console.error(err.message);
+        console.error(err);
         res.status(500).send({status:'FAILED' , error: err.message });
         return;
     }
@@ -114,9 +114,9 @@ const getDefaultTimeSlots = (date) =>
 
                 results.forEach( (time) => {
 
-                    if (TimePast(time))
+                    if (TimePast(time.time))
                     {
-                        finalResults.push(new TimeSlot(timeSlot.time, false));
+                        finalResults.push(new TimeSlot(time.time, false));
                     }
                     else
                     {
@@ -124,25 +124,27 @@ const getDefaultTimeSlots = (date) =>
                     }
                 });
            }
+
+           return finalResults;
 }
 
 function TimePast(time)
 {
-    const currentTime = new Data();
+    const currentTime = new Date();
     var hour = parseInt(time.substr(0,2));
     var minute = parseInt(time.substr(3,2));
-    if (time.toLowerCase().indexOf('pm') > 0)
+    if (time.toLowerCase().indexOf('pm') > 0 && hour < 12)
     {
         hour += 12;
     }
 
-    if (time.hour > currentTime.getHours() || (time.hour === currentTime.getHours() && time.minute > currentTime.getMinuts()))
+    if (hour > currentTime.getHours() || (hour === currentTime.getHours() && minute > currentTime.getMinutes()))
     {
-        return true;
+        return false;
     }
     else
     {
-        return false;
+        return true;
     }
 }
 
