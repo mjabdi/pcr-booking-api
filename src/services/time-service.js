@@ -3,13 +3,14 @@ const router = express.Router();
 const TimeSlot = require('./../models/TimeSlot');
 const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
+const moment = require('moment-timezone');
 
 const MAX_BOOKING_PER_SLOT = 3;
 
 /// Get First Available Date
 router.get('/getfirstavaiabledate', function(req, res, next) {
 
-    var someDate = new Date();
+    var someDate = new Date(moment().tz("Europe/London").format());
     var duration = 0; //In Days
     someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
     
@@ -105,7 +106,7 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL;
     }
 
-    var currentTime = new Date();
+    var currentTime = new Date(moment().tz("Europe/London").format());
 
     if (someDate.getFullYear() === currentTime.getFullYear() 
            && someDate.getMonth() === currentTime.getMonth()
@@ -130,7 +131,8 @@ const getDefaultTimeSlots = (date) =>
 
 function TimePast(time)
 {
-    const currentTime = new Date();
+    const currentTime = new Date(moment().tz("Europe/London").format());
+
     var hour = parseInt(time.substr(0,2));
     var minute = parseInt(time.substr(3,2));
     if (time.toLowerCase().indexOf('pm') > 0 && hour < 12)
