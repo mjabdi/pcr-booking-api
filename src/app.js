@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const apiRouter = require('./routes/api-router');
-const reactAppRouter = require('./routes/react-app-router');
+
 const apiSecurity = require('./middleware/api-security');
 const mongodb = require('./mongodb');
 const  cors = require('cors');
@@ -22,14 +22,23 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "..", "public")));
-
 
 app.use('/api', apiSecurity() ,apiRouter);
-
 // app.use('/api', apiRouter);
 
-app.use('/', reactAppRouter);
+app.use('/admin', express.static(path.join(__dirname, ".." , "public_admin")));
+app.get('/admin/*', function (req, res) {
+  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
+ });
+
+
+
+ app.use('/', express.static(path.join(__dirname, "..", "public")));
+ app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+ });
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,7 +53,10 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({
+    message: err.message,
+    error: err
+  });
 });
 
 module.exports = app;
