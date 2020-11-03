@@ -113,20 +113,22 @@ const getDefaultTimeSlots = (date) =>
            && someDate.getDate() === currentTime.getDate()
            ){
 
-                results.forEach( (time) => {
+                results.forEach( (timeSlot) => {
 
-                    if (TimePast(time.time))
+                    if (TimePast(timeSlot.time))
                     {
-                        finalResults.push(new TimeSlot(time.time, false));
+                        finalResults.push(new TimeSlot(timeSlot.time, false));
                     }
                     else
                     {
-                        finalResults.push(time);
+                        finalResults.push(timeSlot);
                     }
                 });
+
+                return finalResults;
            }
 
-           return finalResults;
+           return results;
 }
 
 function TimePast(time)
