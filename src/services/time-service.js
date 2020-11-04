@@ -46,6 +46,12 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
     res.send({date: someDate});
 });
 
+/// Get Fully Booked Days Date
+router.get('/getfullybookeddays', function(req, res, next) {
+  
+    res.send([]);
+});
+
 
 /// Get Time Slots For a Specific Date
 router.get('/gettimeslots', async function(req, res, next) {
