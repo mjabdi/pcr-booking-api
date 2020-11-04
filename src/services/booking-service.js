@@ -42,6 +42,8 @@ router.post('/bookappointment', async function(req, res, next) {
             {
                 ...req.body,
                 timeStamp: new Date(),
+                forenameCapital : req.body.forename.trim().toUpperCase(),
+                surnameCapital : req.body.surname.trim().toUpperCase(),
             }
         );
 

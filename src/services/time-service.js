@@ -14,12 +14,34 @@ function getNow()
     return  new Date();
 }
 
+function isWeekend(date)
+{
+    return (date.getDay() === 0 || date.getDay() === 6) /// Weekend
+}
+
 /// Get First Available Date
 router.get('/getfirstavaiabledate', function(req, res, next) {
 
     var someDate = new Date(getNow());
+
+    if (isWeekend(someDate))
+    {
+        if (someDate.getHours() >= 14)
+        {
+            someDate.setTime(someDate.getTime() +  (1 * 24 * 60 * 60 * 1000));
+        }
+
+    }else
+    {
+        if (someDate.getHours() >= 18)
+        {
+            someDate.setTime(someDate.getTime() +  (1 * 24 * 60 * 60 * 1000));
+        }
+    }
+
     // var duration = 0; //In Days
     // someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
+
     
     res.send({date: someDate});
 });
@@ -104,7 +126,7 @@ const getDefaultTimeSlots = (date) =>
     var results = [];
     var finalResults = [];
 
-    if (someDate.getDay() === 0 || someDate.getDay() === 6) /// Weekend
+    if (isWeekend(someDate)) /// Weekend
     {
         results = TIME_SLOTS_WEEKEND;
     }
@@ -149,7 +171,7 @@ function TimePast(time)
         hour += 12;
     }
 
-    if (hour > currentTime.getHours() || (hour === currentTime.getHours() && minute > currentTime.getMinutes()))
+    if (hour > currentTime.getHours() || (hour === currentTime.getHours() && (minute + 15) > currentTime.getMinutes()))
     {
         return false;
     }
