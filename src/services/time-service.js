@@ -7,12 +7,19 @@ const moment = require('moment-timezone');
 
 const MAX_BOOKING_PER_SLOT = 3;
 
+function getNow()
+{
+    //const now = new Date(moment().tz("Europe/London").format());
+    
+    return  new Date();
+}
+
 /// Get First Available Date
 router.get('/getfirstavaiabledate', function(req, res, next) {
 
-    var someDate = new Date(moment().tz("Europe/London").format());
-    var duration = 0; //In Days
-    someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
+    var someDate = new Date(getNow());
+    // var duration = 0; //In Days
+    // someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
     
     res.send({date: someDate});
 });
@@ -106,7 +113,7 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL;
     }
 
-    var currentTime = new Date(moment().tz("Europe/London").format());
+    var currentTime = new Date(getNow());
 
     if (someDate.getFullYear() === currentTime.getFullYear() 
            && someDate.getMonth() === currentTime.getMonth()
@@ -133,7 +140,7 @@ const getDefaultTimeSlots = (date) =>
 
 function TimePast(time)
 {
-    const currentTime = new Date(moment().tz("Europe/London").format());
+    const currentTime = new Date(getNow());
 
     var hour = parseInt(time.substr(0,2));
     var minute = parseInt(time.substr(3,2));
