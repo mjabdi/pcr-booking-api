@@ -11,6 +11,85 @@ router.get('/getnewreference', async function(req, res, next) {
 
 });
 
+router.get('/getallbookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find().sort({bookingDate: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/gettodaybookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+
+         const result = await Booking.find({bookingDate : today}).sort({bookingTime: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getoldbookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+
+         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getfuturebookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+
+         const result = await Booking.find({bookingDate : {$gt : today}}).sort({bookingDate: 1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getrecentbookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find().sort({timeStamp: -1}).limit(5).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getrecentbookingsall', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find().sort({timeStamp: -1}).limit(100).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.get('/getbookingsbyref', async function(req, res, next) {
 
     try{
@@ -21,7 +100,6 @@ router.get('/getbookingsbyref', async function(req, res, next) {
     {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
-
 });
 
 router.post('/bookappointment', async function(req, res, next) {

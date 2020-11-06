@@ -11,7 +11,7 @@ function getNow()
 {
     //const now = new Date(moment().tz("Europe/London").format());
     
-    return  new Date();
+    return new Date();
 }
 
 function isWeekend(date)
