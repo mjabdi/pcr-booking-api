@@ -14,7 +14,7 @@ router.get('/getnewreference', async function(req, res, next) {
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find().sort({bookingDate: -1}).exec();
+         const result = await Booking.find().sort({bookingDate: -1, bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -28,7 +28,7 @@ router.get('/gettodaybookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : today}).sort({bookingTime: -1}).exec();
+         const result = await Booking.find({bookingDate : today}).sort({bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -42,7 +42,7 @@ router.get('/getoldbookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1}).exec();
+         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1, bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -56,7 +56,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$gt : today}}).sort({bookingDate: 1}).exec();
+         const result = await Booking.find({bookingDate : {$gt : today}}).sort({bookingDate: 1, bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -122,6 +122,7 @@ router.post('/bookappointment', async function(req, res, next) {
                 timeStamp: new Date(),
                 forenameCapital : req.body.forename.trim().toUpperCase(),
                 surnameCapital : req.body.surname.trim().toUpperCase(),
+                bookingTimeNormalized: NormalizeTime(req.body.bookingTime)
             }
         );
 
@@ -217,7 +218,28 @@ const validateBookAppointment = (body) => {
     return true;
 }
 
+function NormalizeTime(str)
+{
+    var hour = parseInt(str.substr(0,2));
+    const minutesStr = str.substr(3,2);
+    const isPM = str.toLowerCase().indexOf('pm') > 0;
 
+    if (isPM && hour < 12)
+    {
+        hour += 12;
+    }
+
+    if (!isPM && hour === 12)
+    {
+        hour = 0;
+    }
+
+    var hourStr = `${hour}`;
+    if (hourStr.length < 2)
+        hourStr = `0${hourStr}`;
+
+    return `${hourStr}:${minutesStr}`;    
+}
 
 
 module.exports = router;

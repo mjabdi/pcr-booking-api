@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {createPDFForCovid1Form, createPDFForCovid2Form} = require('./../pdf-creator'); 
+const {Booking} = require('./../models/Booking');
 
 router.get('/downloadcovidform1', async function(req, res, next) {
 
@@ -23,11 +24,17 @@ router.get('/downloadcovidform1', async function(req, res, next) {
         
         const pdfBuffer = await createPDFForCovid1Form(id);
         
+
+        await Booking.updateOne({_id: id}, {status: 'took_the_test'});
+
         res.set( {
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename=pcr-reg-form-${id}.pdf`,
             'Content-Transfer-Encoding': 'Binary'
           }).status(200).send(pdfBuffer);
+
+        
+
         
     }
     catch(err)
