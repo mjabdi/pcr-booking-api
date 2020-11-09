@@ -24,8 +24,9 @@ router.get('/downloadcovidform1', async function(req, res, next) {
         
         const pdfBuffer = await createPDFForCovid1Form(id);
         
+        
 
-        await Booking.updateOne({_id: id}, {status: 'took_the_test'});
+        await Booking.updateOne({_id: id, status:'booked'}, {status: 'took_the_test'});
 
         res.set( {
             'Content-Type': 'application/pdf',

@@ -212,6 +212,11 @@ const validateBookAppointment = (body) => {
         throw new Error('bookingTime field not present');
     }
 
+    if (body.passportNumber2 && body.passportNumber2.trim().length === 0)
+    {
+        body.passportNumber2 = '';
+    }
+
     body.bookingDate = dateformat(body.bookingDate, 'yyyy-mm-dd');
     body.birthDate = dateformat(body.birthDate, 'yyyy-mm-dd');
 
