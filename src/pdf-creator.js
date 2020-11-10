@@ -1,6 +1,4 @@
 const PDFDocument = require('pdfkit');
-const fs = require('fs');
-const dateFormat = require('dateformat');
 const getStream = require('get-stream');
 
 const {Booking} = require('./models/Booking');
