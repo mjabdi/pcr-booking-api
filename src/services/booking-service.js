@@ -122,13 +122,13 @@ router.post('/bookappointment', async function(req, res, next) {
                 timeStamp: new Date(),
                 forenameCapital : req.body.forename.trim().toUpperCase(),
                 surnameCapital : req.body.surname.trim().toUpperCase(),
-                bookingTimeNormalized: NormalizeTime(req.body.bookingTime)
+                bookingTimeNormalized: req.body.bookingTimeNormalized
             }
         );
 
         await booking.save();
         
-        sendEmail(req.body);
+        await sendEmail(req.body);
 
         res.status(201).send({status: 'OK'});
 
@@ -219,6 +219,7 @@ const validateBookAppointment = (body) => {
 
     body.bookingDate = dateformat(body.bookingDate, 'yyyy-mm-dd');
     body.birthDate = dateformat(body.birthDate, 'yyyy-mm-dd');
+    body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
 
     return true;
 }
