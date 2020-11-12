@@ -28,8 +28,9 @@ router.get('/downloadcovidform1', async function(req, res, next) {
         const pdfBuffer = await createPDFForCovid1Form(id);
         
         
+        await Booking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
 
-        await Booking.updateOne({_id: id, status:'booked'}, {status: 'took_the_test'});
+      
 
         res.set( {
             'Content-Type': 'application/pdf',
@@ -62,6 +63,8 @@ router.get('/downloadcovidform2', async function(req, res, next) {
     try{
         
         const pdfBuffer = await createPDFForCovid2Form(id);
+
+        await Booking.updateOne({_id: id, status:'patient_attended'}, {status: 'sample_taken'});
         
         res.set( {
                 'Content-Type': 'application/pdf',

@@ -4,6 +4,8 @@ const {Booking} = require('../models/Booking');
 const dateformat = require('dateformat');
 const getNewRef = require('./refgenatator-service');
 const sendEmail = require('./email-service');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 router.get('/getnewreference', async function(req, res, next) {
 
@@ -119,10 +121,7 @@ router.post('/bookappointment', async function(req, res, next) {
         const booking = new Booking(
             {
                 ...req.body,
-                timeStamp: new Date(),
-                forenameCapital : req.body.forename.trim().toUpperCase(),
-                surnameCapital : req.body.surname.trim().toUpperCase(),
-                bookingTimeNormalized: req.body.bookingTimeNormalized
+                timeStamp: new Date()
             }
         );
 
@@ -134,6 +133,35 @@ router.post('/bookappointment', async function(req, res, next) {
 
     }catch(err)
     {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/updatebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.body.bookingId = ObjectId(req.body.bookingId);
+        validateBookAppointment(req.body.person);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await Booking.updateOne({_id : req.body.bookingId}, {...req.body.person});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
         res.status(500).send({status:'FAILED' , error: err.message });
         return;
     }
@@ -209,7 +237,7 @@ const validateBookAppointment = (body) => {
 
     if (!body.bookingRef) 
     {
-        throw new Error('bookingTime field not present');
+        throw new Error('bookingRef field not present');
     }
 
     if (body.passportNumber2 && body.passportNumber2.trim().length === 0)
@@ -220,6 +248,10 @@ const validateBookAppointment = (body) => {
     body.bookingDate = dateformat(body.bookingDate, 'yyyy-mm-dd');
     body.birthDate = dateformat(body.birthDate, 'yyyy-mm-dd');
     body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
+
+    body.forenameCapital = body.forename.trim().toUpperCase();
+    body.surnameCapital = body.surname.trim().toUpperCase();
+   
 
     return true;
 }

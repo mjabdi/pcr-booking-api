@@ -34,14 +34,14 @@ const createPDFForCovid1Form = async (id) =>
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.birthDate.toUpperCase() , 360, 187  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
            
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.forename.toUpperCase() , 100, 215  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.title , 305, 215  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.title.toUpperCase()  , 305, 215  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
           
-            doc.fillColor('black').fontSize(9).font('Courier-Bold').text(booking.address , 100, 245  ,{width: 480, characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 1 } );
+            doc.fillColor('black').fontSize(9).font('Courier-Bold').text(booking.address.toUpperCase()  , 100, 245  ,{width: 480, characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 1 } );
 
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.postCode , 100, 272  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.email , 290, 272  ,{characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.postCode.toUpperCase()  , 100, 272  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.email.toUpperCase()  , 290, 272  ,{characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
 
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.phone , 100, 300  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.phone.toUpperCase()  , 100, 300  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.bookingDate , 360, 313  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
 
 
@@ -60,7 +60,15 @@ const createPDFForCovid1Form = async (id) =>
             if (booking.passportNumber && booking.passportNumber.length > 0)
             {
                 doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text('PASSPORT NUMBER: ' , 20, 530  ,{characterSpacing : 0.5, wordSpacing : 1 , lineGap : 2 } );
-                doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.passportNumber, 140, 529  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
+
+                var passportStr = booking.passportNumber.toUpperCase();
+
+                if (booking.passportNumber2 && booking.passportNumber2.length > 0)
+                {
+                    passportStr += ` - ${booking.passportNumber2.toUpperCase()}`;
+                }
+
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text(passportStr , 140, 529  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
             }
 
             doc.end();
@@ -92,7 +100,7 @@ const createPDFForCovid2Form = async (id) =>
             doc.image('assets/covid-form2.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'top'});
             
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.surname.toUpperCase() , 100, 95  ,{characterSpacing : 4, wordSpacing : 8 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.title , 370, 94  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.title.toUpperCase() , 370, 94  ,{characterSpacing : 2, wordSpacing : 2 , lineGap : 2 } );
 
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.forename.toUpperCase() , 100, 112  ,{characterSpacing : 4, wordSpacing : 8 , lineGap : 2 } );
 
