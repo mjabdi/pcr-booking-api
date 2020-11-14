@@ -3,7 +3,7 @@ const router = express.Router();
 const {Booking} = require('../models/Booking');
 const dateformat = require('dateformat');
 const getNewRef = require('./refgenatator-service');
-const sendEmail = require('./email-service');
+const {sendConfirmationEmail, sendAntiBodyEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -127,7 +127,12 @@ router.post('/bookappointment', async function(req, res, next) {
 
         await booking.save();
         
-        await sendEmail(req.body);
+        await sendConfirmationEmail(req.body);
+
+        if (req.body.antiBodyTest)
+        {
+            await sendAntiBodyEmail(req.body);
+        }
 
         res.status(201).send({status: 'OK'});
 

@@ -42,14 +42,19 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
     // var duration = 0; //In Days
     // someDate.setTime(someDate.getTime() +  (duration * 24 * 60 * 60 * 1000));
 
-    
     res.send({date: someDate});
 });
 
 /// Get Fully Booked Days Date
 router.get('/getfullybookeddays', function(req, res, next) {
+    
+    var holidays = [];
+    holidays.push(new Date(2020,11,24,0,0,0,0));
+    holidays.push(new Date(2020,11,25,0,0,0,0));
+    holidays.push(new Date(2020,11,26,0,0,0,0));
+    holidays.push(new Date(2021,0,1,0,0,0,0));
   
-    res.send([]);
+    res.send(holidays);
 });
 
 
