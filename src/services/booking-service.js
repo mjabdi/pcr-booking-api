@@ -12,7 +12,7 @@ const ObjectId = mongoose.Types.ObjectId;
 router.get('/getunmatchedrecords', async function(req, res, next) {
 
     try{
-         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$ne : true }}).sort({timeStamp: -1}).exec();
+         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$ne : true }, testDate: {$gt : '2020-11-12'}}).sort({timeStamp: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -24,7 +24,7 @@ router.get('/getunmatchedrecords', async function(req, res, next) {
 router.get('/getunmatchedrecordsarchived', async function(req, res, next) {
 
     try{
-         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$eq : true }}).sort({timeStamp: -1}).exec();
+         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$eq : true }, testDate: {$gt : '2020-11-12'}}).sort({timeStamp: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
