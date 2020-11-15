@@ -1,11 +1,68 @@
 const express = require('express');
 const router = express.Router();
 const {Booking} = require('../models/Booking');
+const {Link} = require('../models/link');
 const dateformat = require('dateformat');
 const getNewRef = require('./refgenatator-service');
 const {sendConfirmationEmail, sendAntiBodyEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+
+
+router.get('/getunmatchedrecords', async function(req, res, next) {
+
+    try{
+         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$ne : true }}).sort({timeStamp: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getunmatchedrecordsarchived', async function(req, res, next) {
+
+    try{
+         const result = await Link.find({isPCR: true, emailNotFound: true, seen : {$eq : true }}).sort({timeStamp: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/archiverecord', async function(req, res, next) {
+
+    try{
+         const id = ObjectId(req.query.id);
+         console.log(id);
+         const result = await Link.updateOne({_id: id}, {seen : true});
+         console.log(result);
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/unarchiverecord', async function(req, res, next) {
+
+    try{
+         const id = ObjectId(req.query.id);
+         console.log(id);
+         const result = await Link.updateOne({_id: id}, {seen : false});
+         console.log(result);
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 router.get('/getnewreference', async function(req, res, next) {
 
@@ -16,7 +73,43 @@ router.get('/getnewreference', async function(req, res, next) {
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find().sort({bookingDate: -1, bookingTimeNormalized: 1}).exec();
+         const result = await Booking.find().sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getlivebookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find({status: 'sample_taken'}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getpositivebookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find({status: 'positive'}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getcompletedbookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find({ $or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -44,7 +137,7 @@ router.get('/getoldbookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1, bookingTimeNormalized: 1}).exec();
+         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)

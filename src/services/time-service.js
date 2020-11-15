@@ -5,7 +5,7 @@ const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
 const moment = require('moment-timezone');
 
-const MAX_BOOKING_PER_SLOT = 3;
+const MAX_BOOKING_PER_SLOT = 5;
 
 function getNow()
 {

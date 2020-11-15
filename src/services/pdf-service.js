@@ -28,7 +28,7 @@ router.get('/downloadcovidform1', async function(req, res, next) {
         const pdfBuffer = await createPDFForCovid1Form(id);
         
         
-        await Booking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
+        //await Booking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
 
       
 
@@ -64,7 +64,7 @@ router.get('/downloadcovidform2', async function(req, res, next) {
         
         const pdfBuffer = await createPDFForCovid2Form(id);
 
-        await Booking.updateOne({_id: id, status:'patient_attended'}, {status: 'sample_taken'});
+        await Booking.updateOne({ $and: [{_id: id} , {$or: [{status:'patient_attended'}, {status:'booked'}]}]} , {status: 'sample_taken', samplingTimeStamp: new Date()});
         
         res.set( {
                 'Content-Type': 'application/pdf',
