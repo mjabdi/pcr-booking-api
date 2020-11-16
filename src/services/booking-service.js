@@ -223,6 +223,18 @@ router.post('/bookappointment', async function(req, res, next) {
     }
 
     try{
+
+        const found = await Booking.findOne({forenameCapital : req.body.forenameCapital,
+                                         surnameCapital: req.body.surnameCapital, 
+                                         birthDate: req.body.birthDate, 
+                                         bookingDate: req.body.bookingDate});
+
+        if (found)
+        {
+            res.status(200).send({status:'FAILED' , error: 'Repeated Booking!', person: req.body});
+            return;
+        }
+
         const booking = new Booking(
             {
                 ...req.body,
@@ -239,7 +251,7 @@ router.post('/bookappointment', async function(req, res, next) {
             await sendAntiBodyEmail(req.body);
         }
 
-        res.status(201).send({status: 'OK'});
+        res.status(201).send({status: 'OK', person: req.body});
 
     }catch(err)
     {
