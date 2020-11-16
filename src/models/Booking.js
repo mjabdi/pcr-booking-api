@@ -126,6 +126,12 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
     samplingTimeStamp: {
         type: Date,
         required : false
+    },
+
+    deleted: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 
 }));

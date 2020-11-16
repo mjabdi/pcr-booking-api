@@ -73,7 +73,19 @@ router.get('/getnewreference', async function(req, res, next) {
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find().sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await Booking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getdeletedbookings', async function(req, res, next) {
+
+    try{
+         const result = await Booking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -85,7 +97,7 @@ router.get('/getallbookings', async function(req, res, next) {
 router.get('/getlivebookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({status: 'sample_taken'}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await Booking.find({status: 'sample_taken' , deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -97,7 +109,7 @@ router.get('/getlivebookings', async function(req, res, next) {
 router.get('/getpositivebookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({status: 'positive'}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await Booking.find({status: 'positive' , deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -109,7 +121,7 @@ router.get('/getpositivebookings', async function(req, res, next) {
 router.get('/getcompletedbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({ $or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -123,7 +135,7 @@ router.get('/gettodaybookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : today}).sort({bookingTimeNormalized: 1}).exec();
+         const result = await Booking.find({bookingDate : today, deleted : {$ne : true }}).sort({bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -137,7 +149,7 @@ router.get('/getoldbookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$lt : today}}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await Booking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -151,7 +163,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$gt : today}}).sort({bookingDate: 1, bookingTimeNormalized: 1}).exec();
+         const result = await Booking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -163,7 +175,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
 router.get('/getrecentbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find().sort({timeStamp: -1}).limit(5).exec();
+         const result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(5).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -175,7 +187,7 @@ router.get('/getrecentbookings', async function(req, res, next) {
 router.get('/getrecentbookingsall', async function(req, res, next) {
 
     try{
-         const result = await Booking.find().sort({timeStamp: -1}).limit(100).exec();
+         const result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -254,6 +266,60 @@ router.post('/updatebookappointment', async function(req, res, next) {
     try{
 
         await Booking.updateOne({_id : req.body.bookingId}, {...req.body.person});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/deletebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await Booking.updateOne({_id : req.query.id}, {deleted : true});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/undeletebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await Booking.updateOne({_id : req.query.id}, {deleted : false});
 
         res.status(200).send({status: 'OK'});
 
