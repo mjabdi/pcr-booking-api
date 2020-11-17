@@ -8,7 +8,8 @@ const config = require('config');
 const sendConfirmationEmail =  async (options) =>
 {
     var content = '';
-    content += `<div style="padding: '25px 0 10px 0'; font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: left;color: #333 !important;">`
+    content += `<div style="padding: '25px 0 10px 0'; width: 80%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<img style="margin:10px" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="Medical Express Clinic - private clinic London">`;
     content += `<p>Dear ${options.forename},</p>`;
     content += `<p>Thank you for booking your appointment at the Medical Express Clinic for a COVID-19 PCR Fit to Fly Test. We look forward to welcoming you.</p>`;
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.</p>`;
@@ -21,6 +22,9 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Address : ${options.address} </li>`;
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `</ul>`;
+
+    content += `<p> Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
+
     content += `<p>Kind Regards,</p>`;
     content += `<p>Medical Express Clinic</p>`;
     content += '</div>'

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const apiRouter = require('./routes/api-router');
+const downloadRouter = require('./routes/download-router');
 
 const apiSecurity = require('./middleware/api-security');
 const mongodb = require('./mongodb');
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/api', apiSecurity() ,apiRouter);
+app.use('/download', downloadRouter);
 // app.use('/api', apiRouter);
 
 app.use('/admin', express.static(path.join(__dirname, ".." , "public_admin")));
