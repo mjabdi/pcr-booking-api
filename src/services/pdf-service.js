@@ -7,6 +7,7 @@ const {getPdfResult, getPdfCert} = require('./../pdf-finder');
 
 
 const {Booking} = require('./../models/Booking');
+const {GlobalParams} = require('./../models/GlobalParams');
 
 router.get('/downloadcovidform1', async function(req, res, next) {
 
@@ -62,6 +63,19 @@ router.get('/downloadcovidform2', async function(req, res, next) {
 
     try{
         
+
+        var extRef = '';
+        const booking = await Booking.findOne({_id : id});
+
+
+        if (!booking.extRef || booking.extRef === 'not-set')
+        {
+            const params = await GlobalParams.findOne({name:'parameters'});
+            extRef = `MX${params.lastExtRef + 1}`;
+            await GlobalParams.updateOne({name:'parameters'}, {lastExtRef : params.lastExtRef + 1});
+            await Booking.updateOne({_id: id} , {extRef : extRef});
+        }
+
         const pdfBuffer = await createPDFForCovid2Form(id);
 
         await Booking.updateOne({ $and: [{_id: id} , {$or: [{status:'patient_attended'}, {status:'booked'}]}]} , {status: 'sample_taken', samplingTimeStamp: new Date()});
@@ -75,6 +89,7 @@ router.get('/downloadcovidform2', async function(req, res, next) {
     }
     catch(err)
     {
+        console.log(err);
         res.status(500).send({status:'FAILED' , error: err.message });
         return;
     }

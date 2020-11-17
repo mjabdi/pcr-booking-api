@@ -93,15 +93,13 @@ const createPDFForCovid2Form = async (id) =>
             booking.birthDate = NormalizeDate(booking.birthDate);
             booking.bookingDate = NormalizeDate(booking.bookingDate);
             booking.address = NormalizeAddress(booking.address);
-
-            const refNumber = createRefNumber(booking);
             
             const doc = new PDFDocument;
             //const stream = fs.createWriteStream(filePath);
             //doc.pipe(stream);
             doc.image('assets/covid-form2.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'top'});
 
-            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(refNumber , 150, 78  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.extRef , 150, 78  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
 
             
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.surname.toUpperCase() , 100, 95  ,{characterSpacing : 4, wordSpacing : 8 , lineGap : 2 } );
@@ -131,13 +129,13 @@ const createPDFForCovid2Form = async (id) =>
         }
 }
 
-const createRefNumber = (booking) =>
-{
-    const refNumber = `${booking.bookingRef.substr(0,3)}${booking.bookingRef.substr(4,3)}${booking.bookingRef.substr(8,3)}`;
-    const day = booking.birthDate.substr(0,2);
-    const month = booking.birthDate.substr(3,2);
-    return `MX${refNumber}${day}${month}`;
-}
+// const createRefNumber = (booking) =>
+// {
+//     const refNumber = `${booking.bookingRef.substr(0,3)}${booking.bookingRef.substr(4,3)}${booking.bookingRef.substr(8,3)}`;
+//     const day = booking.birthDate.substr(0,2);
+//     const month = booking.birthDate.substr(3,2);
+//     return `MX${refNumber}${day}${month}`;
+// }
 
 module.exports = {
     createPDFForCovid1Form : createPDFForCovid1Form,
