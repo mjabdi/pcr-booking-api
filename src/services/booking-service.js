@@ -209,6 +209,35 @@ router.get('/getbookingsbyref', async function(req, res, next) {
     }
 });
 
+router.get('/getbookingsbyrefandbirthdate', async function(req, res, next) {
+
+    try{
+         const result = await Booking.findOne({bookingRef : req.query.ref, birthDate : req.query.birthdate, deleted : {$ne : true }});
+         if (result)
+         {
+            if (result.status !== 'booked' || timePassed(result.bookingDate))
+            {
+                res.status(200).send({status:'FAILED' , error : 'Time Passed'});
+
+            }else
+            {
+                res.status(200).send({status:'OK' , booking : result});
+            }
+         }
+         else
+         {
+            res.status(200).send({status:'FAILED' , error : 'Not Found'});
+         }
+        
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+
 router.post('/bookappointment', async function(req, res, next) {
 
     try
@@ -277,7 +306,16 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
     try{
 
+        const oldBooking = await Booking.findOne({_id : req.body.bookingId});
+
         await Booking.updateOne({_id : req.body.bookingId}, {...req.body.person});
+
+        await sendConfirmationEmail(req.body.person);
+
+        if (req.body.person.antiBodyTest && !oldBooking.antiBodyTest)
+        {
+            await sendAntiBodyEmail(req.body.person);
+        }
 
         res.status(200).send({status: 'OK'});
 
@@ -288,6 +326,38 @@ router.post('/updatebookappointment', async function(req, res, next) {
         return;
     }
 });
+
+router.post('/updatebookappointmenttime', async function(req, res, next) {
+
+    try
+    {
+        req.body.bookingId = ObjectId(req.body.bookingId);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await Booking.updateOne({_id : req.body.bookingId}, {bookingDate : req.body.bookingDate, bookingTime : req.body.bookingTime});
+
+        const booking = await Booking.findOne({_id : req.body.bookingId});
+
+        await sendConfirmationEmail(booking);
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
 
 router.post('/deletebookappointment', async function(req, res, next) {
 
@@ -453,6 +523,13 @@ function NormalizeTime(str)
         hourStr = `0${hourStr}`;
 
     return `${hourStr}:${minutesStr}`;    
+}
+
+function timePassed (bookingDate)
+{
+    const today= new Date();
+    const todayStr = dateformat(today , 'yyyy-mm-dd');
+    return (bookingDate < todayStr); 
 }
 
 

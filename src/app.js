@@ -28,6 +28,12 @@ app.use('/api', apiSecurity() ,apiRouter);
 app.use('/download', downloadRouter);
 // app.use('/api', apiRouter);
 
+app.use('/user/edit/', express.static(path.join(__dirname, ".." , "public_admin")));
+app.get('/user/edit/*', function (req, res) {
+  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
+ });
+
+
 app.use('/admin', express.static(path.join(__dirname, ".." , "public_admin")));
 app.get('/admin/*', function (req, res) {
   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));

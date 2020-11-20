@@ -3,6 +3,7 @@ const {sendMail} = require('./../mail-sender-2');
 const {createICS} = require('./../ics-creator');
 
 const config = require('config');
+const { calculatePrice } = require('./PriceCalculator');
 
 
 const sendConfirmationEmail =  async (options) =>
@@ -16,12 +17,30 @@ const sendConfirmationEmail =  async (options) =>
     content += `<p>Below is your booking information : </p>`;
     content += '<ul>';
     content += `<li> Appointment Time : ${options.bookingDate} at ${options.bookingTime} </li>`;
-    content += `<li> Forename : ${options.forename} </li>`;
-    content += `<li> Lastname : ${options.lastname} </li>`;
+    content += `<li> Forename : ${options.forename.toUpperCase()} </li>`;
+    content += `<li> Lastname : ${options.surname.toUpperCase()} </li>`;
     content += `<li> Date of Birth : ${options.birthDate} </li>`;
+    content += `<li> Title : ${options.title} </li>`;
+    content += `<li> Gender : ${options.gender} </li>`;
+    content += `<li> Post Code : ${options.postCode} </li>`;
     content += `<li> Address : ${options.address} </li>`;
     content += `<li> Telephone : ${options.phone} </li>`;
+    if (options.passportNumber)
+         content += `<li> Passport Number : ${options.passportNumber} </li>`;
+    if (options.passportNumber2)
+        content += `<li> Second Passport Number : ${options.passportNumber2} </li>`;
+    content += `<li> Certificate Order : ${options.certificate ? 'YES' : 'NO'} </li>`;
+    content += `<li> Antibody Test Order : ${options.antiBodyTest ? 'YES' : 'NO'} </li>`;
+    content += `<li> Price : £${calculatePrice(options)} </li>`;
+
     content += `</ul>`;
+
+    content += `<p> Please follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
+
+    const target = `https://travelpcrtest.com/user/edit/${options.bookingRef}-${options.birthDate}`;
+    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);background-color:#33bdef;border-radius:6px;border:1px solid #057fd0;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
 
     content += `<p> Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
 
@@ -54,7 +73,7 @@ const sendAntiBodyEmail =  async (options) =>
     content += '<ul>';
     content += `<li> Appointment Time : ${options.bookingDate} at ${options.bookingTime} </li>`;
     content += `<li> Forename : ${options.forename} </li>`;
-    content += `<li> Lastname : ${options.lastname} </li>`;
+    content += `<li> Lastname : ${options.surname} </li>`;
     content += `<li> Date of Birth : ${options.birthDate} </li>`;
     content += `<li> Email Address : ${options.email} </li>`;
     content += `<li> Address : ${options.address} </li>`;
