@@ -49,7 +49,7 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
 router.get('/getfullybookeddays', function(req, res, next) {
     
     var holidays = [];
-    holidays.push(new Date(2020,11,24,0,0,0,0));
+    // holidays.push(new Date(2020,11,24,0,0,0,0));
     holidays.push(new Date(2020,11,25,0,0,0,0));
     holidays.push(new Date(2020,11,26,0,0,0,0));
     holidays.push(new Date(2021,0,1,0,0,0,0));
@@ -146,29 +146,31 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL;
     }
 
-    var currentTime = new Date(getNow());
+    const dateStr = dateformat(someDate, 'yyyy-mm-dd');
+    const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
+    const is24Dec = (dateStr === '2020-12-24');
+    const isToday = (dateStr === todayStr);
 
-    if (someDate.getFullYear() === currentTime.getFullYear() 
-           && someDate.getMonth() === currentTime.getMonth()
-           && someDate.getDate() === currentTime.getDate()
-           ){
 
-                results.forEach( (timeSlot) => {
+    for (var i=0; i < results.length; i++)
+    {
 
-                    if (TimePast(timeSlot.time))
-                    {
-                        finalResults.push(new TimeSlot(timeSlot.time, false));
-                    }
-                    else
-                    {
-                        finalResults.push(timeSlot);
-                    }
-                });
-
-                return finalResults;
-           }
-
-           return results;
+         if (isToday && TimePast(results[i].time))
+         {
+             finalResults.push(new TimeSlot(results[i].time, false));
+         }
+         else if (is24Dec && results[i].time.toUpperCase().indexOf('PM') > 0)
+         {
+            finalResults.push(new TimeSlot(results[i].time, false));
+         }
+         else 
+         {
+             finalResults.push(results[i]);
+         }  
+    }
+    
+    
+    return finalResults;
 }
 
 function TimePast(time)
