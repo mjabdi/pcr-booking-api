@@ -3,7 +3,7 @@ const router = express.Router();
 const TimeSlot = require('./../models/TimeSlot');
 const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
-const moment = require('moment-timezone');
+
 
 const MAX_BOOKING_PER_SLOT = 5;
 
@@ -84,13 +84,25 @@ router.get('/gettimeslots', async function(req, res, next) {
                   bookingDate: date
                 }
               },
-
+    
               { $group:
                  {
-                     _id : "$bookingTime", 
-                     total: { $sum: 1 }               
+                     "_id" : {
+                        "bookingTime" : "$bookingTime",
+                        "bookingRef": "$bookingRef"
+    
+                     } ,
+                     "bookCount": { "$sum" : 1 }               
                 } 
-            }
+            } ,
+    
+            { $group:
+                {
+                    _id : "$_id.bookingTime",
+                    total : { $sum: 1 }               
+               } 
+           },
+    
          ]);
 
         if (result.length === 0)
