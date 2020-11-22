@@ -8,6 +8,7 @@ const {sendConfirmationEmail, sendAntiBodyEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const stringSimilarity = require('string-similarity');
+const {GlobalParams} = require('./../models/GlobalParams');
 
 
 router.post('/resendemails' , async function (req,res,next) {
@@ -39,7 +40,7 @@ router.post('/matchrecords', async function (req,res,next) {
             const params = await GlobalParams.findOne({name:'parameters'});
             extRef = `MX${params.lastExtRef + 1}`;
             await GlobalParams.updateOne({name:'parameters'}, {lastExtRef : params.lastExtRef + 1});
-            await Booking.updateOne({_id: id} , {extRef : extRef});
+            await Booking.updateOne({_id: bookingId} , {extRef : extRef});
         }else
         {
             extRef = booking.extRef;
@@ -50,6 +51,7 @@ router.post('/matchrecords', async function (req,res,next) {
         res.status(200).send({status : "OK"});
     }
     catch(err){
+        console.log(err);
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
