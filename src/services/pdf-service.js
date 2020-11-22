@@ -67,7 +67,6 @@ router.get('/downloadcovidform2', async function(req, res, next) {
         var extRef = '';
         const booking = await Booking.findOne({_id : id});
 
-
         if (!booking.extRef || booking.extRef === 'not-set')
         {
             const params = await GlobalParams.findOne({name:'parameters'});

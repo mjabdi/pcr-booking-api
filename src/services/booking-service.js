@@ -7,7 +7,52 @@ const getNewRef = require('./refgenatator-service');
 const {sendConfirmationEmail, sendAntiBodyEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const stringSimilarity = require('string-similarity');
 
+
+router.post('/resendemails' , async function (req,res,next) {
+
+    try{
+        const id = ObjectId(req.query.id);
+        await Link.updateOne({_id: id} , {status: 'downloadFailed'});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+router.post('/matchrecords', async function (req,res,next) {
+
+    try{
+        const bookingId = ObjectId(req.query.bookingid);
+        const linkId = ObjectId(req.query.linkid);
+    
+    
+        var extRef = '';
+        const booking = await Booking.findOne({_id : bookingId});
+    
+        if (!booking.extRef || booking.extRef === 'not-set')
+        {
+            const params = await GlobalParams.findOne({name:'parameters'});
+            extRef = `MX${params.lastExtRef + 1}`;
+            await GlobalParams.updateOne({name:'parameters'}, {lastExtRef : params.lastExtRef + 1});
+            await Booking.updateOne({_id: id} , {extRef : extRef});
+        }else
+        {
+            extRef = booking.extRef;
+        }
+    
+        await Link.updateOne({_id: linkId}, {extRef : extRef});
+    
+        res.status(200).send({status : "OK"});
+    }
+    catch(err){
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
 
 router.get('/getunmatchedrecords', async function(req, res, next) {
 
@@ -201,6 +246,19 @@ router.get('/getbookingsbyref', async function(req, res, next) {
 
     try{
          const result = await Booking.find({bookingRef : req.query.ref});
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getbookingbyid', async function(req, res, next) {
+
+    try{
+        req.query.id = ObjectId(req.query.id);
+         const result = await Booking.findOne({_id : req.query.id});
          res.status(200).send(result);
     }
     catch(err)
@@ -412,6 +470,102 @@ router.post('/undeletebookappointment', async function(req, res, next) {
         return;
     }
 });
+
+router.get('/getlinkdetails', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+         const result = await Link.findOne({_id: req.query.id});
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getbestmatchedbookings', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        const link =  await Link.findOne({_id : req.query.id});
+
+        const liveRecords = await Booking.find({status : 'sample_taken', deleted : {$ne : true }});
+
+        const forenameArray = [];
+        const surnameArray = [];
+        const fullNameArray = [];
+    
+        if (liveRecords && liveRecords.length > 0)
+        {
+            for (var i = 0 ; i < liveRecords.length; i++)
+            {
+                forenameArray.push(liveRecords[i].forenameCapital);
+                surnameArray.push(liveRecords[i].surnameCapital);
+                fullNameArray.push(`${liveRecords[i].forenameCapital} ${liveRecords[i].surnameCapital}`);
+            }
+        }
+    
+        const fullname = `${link.forename} ${link.surname}`;
+        const matchedFullnameIndex =  stringSimilarity.findBestMatch(fullname, fullNameArray).bestMatchIndex;
+        const likelihood = stringSimilarity.findBestMatch(fullname, fullNameArray).bestMatch.rating.toFixed(2);
+    
+        const matchedForename = forenameArray[matchedFullnameIndex];
+        const matchedSurname = surnameArray[matchedFullnameIndex];
+        var bookingMatch = [];
+    
+
+        bookingMatch.push({likelihood: likelihood, bookings: await Booking.find({forenameCapital : matchedForename, surnameCapital : matchedSurname, deleted : {$ne : true }})});
+        bookingMatch.push({likelihood: likelihood * 0.95, bookings: await Booking.find({forenameCapital : matchedSurname , surnameCapital : matchedForename, deleted : {$ne : true }})});
+        bookingMatch.push({likelihood: likelihood * 0.8, bookings: await Booking.find({surnameCapital : matchedSurname, deleted : {$ne : true }})});
+        bookingMatch.push({likelihood: likelihood * 0.6, bookings: await Booking.find({forenameCapital : matchedForename, deleted : {$ne : true }})});
+        bookingMatch.push({likelihood: likelihood * 0.5, bookings: await Booking.find({forenameCapital : matchedSurname, deleted : {$ne : true }})});
+        bookingMatch.push({likelihood: likelihood * 0.5, bookings: await Booking.find({surnameCapital : matchedForename, deleted : {$ne : true }})});
+    
+        const result = [];
+    
+        bookingMatch.forEach(group => {
+            if (group.bookings.length > 0 && group.likelihood > 0.5)
+            {
+                group.bookings.forEach(booking => {
+                    if (result.findIndex(element => `${element._id}` === `${booking._doc._id}`) < 0)
+                       result.push({...booking._doc, likelihood : (group.likelihood * 100).toFixed(0)});
+                });
+            }
+        });
+    
+        res.status(200).send({status: 'OK', matchedBookings : result});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+
 
 const validateBookAppointment = (body) => {
 
