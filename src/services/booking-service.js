@@ -400,6 +400,7 @@ router.post('/updatebookappointment', async function(req, res, next) {
     }
 });
 
+
 router.post('/updatebookappointmenttime', async function(req, res, next) {
 
     try
@@ -431,6 +432,34 @@ router.post('/updatebookappointmenttime', async function(req, res, next) {
     }
 });
 
+router.post('/changebacktobookingmade', async function(req, res, next) {
+   
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await Booking.updateOne({_id : req.query.id}, {status : 'booked'});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+});
+
 
 router.post('/deletebookappointment', async function(req, res, next) {
 
@@ -440,7 +469,7 @@ router.post('/deletebookappointment', async function(req, res, next) {
 
     }catch(err)
     {
-        console.error(err.message);
+        console.error(err);
         res.status(400).send({status:'FAILED' , error: err.message });
         return;
     }
