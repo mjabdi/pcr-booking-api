@@ -235,7 +235,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
 router.get('/getrecentbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(5).exec();
+         const result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(10).exec();
          res.status(200).send(result);
     }
     catch(err)
