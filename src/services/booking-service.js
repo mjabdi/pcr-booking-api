@@ -15,7 +15,20 @@ router.post('/resendemails' , async function (req,res,next) {
 
     try{
         const id = ObjectId(req.query.id);
-        await Link.updateOne({_id: id} , {status: 'downloadFailed'});
+        await Link.updateOne({_id: id} , {status: 'downloadFailed', dontSendEmail: false});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/regeneratefiles' , async function (req,res,next) {
+
+    try{
+        const id = ObjectId(req.query.id);
+        await Link.updateOne({_id: id} , {status: 'downloadFailed', dontSendEmail : true});
         res.status(200).send({status : "OK"});
     }
     catch(err)
