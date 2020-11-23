@@ -135,7 +135,7 @@ router.get('/gettimeslots', async function(req, res, next) {
 
 const validateGetTimeSlots = (query) => {
 
-    if (!query.date){
+    if (!query.date || query.date === 'undefined'){
         throw new Error('date field not present');
     }
 
