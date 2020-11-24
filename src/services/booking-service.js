@@ -24,11 +24,42 @@ router.post('/resendemails' , async function (req,res,next) {
     }
 });
 
+router.post('/resendemailswithbookingid' , async function (req,res,next) {
+
+    try{
+        const id = ObjectId(req.query.id);
+
+        const booking = await Booking.findOne({_id: id});
+
+        await Link.updateOne({filename: booking.filename} , {status: 'downloadFailed', dontSendEmail: false});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.post('/regeneratefiles' , async function (req,res,next) {
 
     try{
         const id = ObjectId(req.query.id);
         await Link.updateOne({_id: id} , {status: 'downloadFailed', dontSendEmail : true});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/regeneratefileswithbookingid' , async function (req,res,next) {
+
+    try{
+        const id = ObjectId(req.query.id);
+        const booking = await Booking.findOne({_id: id});
+        await Link.updateOne({filename: booking.filename} , {status: 'downloadFailed', dontSendEmail : true});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -92,6 +123,38 @@ router.get('/getunmatchedrecordsarchived', async function(req, res, next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
+
+router.get('/getlatebookings', async function(req, res, next) {
+
+    try{
+
+     const now = new Date();   
+            
+     const bookings = await Booking.find({$and: [{status : 'sample_taken'} , {samplingTimeStamp : {$ne : null}}]});
+ 
+    const result = [];
+
+    for (var i = 0; i < bookings.length ; i++)
+    {
+        let booking = bookings[i]._doc;
+
+        const delay = parseInt((now - booking.samplingTimeStamp) / (3600*1000));
+
+        if (delay >= 40)
+        {
+            result.push({...booking, delay: delay});
+        }
+    }
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+
 
 router.post('/archiverecord', async function(req, res, next) {
 
@@ -534,6 +597,39 @@ router.get('/getlinkdetails', async function(req, res, next) {
     }
     catch(err)
     {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getlinkdetailswithbookingid', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+         const booking = await Booking.findOne({_id : req.query.id});
+         if (booking)
+         {
+            const result = await Link.findOne({filename: booking.filename});
+            res.status(200).send({status: 'OK', link : result});
+         } 
+         else
+         {
+            res.status(200).send({status: 'FAILED' , error: 'NOT FOUND LINK'});
+         }
+
+    }
+    catch(err)
+    {
+        console.log(err);
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
