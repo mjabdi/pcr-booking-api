@@ -193,6 +193,45 @@ router.get('/getnewreference', async function(req, res, next) {
 
 });
 
+router.get('/getbookingscountbydatestr', async function(req, res, next) {
+
+    try{
+         const dateStr = req.query.date;
+         if (!dateStr || dateStr.length <= 0)
+         {
+            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+            return;
+         }
+         const result = await Booking.count({bookingDate: dateStr , deleted : {$ne : true }, status: 'booked'}).exec();
+         res.status(200).send({status: "OK", count : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getbookingscountbydatestrandtime', async function(req, res, next) {
+
+    try{
+         const dateStr = req.query.date;
+         const timeStr = req.query.time;
+         if (!dateStr || dateStr.length <= 0)
+         {
+            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+            return;
+         }
+         const result = await Booking.count({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).exec();
+         res.status(200).send({status: "OK", count : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
@@ -686,7 +725,7 @@ router.get('/getbestmatchedbookings', async function(req, res, next) {
         const result = [];
     
         bookingMatch.forEach(group => {
-            if (group.bookings.length > 0 && group.likelihood > 0.5)
+            if (group.bookings.length > 0 && group.likelihood > 0.4)
             {
                 group.bookings.forEach(booking => {
                     if (result.findIndex(element => `${element._id}` === `${booking._doc._id}`) < 0)
