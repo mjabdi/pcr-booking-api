@@ -232,6 +232,26 @@ router.get('/getbookingscountbydatestrandtime', async function(req, res, next) {
     }
 });
 
+router.get('/getbookingsbydatestrandtime', async function(req, res, next) {
+
+    try{
+        const dateStr = req.query.date;
+        const timeStr = req.query.time;
+        if (!dateStr || dateStr.length <= 0)
+        {
+           res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+           return;
+        }
+        const result = await Booking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:-1}).exec();
+        res.status(200).send({status: "OK", bookings : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
