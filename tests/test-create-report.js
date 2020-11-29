@@ -13,8 +13,15 @@ const config = require('config');
    
     // const bookings = await Booking.find({$and: [{$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]} , {samplingTimeStamp : {$ne : null}}]});
     const bookings = await Booking.find({$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]});
+    const Links = await Link.find();
 
-    const result = [];
+    // const result = [];
+
+    var lessThan12 = 0;
+    var lessThan24 = 0;
+    var lessThan36 = 0;
+    var morethan36 = 0;
+    var totoalTime = 0;
 
     for (var i = 0; i < bookings.length ; i++)
     {
@@ -25,13 +32,27 @@ const config = require('config');
             booking.samplingTimeStamp = createTimeStampFromBookingDate(booking.bookingDate, booking.bookingTime);
         }
 
-        const link = await Link.findOne({filename: booking.filename});
+        const link = Links.find(link =>  link.filename === booking.filename);
 
         const delay = parseInt((link.timeStamp - booking.samplingTimeStamp) / (3600*1000));
 
-        result.push({id : booking._id, testTime: dateformat(booking.samplingTimeStamp,"dddd, mmmm dS, yyyy, h:MM:ss TT" ),resultTime: dateformat(link.timeStamp, "dddd, mmmm dS, yyyy, h:MM:ss TT"), delay: delay});
-
+        //result.push({id : booking._id, testTime: dateformat(booking.samplingTimeStamp,"dddd, mmmm dS, yyyy, h:MM:ss TT" ),resultTime: dateformat(link.timeStamp, "dddd, mmmm dS, yyyy, h:MM:ss TT"), delay: delay});
+        if (delay <= 12)
+            lessThan12++;
+        else if (delay <= 24)
+            lessThan24++;
+        else if (delay <= 36)
+            lessThan36++;
+        else if (delay <= 48)
+            morethan36++;   
+      
+        if (delay <= 48)
+        {
+            totoalTime += delay; 
+        }
     }
+
+    const result = {lessThan12, lessThan24, lessThan36, morethan36, avg: (totoalTime / bookings.length).toFixed(1)}
 
 
     console.log(result);

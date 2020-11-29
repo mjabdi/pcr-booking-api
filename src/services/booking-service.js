@@ -202,7 +202,26 @@ router.get('/getbookingscountbydatestr', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await Booking.count({bookingDate: dateStr , deleted : {$ne : true }, status: 'booked'}).exec();
+         const result = await Booking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }, status: 'booked'}).exec();
+         res.status(200).send({status: "OK", count : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getallbookingscountbydatestr', async function(req, res, next) {
+
+    try{
+         const dateStr = req.query.date;
+         if (!dateStr || dateStr.length <= 0)
+         {
+            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+            return;
+         }
+         const result = await Booking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -257,7 +276,27 @@ router.get('/getbookingscountbydatestrandtime', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await Booking.count({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).exec();
+         const result = await Booking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).exec();
+         res.status(200).send({status: "OK", count : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getallbookingscountbydatestrandtime', async function(req, res, next) {
+
+    try{
+         const dateStr = req.query.date;
+         const timeStr = req.query.time;
+         if (!dateStr || dateStr.length <= 0)
+         {
+            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+            return;
+         }
+         const result = await Booking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -278,6 +317,26 @@ router.get('/getbookingsbydatestrandtime', async function(req, res, next) {
            return;
         }
         const result = await Booking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:-1}).exec();
+        res.status(200).send({status: "OK", bookings : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
+
+    try{
+        const dateStr = req.query.date;
+        const timeStr = req.query.time;
+        if (!dateStr || dateStr.length <= 0)
+        {
+           res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+           return;
+        }
+        const result = await Booking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:-1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -799,6 +858,80 @@ router.get('/getbestmatchedbookings', async function(req, res, next) {
     }
 });
 
+router.get('/getteststimereport', async function(req, res, next) {
+
+    try{
+        const bookings = await Booking.find({$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]});
+        const Links = await Link.find();
+    
+        var lessThan12 = 0;
+        var lessThan24 = 0;
+        var lessThan36 = 0;
+        var lessThan48 = 0;
+        var totoalTime = 0;
+        var totalCount = 0;
+    
+        for (var i = 0; i < bookings.length ; i++)
+        {
+            let booking = bookings[i];
+    
+            if (!booking.samplingTimeStamp)
+            {
+                booking.samplingTimeStamp = createTimeStampFromBookingDate(booking.bookingDate, booking.bookingTime);
+            }
+    
+            const link = Links.find(link =>  link.filename === booking.filename);
+    
+            const delay = parseInt((link.timeStamp - booking.samplingTimeStamp) / (3600*1000));
+    
+            if (delay <= 12)
+                lessThan12++;
+            else if (delay <= 24)
+                lessThan24++;
+            else if (delay <= 36)
+                lessThan36++;
+            else if (delay <= 48)
+                lessThan48++;   
+          
+            if (delay <= 48)
+            {
+                totoalTime += delay; 
+                totalCount ++;
+            }
+        }
+    
+        const result = {lessThan12, lessThan24, lessThan36, lessThan48, avg: (totoalTime / totalCount).toFixed(1)}
+         res.status(200).send({status:'OK' , result: result});
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+function createTimeStampFromBookingDate(date, time){
+
+    var hour = parseInt(time.substr(0,2));
+    const minutes = parseInt(time.substr(3,2));
+    const isPM = time.toLowerCase().indexOf('pm') > 0;
+
+    if (isPM && hour < 12)
+    {
+        hour += 12;
+    }
+
+    if (!isPM && hour === 12)
+    {
+        hour = 0;
+    }
+
+    const year = parseInt(date.substr(0,4));
+    const month = parseInt(date.substr(5,2)) - 1;
+    const day = parseInt(date.substr(8,2));
+
+    return new Date(year,month,day,hour,minutes,0,0);
+}
 
 
 const validateBookAppointment = (body) => {
