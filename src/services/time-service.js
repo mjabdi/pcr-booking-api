@@ -81,7 +81,8 @@ router.get('/gettimeslots', async function(req, res, next) {
         const result = await Booking.aggregate([
             {
                 $match: {
-                  bookingDate: date
+                  bookingDate: date,
+                  deleted: {$ne : true}
                 }
               },
     
@@ -107,7 +108,7 @@ router.get('/gettimeslots', async function(req, res, next) {
 
         if (result.length === 0)
         {
-            timeSlots = defaultTimeSlots;
+            timeSlots = [...defaultTimeSlots];
         }
         else
         {

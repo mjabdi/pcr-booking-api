@@ -212,6 +212,41 @@ router.get('/getbookingscountbydatestr', async function(req, res, next) {
     }
 });
 
+router.get('/getbookingsstatsbydatestr', async function(req, res, next) {
+
+    try{
+         const dateStr = req.query.date;
+         if (!dateStr || dateStr.length <= 0)
+         {
+            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
+            return;
+         }
+          const result = await Booking.aggregate([
+            {
+                $match: {
+                  bookingDate: dateStr,
+                  deleted: {$ne : true}
+                }
+              },
+    
+              { $group:
+                 {
+                     "_id" : "$bookingTimeNormalized",
+                                                                
+                     "count": { "$sum" : 1 }               
+                } 
+            } ,
+         ]);
+         res.status(200).send({status: "OK", result : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.get('/getbookingscountbydatestrandtime', async function(req, res, next) {
 
     try{
@@ -538,7 +573,7 @@ router.post('/updatebookappointmenttime', async function(req, res, next) {
 
     try{
 
-        await Booking.updateOne({_id : req.body.bookingId}, {bookingDate : req.body.bookingDate, bookingTime : req.body.bookingTime});
+        await Booking.updateOne({_id : req.body.bookingId}, {bookingDate : req.body.bookingDate, bookingTime : req.body.bookingTime, bookingTimeNormalized: NormalizeTime(req.body.bookingTime)});
 
         const booking = await Booking.findOne({_id : req.body.bookingId});
 
