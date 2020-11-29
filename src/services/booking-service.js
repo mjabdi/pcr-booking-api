@@ -869,6 +869,7 @@ router.get('/getteststimereport', async function(req, res, next) {
         var lessThan36 = 0;
         var lessThan48 = 0;
         var totoalTime = 0;
+        
         var totalCount = 0;
     
         for (var i = 0; i < bookings.length ; i++)
@@ -899,8 +900,13 @@ router.get('/getteststimereport', async function(req, res, next) {
                 totalCount ++;
             }
         }
+
+        const lessThan12Percent = ((lessThan12 / totalCount) * 100).toFixed(1);
+        const lessThan24Percent = ((lessThan24 / totalCount) * 100).toFixed(1);
+        const lessThan36Percent = ((lessThan36 / totalCount) * 100).toFixed(1);
+        const lessThan48Percent = ((lessThan48 / totalCount) * 100).toFixed(1);
     
-        const result = {lessThan12, lessThan24, lessThan36, lessThan48, avg: (totoalTime / totalCount).toFixed(1)}
+        const result = {lessThan12, lessThan24, lessThan36, lessThan48, lessThan12Percent, lessThan24Percent, lessThan36Percent, lessThan48Percent  ,avg: (totoalTime / totalCount).toFixed(1)}
          res.status(200).send({status:'OK' , result: result});
     }
     catch(err)
