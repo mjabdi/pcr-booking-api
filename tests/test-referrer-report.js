@@ -61,7 +61,8 @@ const sendMail = require('./../src/mail-sender');
      const res = await sendMail('m.jafarabdi@gmail.com', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
 
      console.log(result);
-    
+
+     process.exit(0);
 
 
 })();
