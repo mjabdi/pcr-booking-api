@@ -869,7 +869,7 @@ router.get('/getteststimereport', async function(req, res, next) {
         var lessThan36 = 0;
         var lessThan48 = 0;
         var totoalTime = 0;
-        
+
         var totalCount = 0;
     
         for (var i = 0; i < bookings.length ; i++)
@@ -882,23 +882,27 @@ router.get('/getteststimereport', async function(req, res, next) {
             }
     
             const link = Links.find(link =>  link.filename === booking.filename);
-    
-            const delay = parseInt((link.timeStamp - booking.samplingTimeStamp) / (3600*1000));
-    
-            if (delay <= 12)
-                lessThan12++;
-            else if (delay <= 24)
-                lessThan24++;
-            else if (delay <= 36)
-                lessThan36++;
-            else if (delay <= 48)
-                lessThan48++;   
-          
-            if (delay <= 48)
+
+            if (link)
             {
-                totoalTime += delay; 
-                totalCount ++;
-            }
+    
+                const delay = parseInt((link.timeStamp - booking.samplingTimeStamp) / (3600*1000));
+        
+                if (delay <= 12)
+                    lessThan12++;
+                else if (delay <= 24)
+                    lessThan24++;
+                else if (delay <= 36)
+                    lessThan36++;
+                else if (delay <= 48)
+                    lessThan48++;   
+            
+                if (delay <= 48)
+                {
+                    totoalTime += delay; 
+                    totalCount ++;
+                }
+             }
         }
 
         const lessThan12Percent = ((lessThan12 / totalCount) * 100).toFixed(1);

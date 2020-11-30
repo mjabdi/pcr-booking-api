@@ -10,12 +10,15 @@ const sendMail = require('./../src/mail-sender');
     config.MongodbUrl =  "mongodb+srv://dbadmin:Bahar$bahar$1@cluster0.s4l29.mongodb.net/PCRTest?retryWrites=true&w=majority";
 
     await mongodb();
-    const date = '2020-11-21';
+    const date = new Date();
+    const startDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() - 1,0,0,0,0);
+    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() - 1,23,59,59,0);
+
     
     const result = await Booking.aggregate([
          {
             $match: {
-              $and:[ {referrer : { $ne: null}} , {referrer : { $ne: '/'}} ]  
+              $and:[ {referrer : { $ne: null}} , {referrer : { $ne: '/'}} , {$and: [{timeStamp : {$gt : startDate}},{timeStamp : {$lt : endDate}}]}]  
               
             }
           },
@@ -54,10 +57,10 @@ const sendMail = require('./../src/mail-sender');
 
      html += '</table> </div>';
 
-     const res = await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
+     //const res = await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
      //const res = await sendMail('m.jafarabdi@gmail.com', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
 
-     console.log(res);
+     console.log(result);
     
 
 

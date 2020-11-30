@@ -45,6 +45,11 @@ const config = require('config');
             lessThan36++;
         else if (delay <= 48)
             morethan36++;   
+        
+            if (delay > 48)
+            {
+                console.log(`More Than 48 Hours!!! : ${booking.forenameCapital}-${booking.surnameCapital} : ${delay}  `);
+            }
       
         if (delay <= 48)
         {
