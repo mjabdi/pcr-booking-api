@@ -7,6 +7,8 @@ const sendMail = require('./../src/mail-sender');
 
 (async () => {
 
+    config.MongodbUrl =  "mongodb+srv://dbadmin:Bahar$bahar$1@cluster0.s4l29.mongodb.net/PCRTest?retryWrites=true&w=majority";
+
     await mongodb();
     const date = new Date();
     const startDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() - 1,0,0,0,0);
