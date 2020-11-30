@@ -59,10 +59,10 @@ const sendMail = require('./../src/mail-sender');
 
      html += '</table> </div>';
 
-     //const res = await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
+     const res = await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
      const res = await sendMail('m.jafarabdi@gmail.com', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
 
-     console.log(result);
+     //console.log(result);
 
      process.exit(0);
 
