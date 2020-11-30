@@ -44,6 +44,8 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `<p> Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
 
+    content += `<p><strong> ‘If you have received this email your appointment is confirmed. Please do not call the clinic to confirm your appointment.’ <strong>`;
+
     content += `<p>Kind Regards,</p>`;
     content += `<p>Medical Express Clinic</p>`;
     content += '</div>'
