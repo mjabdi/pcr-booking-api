@@ -8,6 +8,8 @@ const sendMail = require('./../src/mail-sender');
 (async () => {
 
     config.MongodbUrl =  "mongodb+srv://dbadmin:Bahar$bahar$1@cluster0.s4l29.mongodb.net/PCRTest?retryWrites=true&w=majority";
+    config.MailAccount = "m.jafarabdi2@gmail.com";
+    config.MailPassword = "baqimhtprmkkhepl";
 
     await mongodb();
     const date = new Date();
