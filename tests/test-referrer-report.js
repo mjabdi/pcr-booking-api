@@ -12,9 +12,9 @@ const sendMail = require('./../src/mail-sender');
     config.MailPassword = "baqimhtprmkkhepl";
 
     await mongodb();
-    const date = new Date();
-    const startDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() - 1,0,0,0,0);
-    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() - 1,23,59,59,0);
+    const date = new Date(new Date().getTime() - 86400000); 
+    const startDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 0,0,0,0);
+    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 23,59,59,0);
 
     
     const result = await Booking.aggregate([
@@ -59,10 +59,10 @@ const sendMail = require('./../src/mail-sender');
 
      html += '</table> </div>';
 
-     const res = await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
-     const res = await sendMail('m.jafarabdi@gmail.com', `PCR BOOKING REPORTS - ${dateformat(new Date(), 'dd/mm/yyyy')}`, html, null);
+     await sendMail('matt@dubseo.co.uk', `PCR BOOKING REPORTS - ${dateformat(date, 'dd/mm/yyyy')}`, html, null);
+     await sendMail('m.jafarabdi@gmail.com', `PCR BOOKING REPORTS - ${dateformat(date, 'dd/mm/yyyy')}`, html, null);
 
-     //console.log(result);
+     console.log(result);
 
      process.exit(0);
 
