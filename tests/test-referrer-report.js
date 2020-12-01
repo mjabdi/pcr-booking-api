@@ -14,7 +14,7 @@ const sendMail = require('./../src/mail-sender');
     await mongodb();
     const date = new Date(new Date().getTime() - 86400000); 
     const startDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 0,0,0,0);
-    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 23,59,59,0);
+    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 23,59,59,99);
 
     
     const result = await Booking.aggregate([
