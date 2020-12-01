@@ -20,7 +20,7 @@ mongodb();
 app.use(cors({
   credentials: true,
 }));
-app.use(logger('dev'));
+app.use(logger(':date[clf] ":method :url"'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

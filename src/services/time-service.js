@@ -161,7 +161,7 @@ const getDefaultTimeSlots = (date) =>
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
     const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
-    const is24Dec = (dateStr === '2020-12-24');
+    const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-11-31' );
     const isToday = (dateStr === todayStr);
 
 
