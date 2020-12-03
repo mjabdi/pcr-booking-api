@@ -5,7 +5,7 @@ const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
 
 
-const MAX_BOOKING_PER_SLOT = 5;
+const MAX_BOOKING_PER_SLOT = 7;
 
 function getNow()
 {
