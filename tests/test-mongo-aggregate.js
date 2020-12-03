@@ -9,36 +9,56 @@ const config = require('config');
     config.MongodbUrl =  "mongodb+srv://dbadmin:Bahar$bahar$1@cluster0.s4l29.mongodb.net/PCRTest?retryWrites=true&w=majority";
 
     await mongodb();
-    const date = '2020-11-21';
+    const date = '2020-12-24';
     
     const result = await Booking.aggregate([
-        {
-            $match: {
-              bookingDate: date
-            }
-          },
-
-          { $group:
-             {
-                 "_id" : {
-                    "bookingTime" : "$bookingTime",
-                    "bookingRef": "$bookingRef"
-
-                 } ,
-                 "bookCount": { "$sum" : 1 }               
-            } 
-        } ,
+      {
+          $match: {
+            bookingDate: date,
+            deleted: {$ne : true}
+          }
+        },
 
         { $group:
-            {
-                _id : "$_id.bookingTime",
-                total : { $sum: 1 }               
-           } 
-       },
+           {
+               "_id" : {
+                  "bookingTime" : "$bookingTime",
+                  "bookingRef": "$bookingRef"
 
-     ]);
+               } ,
+               "bookCount": { "$sum" : 1 }               
+          } 
+      } ,
+
+      { $group:
+          {
+              _id : "$_id.bookingTime",
+              total : { $sum: 1 }               
+         } 
+     },
+
+   ]).sort({_id: 1}).exec();
+
+   const result2 = await Booking.aggregate([
+    {
+        $match: {
+          bookingDate: date,
+          deleted: {$ne : true}
+        }
+      },
+
+      { $group:
+         {_id : "$bookingTime",
+         total : { $sum: 1 }               
+        } 
+    } ,
+
+ ]).sort({_id: 1}).exec();
+
 
      console.log(result);
+
+     console.log(result2);
     
 
 

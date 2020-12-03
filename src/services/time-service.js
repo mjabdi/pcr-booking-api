@@ -5,7 +5,7 @@ const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
 
 
-const MAX_BOOKING_PER_SLOT = 6;
+const MAX_BOOKING_PER_SLOT = 7;
 
 function getNow()
 {
@@ -78,42 +78,60 @@ router.get('/gettimeslots', async function(req, res, next) {
     try{
 
         const defaultTimeSlots = getDefaultTimeSlots(req.query.date);     
-        const result = await Booking.aggregate([
+        // const result = await Booking.aggregate([
+        //     {
+        //         $match: {
+        //           bookingDate: date,
+        //           deleted: {$ne : true}
+        //         }
+        //       },
+    
+        //       { $group:
+        //          {
+        //              "_id" : {
+        //                 "bookingTime" : "$bookingTime",
+        //                 "bookingRef": "$bookingRef"
+    
+        //              } ,
+        //              "bookCount": { "$sum" : 1 }               
+        //         } 
+        //     } ,
+    
+        //     { $group:
+        //         {
+        //             _id : "$_id.bookingTime",
+        //             total : { $sum: 1 }               
+        //        } 
+        //    },
+    
+        //  ]).sort({_id: 1}).exec();
+
+         const result2 = await Booking.aggregate([
             {
                 $match: {
                   bookingDate: date,
                   deleted: {$ne : true}
                 }
               },
-    
+        
               { $group:
-                 {
-                     "_id" : {
-                        "bookingTime" : "$bookingTime",
-                        "bookingRef": "$bookingRef"
-    
-                     } ,
-                     "bookCount": { "$sum" : 1 }               
+                 {_id : "$bookingTime",
+                 total : { $sum: 1 }               
                 } 
             } ,
-    
-            { $group:
-                {
-                    _id : "$_id.bookingTime",
-                    total : { $sum: 1 }               
-               } 
-           },
-    
-         ]);
+        
+         ]).sort({_id: 1}).exec();
 
-        if (result.length === 0)
+        if (result2.length === 0)
         {
             timeSlots = [...defaultTimeSlots];
         }
         else
         {
             defaultTimeSlots.forEach((timeSlot) => {
-                if (result.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT)))
+                if (result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT)) 
+                        // || result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT))
+                    )
                 {
                     timeSlots.push(new TimeSlot(timeSlot.time, false));
                 }
