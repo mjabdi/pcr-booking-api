@@ -200,6 +200,10 @@ const getDefaultTimeSlots = (date) =>
          {
             finalResults.push(new TimeSlot(results[i].time, false));
          }
+         else if (is27Dec && results[i].time.toUpperCase().indexOf('AM') > 0 &&  parseInt(results[i].time.substr(0,2)) < 10)
+         {
+            finalResults.push(new TimeSlot(results[i].time, false));
+         }
          else 
          {
              finalResults.push(results[i]);
