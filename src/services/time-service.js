@@ -164,11 +164,12 @@ const validateGetTimeSlots = (query) => {
 const getDefaultTimeSlots = (date) =>
 {
     const someDate = new Date(date);
+    const someDateStr = dateformat(someDate,'yyyy-mm-dd');
 
     var results = [];
     var finalResults = [];
 
-    if (isWeekend(someDate)) /// Weekend
+    if (isWeekend(someDate) && someDateStr !== '2020-12-27') /// Weekend
     {
         results = TIME_SLOTS_WEEKEND;
     }
@@ -180,6 +181,7 @@ const getDefaultTimeSlots = (date) =>
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
     const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
+    const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
 
 
@@ -191,6 +193,10 @@ const getDefaultTimeSlots = (date) =>
              finalResults.push(new TimeSlot(results[i].time, false));
          }
          else if (is24Dec && results[i].time.toUpperCase().indexOf('PM') > 0)
+         {
+            finalResults.push(new TimeSlot(results[i].time, false));
+         }
+         else if (is27Dec && results[i].time.toUpperCase().indexOf('PM') > 0 &&  parseInt(results[i].time.substr(0,2)) >= 5)
          {
             finalResults.push(new TimeSlot(results[i].time, false));
          }
