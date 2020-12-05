@@ -6,6 +6,26 @@ const config = require('config');
 const { calculatePrice } = require('./PriceCalculator');
 
 
+const faq = [
+    {
+        question: "I just booked my appointment online, should I call the clinic to confirm my appointment?",
+        answer: "Please do not call to confirm appointments that have already been confirmed via email. Once you have your 9 digit code, this appointment is confirmed."
+    },
+    {
+        question: "Can I pay in advance?",
+        answer: "Sorry, we do not accept pre-payment for any PCR tests."
+    },
+    {
+        question: "Can you guarantee my results in less than 48 hours?",
+        answer: "Many patients are booking cheap flights at short notice however you must bear in mind that if these tests need to be conducted, you should be leaving at least 48 hours between test time and departure. Over 95% of our results are sent to patients within 40 hours, and there are live statistics on our website advising current turnaround times, patients booking tests for flights under 48 hours away assume all responsibility."
+    },
+    {
+        question: "I need a certificate and I didn't pay for one, can you add one onto my booking?",
+        answer: "If you have not attended for your test yet, please amend your booking following the link in your confirmation email. If you have already attended, please call the clinic to pay your additional £50, have your passport details to hand so we can note them on your certificate."
+    },
+]
+
+
 const sendConfirmationEmail =  async (options) =>
 {
     var content = '';
@@ -46,9 +66,22 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `<p style="width:80%"> * Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
 
- 
-    content += `<p>Kind Regards,</p>`;
-    content += `<p>Medical Express Clinic</p>`;
+    content += '<p style="font-weight:600"> Please Read our PCR Test FAQs </p>';
+
+    faq.forEach(element => {
+
+        content += `<p style="border-left: 4px solid red; background: #eee; font-weight:600;padding-left:10px;line-height:50px"> <span style="color:red;font-size:24px"> Q. </span> ${element.question} </p>`;
+        content += `<p style="border-left: 4px solid #999; background: #fff; font-weight:400;color: #555;padding-left:10px;line-height:50px"> <span style="color:#555;font-size:24px"> A. </span>${element.answer} </p>`;
+
+    });
+
+
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Medical Express Clinic</p>`;
+    content += `</div>`;
+  
+  
     content += '</div>'
 
     content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
@@ -83,7 +116,7 @@ const sendAntiBodyEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `</ul>`;
     content += `<p>Kind Regards,</p>`;
-    content += `<p>Medical Express Clinic</p>`;
+    content += `<p>Medical Express Clinic,</p>`;
     content += '</div>'
 
     await sendMail(config.AntibodyEmail, `${options.forenameCapital} ${options.surnameCapital} ${options.birthDate} COVID-19 Antibody Test (IgM & IgG)` , content, null);
