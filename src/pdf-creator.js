@@ -99,6 +99,16 @@ const createPDFForCovid2Form = async (id) =>
             //doc.pipe(stream);
             doc.image('assets/covid-form2.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'top'});
 
+            if (booking.certificate)
+            {
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('C' , 580, 15  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+            }
+            if (booking.antiBodyTest)
+            {
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('A' , 580, 28  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+            }
+
+
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.extRef , 150, 78  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
 
             
