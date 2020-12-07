@@ -545,7 +545,10 @@ router.post('/bookappointment', async function(req, res, next) {
         const found = await Booking.findOne({forenameCapital : req.body.forenameCapital,
                                          surnameCapital: req.body.surnameCapital, 
                                          birthDate: req.body.birthDate, 
-                                         bookingDate: req.body.bookingDate});
+                                         bookingDate: req.body.bookingDate,
+                                         deleted: {$ne: true}
+                                        
+                                        });
 
         if (found)
         {
