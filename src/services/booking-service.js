@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const stringSimilarity = require('string-similarity');
 const {GlobalParams} = require('./../models/GlobalParams');
 const {getDefaultTimeSlots, holidays} = require('./holidays');
-
+const {Notification} = require('./../models/Notification');
 
 router.post('/resendemails' , async function (req,res,next) {
 
@@ -553,6 +553,7 @@ router.post('/bookappointment', async function(req, res, next) {
 
         if (found)
         {
+
             res.status(200).send({status:'FAILED' , error: 'Repeated Booking!', person: req.body});
             return;
         }
@@ -566,6 +567,14 @@ router.post('/bookappointment', async function(req, res, next) {
 
         if (!checkBookingTime(booking))
         {
+            const alaram = new Notification(
+                {
+                    timeStamp: new Date(),
+                    type: 'InvalidBooking',
+                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system`
+                }
+            );
+            await alaram.save();
             res.status(200).send({status:'FAILED' , error: 'FullTime', person: req.body});
             return;
         }
