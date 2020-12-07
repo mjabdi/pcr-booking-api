@@ -1,5 +1,5 @@
 node_modules/
 config/
 attachments/
-tests/test-twilio.js
+test/
 keys/

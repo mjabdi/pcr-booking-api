@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const stringSimilarity = require('string-similarity');
 const {GlobalParams} = require('./../models/GlobalParams');
+const {getDefaultTimeSlots, holidays} = require('./holidays');
 
 
 router.post('/resendemails' , async function (req,res,next) {
@@ -563,6 +564,12 @@ router.post('/bookappointment', async function(req, res, next) {
             }
         );
 
+        if (!checkBookingTime(booking))
+        {
+            res.status(200).send({status:'FAILED' , error: 'FullTime', person: req.body});
+            return;
+        }
+
         await booking.save();
         
         await sendConfirmationEmail(req.body);
@@ -1065,6 +1072,41 @@ function timePassed (bookingDate)
     const todayStr = dateformat(today , 'yyyy-mm-dd');
     return (bookingDate < todayStr); 
 }
+
+function checkBookingTime(booking)
+{
+    const bookingDateStr = booking.bookingDate;
+    const bookingTime = booking.bookingTime;
+
+    const bookingDate = new Date(bookingDateStr);
+    const todayStr = dateformat(new Date(),'yyyy-mm-dd');
+
+    if (bookingDateStr < todayStr)
+        return false;
+
+    if (holidays.find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
+    {
+        return false;
+    }
+
+    const validTimeSlots = getDefaultTimeSlots(bookingDate);
+    
+
+    console.log(validTimeSlots);
+    console.log(bookingTime);
+    
+    if (!validTimeSlots.find(element => (element.time === bookingTime && element.available === true)) )
+    {
+        return false;
+    }
+
+    console.log(bookingDate);
+    console.log(bookingTime);
+
+    return true;
+}
+
+
 
 
 module.exports = router;
