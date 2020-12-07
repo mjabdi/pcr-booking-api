@@ -101,11 +101,11 @@ const createPDFForCovid2Form = async (id) =>
 
             if (booking.certificate)
             {
-                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('C' , 580, 15  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('C' , 570, 15  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
             }
             if (booking.antiBodyTest)
             {
-                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('A' , 580, 28  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('A' , 570, 28  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
             }
 
 
