@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {createPDFForCovid1Form, createPDFForCovid2Form} = require('./../pdf-creator'); 
-const {getPdfResult, getPdfCert} = require('./../pdf-finder'); 
+const {getPdfResult, getPdfCert, getPdfLabReport} = require('./../pdf-finder'); 
 
 
 const {Booking} = require('./../models/Booking');
@@ -129,6 +129,8 @@ router.get('/downloadpdfresult', async function(req, res, next) {
 
 });
 
+
+
 router.get('/downloadpdfcert', async function(req, res, next) {
 
     var id = null;
@@ -151,6 +153,41 @@ router.get('/downloadpdfcert', async function(req, res, next) {
         res.set( {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename=certificate-${id}.pdf`,
+                'Content-Transfer-Encoding': 'Binary'
+              }).status(200).send(pdfBuffer);
+        
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+});
+
+
+router.get('/downloadpdflabreport', async function(req, res, next) {
+
+    var id = null;
+    try{
+        id = ObjectId(req.query.id);
+        if (!id)
+            throw new Error();
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;
+    }
+
+    try{
+        
+        const pdfBuffer = await getPdfLabReport(id);
+        
+        res.set( {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename=lab-report-${id}.pdf`,
                 'Content-Transfer-Encoding': 'Binary'
               }).status(200).send(pdfBuffer);
         
