@@ -119,7 +119,7 @@ const sendAntiBodyEmail =  async (options) =>
     content += `<p>Medical Express Clinic,</p>`;
     content += '</div>'
 
-    await sendMail(config.AntibodyEmail, `${options.forenameCapital} ${options.surnameCapital} ${options.birthDate} COVID-19 Antibody Test (IgM & IgG)` , content, null);
+    await sendMail(config.AntibodyEmail, `${options.forenameCapital} ${options.surnameCapital} ${options.birthDate} COVID-19 Antibody Test` , content, null);
    
 }
 
