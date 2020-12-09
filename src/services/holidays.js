@@ -93,8 +93,12 @@ const getDefaultTimeSlots = (date) =>
 
     for (var i=0; i < results.length; i++)
     {
-
-         if (isToday && TimePast(results[i].time))
+      
+        if (isHoliday(date))
+        {
+            finalResults.push(new TimeSlot(results[i].time, false));
+        }
+        else if (isToday && TimePast(results[i].time))
          {
              finalResults.push(new TimeSlot(results[i].time, false));
          }
@@ -153,6 +157,12 @@ const isWeekend = (date) =>
 {
     return (date.getDay() === 0 || date.getDay() === 6) /// Weekend
 }
+
+const isHoliday = (date) =>
+{
+    return holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd'));
+}
+
 
 
 module.exports = {
