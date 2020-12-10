@@ -28,6 +28,19 @@ router.post('/paybooking' , async function (req,res,next) {
     }
 });
 
+router.post('/unpaybooking' , async function (req,res,next) {
+
+    try{
+        const bookingId = ObjectId(req.query.id);
+        await Booking.updateOne({_id: bookingId} , {paid: false, paidBy: '', corporate: ''});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.post('/resendemails' , async function (req,res,next) {
 
     try{
