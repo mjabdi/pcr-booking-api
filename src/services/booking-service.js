@@ -617,7 +617,7 @@ router.post('/bookappointment', async function(req, res, next) {
             await sendAntiBodyEmail(req.body);
         }
 
-        
+        res.status(200).send({status: 'OK'});
 
     }catch(err)
     {
@@ -1130,16 +1130,16 @@ function checkBookingTime(booking)
     const validTimeSlots = getDefaultTimeSlots(bookingDate);
     
 
-    console.log(validTimeSlots);
-    console.log(bookingTime);
+    // console.log(validTimeSlots);
+    // console.log(bookingTime);
     
     if (!validTimeSlots.find(element => (element.time === bookingTime && element.available === true)) )
     {
         return false;
     }
 
-    console.log(bookingDate);
-    console.log(bookingTime);
+    // console.log(bookingDate);
+    // console.log(bookingTime);
 
     return true;
 }
