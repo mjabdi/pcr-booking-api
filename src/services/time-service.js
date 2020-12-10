@@ -64,11 +64,11 @@ router.get('/gettimeslots', async function(req, res, next) {
     }
 
     var timeSlots = [];
-    const date = dateformat(req.query.date, 'yyyy-mm-dd');
+    const date = req.query.date;  //dateformat(req.query.date, 'yyyy-mm-dd');
 
     try{
 
-        const defaultTimeSlots = getDefaultTimeSlots(req.query.date);     
+        const defaultTimeSlots = getDefaultTimeSlots(date);     
         // const result = await Booking.aggregate([
         //     {
         //         $match: {

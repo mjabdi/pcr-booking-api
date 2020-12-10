@@ -1070,8 +1070,8 @@ const validateBookAppointment = (body) => {
         body.passportNumber2 = '';
     }
 
-    body.bookingDate = dateformat(body.bookingDate, 'yyyy-mm-dd');
-    body.birthDate = dateformat(body.birthDate, 'yyyy-mm-dd');
+    // body.bookingDate = body.bookingDate;
+    // body.birthDate = body.birthDate;
     body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
 
     body.forenameCapital = body.forename.trim().toUpperCase();

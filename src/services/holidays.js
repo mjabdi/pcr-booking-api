@@ -70,7 +70,7 @@ const TIME_SLOTS_WEEKEND = [
 const getDefaultTimeSlots = (date) =>
 {
     const someDate = new Date(date);
-    const someDateStr = dateformat(someDate,'yyyy-mm-dd');
+    const someDateStr = date;
 
     var results = [];
     var finalResults = [];
