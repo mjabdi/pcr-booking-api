@@ -92,6 +92,16 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         default: false
     },
 
+    paidBy: {
+        type: String,
+        required: false
+    },
+
+    corporate: {
+        type: String,
+        required: false
+    },
+
     forenameCapital: {
         type: String,
         required: false
