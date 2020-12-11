@@ -69,8 +69,11 @@ const TIME_SLOTS_WEEKEND = [
 
 const getDefaultTimeSlots = (date) =>
 {
+    // console.log(date);
     const someDate = new Date(date);
-    const someDateStr = date;
+    const someDateStr = dateformat(someDate, 'yyyy-mm-dd');
+
+    // console.log(someDate);
 
     var results = [];
     var finalResults = [];

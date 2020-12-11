@@ -1119,13 +1119,18 @@ function checkBookingTime(booking)
     const bookingDate = new Date(bookingDateStr);
     const todayStr = dateformat(new Date(),'yyyy-mm-dd');
 
+    
     if (bookingDateStr < todayStr)
         return false;
+
+     
 
     if (holidays.find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
     {
         return false;
     }
+
+ 
 
     const validTimeSlots = getDefaultTimeSlots(bookingDate);
     
