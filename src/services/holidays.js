@@ -3,10 +3,17 @@ const dateformat = require('dateformat');
 
 const holidays = [
 
-new Date(2020,11,25,0,0,0,0),
-new Date(2020,11,26,0,0,0,0),
-new Date(2021,0,1,0,0,0,0),
+        new Date(2020,11,25,0,0,0,0),
+        new Date(2020,11,26,0,0,0,0),
+        new Date(2021,0,1,0,0,0,0),
 ];
+
+const getHolidays = () =>
+{
+    const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+    let result = [...holidays, yesterday];
+    return result;
+}
 
 
 const TIME_SLOTS_NORMAL = [
@@ -163,14 +170,15 @@ const isWeekend = (date) =>
 
 const isHoliday = (date) =>
 {
-    return holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd'));
+    const todayStr = dateformat(new Date(),'yyyy-mm-dd');
+    return (holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd')) ||  dateformat(date,'yyyy-mm-dd') < todayStr);
 }
 
 
 
 module.exports = {
 
-    holidays: holidays,
+    getHolidays: getHolidays,
     isWeekend: isWeekend,
     TIME_SLOTS_WEEKEND: TIME_SLOTS_WEEKEND,
     TIME_SLOTS_NORMAL: TIME_SLOTS_NORMAL,

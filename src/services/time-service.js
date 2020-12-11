@@ -3,7 +3,7 @@ const router = express.Router();
 const TimeSlot = require('./../models/TimeSlot');
 const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
-const { isWeekend, getDefaultTimeSlots, holidays } = require('./holidays');
+const { isWeekend, getDefaultTimeSlots, getHolidays } = require('./holidays');
 
 
 const MAX_BOOKING_PER_SLOT = 7;
@@ -45,7 +45,7 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
 /// Get Fully Booked Days Date
 router.get('/getfullybookeddays', function(req, res, next) {
   
-    res.send(holidays);
+    res.send(getHolidays());
 });
 
 

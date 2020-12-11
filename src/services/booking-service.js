@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const stringSimilarity = require('string-similarity');
 const {GlobalParams} = require('./../models/GlobalParams');
-const {getDefaultTimeSlots, holidays} = require('./holidays');
+const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../models/Notification');
 
 
@@ -1125,7 +1125,7 @@ function checkBookingTime(booking)
 
      
 
-    if (holidays.find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
+    if (getHolidays.find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
     {
         return false;
     }
