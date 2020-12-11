@@ -144,7 +144,7 @@ function TimePast(time)
         hour += 12;
     }
 
-    if (hour > currentTime.getHours() || (hour === currentTime.getHours() && (minute + 15) > currentTime.getMinutes()))
+    if (hour > currentTime.getHours() || (hour === currentTime.getHours() && (minute - 10) > currentTime.getMinutes()))
     {
         return false;
     }
