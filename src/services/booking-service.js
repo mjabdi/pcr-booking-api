@@ -1125,7 +1125,7 @@ function checkBookingTime(booking)
 
      
 
-    if (getHolidays.find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
+    if (getHolidays().find(element => dateformat(element,'yyyy-mm-dd') === bookingDateStr))
     {
         return false;
     }
