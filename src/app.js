@@ -40,6 +40,11 @@ app.get('/admin/*', function (req, res) {
   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
  });
 
+ app.use('/tr', express.static(path.join(__dirname, ".." , "public_tr")));
+app.get('/tr/*', function (req, res) {
+  res.sendFile(path.join(__dirname, ".." , "public_tr","index.html"));
+ });
+
 
 
  app.use('/', express.static(path.join(__dirname, "..", "public")));
