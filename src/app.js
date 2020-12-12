@@ -27,14 +27,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-if (process.env.NODE_ENV === 'production')
-{
-  app.use('/api', apiSecurity(), checkReferrer() ,apiRouter);
-}
-else
-{
+// if (process.env.NODE_ENV === 'production')
+// {
+//   app.use('/api', apiSecurity(), checkReferrer() ,apiRouter);
+// }
+// else
+// {
   app.use('/api', apiSecurity() , apiRouter);
-}
+// }
 
 
 app.use('/download', downloadRouter);
