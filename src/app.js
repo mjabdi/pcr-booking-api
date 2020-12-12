@@ -9,7 +9,7 @@ const downloadRouter = require('./routes/download-router');
 
 const apiSecurity = require('./middleware/api-security');
 const mongodb = require('./mongodb');
-const  cors = require('cors');
+// const cors = require('cors');
 
 
 const app = express();
@@ -17,9 +17,10 @@ const app = express();
 // connect to Database
 mongodb();
 
-app.use(cors({
-  credentials: true,
-}));
+// app.use(cors({
+//   credentials: true,
+// }));
+
 app.use(logger(':date[clf] ":method :url"'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
