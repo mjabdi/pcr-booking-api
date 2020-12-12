@@ -8,6 +8,7 @@ const apiRouter = require('./routes/api-router');
 const downloadRouter = require('./routes/download-router');
 
 const apiSecurity = require('./middleware/api-security');
+const checkReferrer = require('./middleware/check-referrer');
 const mongodb = require('./mongodb');
 const cors = require('cors');
 
@@ -26,7 +27,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api', apiSecurity() ,apiRouter);
+if (process.env === 'production')
+{
+  app.use('/api', apiSecurity(), checkReferrer() ,apiRouter);
+}
+else
+{
+  app.use('/api', apiSecurity() , apiRouter);
+}
+
+
 app.use('/download', downloadRouter);
 // app.use('/api', apiRouter);
 

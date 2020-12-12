@@ -1,9 +1,11 @@
 const express = require('express');
 
-const checkAccessToken = () => {
+const CheckReferrer = () => {
     return (req, res, next) => {
+
+        console.log(`referer : ${req.headers.referer}`);
      
-        if (req.headers.authorization !== 'Basic QXp1cmXEaWFtb45kOmh1bnRlcjO=') {
+        if (req.headers.referer !== 'https://travelpcrtest.com/') {
             res.status(401).send('Access Denied!');
             return;
           }
@@ -15,4 +17,4 @@ const checkAccessToken = () => {
   }
 
 
-module.exports = checkAccessToken;
+module.exports = CheckReferrer;
