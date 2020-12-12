@@ -17,9 +17,9 @@ const app = express();
 // connect to Database
 mongodb();
 
-// app.use(cors({
-//   credentials: true,
-// }));
+app.use(cors({
+  credentials: true,
+}));
 
 app.use(logger(':date[clf] ":method :url"'));
 app.use(express.json());
