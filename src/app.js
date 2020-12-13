@@ -8,9 +8,14 @@ const apiRouter = require('./routes/api-router');
 const downloadRouter = require('./routes/download-router');
 
 const apiSecurity = require('./middleware/api-security');
-const checkReferrer = require('./middleware/check-referrer');
+// const checkReferrer = require('./middleware/check-referrer');
 const mongodb = require('./mongodb');
 const cors = require('cors');
+
+// const Promise = require('bluebird')
+// const fs = Promise.promisifyAll(require('fs'));
+
+// const crypto = require("crypto");
 
 
 const app = express();
@@ -57,8 +62,67 @@ app.get('/tr/*', function (req, res) {
  });
 
 
+//  const getNewToken = () =>
+//  {
+//     return crypto.randomBytes(16).toString("hex");
+//  }
+
+//  app.use('/static/js/*', async (req,res,next) => {
+//    if (
+//      req.params[0].indexOf("main") === 0 &&
+//      req.params[0].indexOf(".js") > 0
+//    ) {
+     
+//     if (!fs.existsSync(path.join(__dirname, "..", "tokens", "public", "static", "js", 'main.js')))
+//      {
+//         let contents = await fs.readFileAsync(
+//           path.join(
+//             __dirname,
+//             "..",
+//             "public",
+//             "static",
+//             "js",
+//             req.params[0]
+//           ),
+//           'utf8'
+//         );
+//         const newToken = getNewToken();
+//         let replaced_contents = contents.replace('QXp1cmXEaWFtb45kOmh1bnRlcjO=', newToken);
+
+//         if (fs.existsSync(path.join(__dirname, "..", "tokens", "public", "static", "js", 'token.jwt')))
+//         {
+//               const prevToken = await fs.readFileAsync(
+//                 path.join(
+//                   __dirname,
+//                   "..",
+//                   "tokens",
+//                   "public",
+//                   "static",
+//                   "js",
+//                   "token.jwt"
+//                 ),
+//                 'utf8'
+//               );
+//               await fs.writeFileAsync(path.join(__dirname, "..", "tokens", "public", "static", "js", "token.old.jwt"), prevToken ,'utf8');
+//           }
+
+//         await fs.writeFileAsync(path.join(__dirname, "..", "tokens", "public", "static", "js", "token.jwt"), newToken ,'utf8');
+//         await fs.writeFileAsync(path.join(__dirname, "..", "tokens", "public", "static", "js", "main.js"), replaced_contents,'utf8');
+//      }
+    
+//      res.sendFile(
+//        path.join(__dirname, "..", "tokens", "public", "static", "js", 'main.js')
+//      ); 
+
+//      return;
+//    }
+
+//    next();
+//  });
+
 
  app.use('/', express.static(path.join(__dirname, "..", "public")));
+
  app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
  });

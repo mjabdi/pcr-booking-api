@@ -153,7 +153,62 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
     referrer: {
         type: String,
         required: false,
-    }
+    },
+
+
+    tr: {
+        type: Boolean,
+        required: false,
+    },
+
+    selfIsolate: {
+        type: Boolean,
+        required: false,
+    },
+
+    NHSNumber: {
+        type: String,
+        required: false,
+    },
+
+    ethnicity: {
+        type: String,
+        required: false,
+    },
+
+    postCodeSI: {
+        type: String,
+        required: false,
+    },
+
+
+    addressSI: {
+        type: String,
+        required: false,
+    },
+
+
+    arrivalDate: {
+        type: String,
+        required: false,
+    },
+
+    flightNumber: {
+        type: String,
+        required: false,
+    },
+
+
+    lastDepartedDate: {
+        type: String,
+        required: false,
+    },
+
+
+    travellingFrom: {
+        type: String,
+        required: false,
+    },
 
 }));
 

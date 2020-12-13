@@ -617,7 +617,7 @@ router.post('/bookappointment', async function(req, res, next) {
             await sendAntiBodyEmail(req.body);
         }
 
-        res.status(200).send({status: 'OK'});
+        res.status(200).send({status: 'OK', person: req.body});
 
     }catch(err)
     {
