@@ -647,11 +647,13 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
         await Booking.updateOne({_id : req.body.bookingId}, {...req.body.person});
 
-        await sendConfirmationEmail(req.body.person);
+        const newBooking = await Booking.findOne({_id : req.body.bookingId});
 
-        if (req.body.person.antiBodyTest && !oldBooking.antiBodyTest)
+        await sendConfirmationEmail(newBooking);
+
+        if (newBooking.antiBodyTest && !oldBooking.antiBodyTest)
         {
-            await sendAntiBodyEmail(req.body.person);
+            await sendAntiBodyEmail(newBooking);
         }
 
         res.status(200).send({status: 'OK'});
