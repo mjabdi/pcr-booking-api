@@ -99,15 +99,24 @@ const createPDFForCovid2Form = async (id) =>
             //doc.pipe(stream);
             doc.image('assets/covid-form2.png', 0, 0,  {fit: [590, 720], align: 'center', valign: 'top'});
 
-            if (booking.certificate)
+            if (booking.tr)
             {
-                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('C' , 570, 15  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+            
+                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('TR' , 570, 15  ,{characterSpacing : 0.5, wordSpacing : 0.8 , lineGap : 2 } );
+                
             }
-            if (booking.antiBodyTest)
+            else
             {
-                doc.fillColor('black').fontSize(12).font('Courier-Bold').text('A' , 570, 28  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
+                if (booking.certificate)
+                {
+                    doc.fillColor('black').fontSize(12).font('Courier-Bold').text('C' , 570, 15  ,{characterSpacing : 0.8, wordSpacing : 0.8 , lineGap : 2 } );
+                }
+                if (booking.antiBodyTest)
+                {
+                    doc.fillColor('black').fontSize(12).font('Courier-Bold').text('A' , 570, 28  ,{characterSpacing : 0.8, wordSpacing : 0.8 , lineGap : 2 } );
+                }
             }
-
+           
 
             doc.fillColor('black').fontSize(12).font('Courier-Bold').text(booking.extRef , 150, 78  ,{characterSpacing : 2, wordSpacing : 8 , lineGap : 2 } );
 
