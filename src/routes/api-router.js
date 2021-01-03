@@ -4,6 +4,8 @@ const router = express.Router();
 const timeService = require('./../services/time-service');
 const bookingService = require('./../services/booking-service');
 const pdfService = require('./../services/pdf-service');
+const UserService = require('./../services/user-service');
+const UserBookingService = require('./../services/user-booking-service')
 
 /* GET Apis listing. */
 router.get('/', function(req, res, next) {
@@ -17,6 +19,10 @@ router.get('/', function(req, res, next) {
   router.use('/book', bookingService);
 
   router.use('/pdf', pdfService);
+
+  router.use('/user', UserService)
+
+  router.use('/userbookings', UserBookingService)
 
 
 
