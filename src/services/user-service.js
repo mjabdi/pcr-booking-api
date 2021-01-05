@@ -4,12 +4,15 @@ const router = express.Router();
 const {User} = require('./../models/User')
 const {CreateRandomVerificationCode} = require('../verfication-code.js')
 const uuid = require('uuid-random')
-const {sendVerificationEmail, sendForgotPasswordEmail} = require('./verification-email-service')
+const {sendVerificationEmail, sendForgotPasswordEmail} = require('./verification-email-service');
+
 
 
 const signupKeys = new Map()
 
 const ForgotPasswordKeys = new Map()
+
+const TIMEOUT = 10 * 60 * 1000
 
 router.post('/signin', async function(req, res, next) {
     
@@ -46,7 +49,7 @@ router.post('/signin', async function(req, res, next) {
 
         const authToken = uuid()
 
-        await User.updateOne({_id: user._id}, {authToken: authToken})
+        await User.updateOne({_id: user._id}, {authToken: authToken, lastLoginTimeStamp: new Date()})
 
         res.status(200).send({status: 'OK', token: authToken }) 
     }
@@ -93,7 +96,7 @@ router.post('/forgotpassword', async function(req, res, next) {
         ForgotPasswordKeys.set(email, {verficationCode})
         setTimeout(() => {
             ForgotPasswordKeys.delete(email)
-        }, 5 * 60 * 1000);
+        }, TIMEOUT);
 
         await sendForgotPasswordEmail(email, found.forename, verficationCode)
 
@@ -196,7 +199,7 @@ router.post('/presignup', async function(req, res, next) {
         signupKeys.set(email, {verficationCode, forename, surname, password})
         setTimeout(() => {
             signupKeys.delete(email)
-        }, 5 * 60 * 1000);
+        }, TIMEOUT);
 
         await sendVerificationEmail(email, forename, verficationCode)
 
