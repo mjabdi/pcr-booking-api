@@ -68,6 +68,11 @@ app.get('/tr/*', function (req, res) {
    res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
   });
 
+  app.use('/gynae', express.static(path.join(__dirname, ".." , "public_gynae")));
+  app.get('/gynae/*', function (req, res) {
+    res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
+   });
+
  app.use('/', express.static(path.join(__dirname, "..", "public")));
 
  app.get('/*', function (req, res) {

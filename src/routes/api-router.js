@@ -7,12 +7,17 @@ const pdfService = require('./../services/pdf-service');
 const UserService = require('./../services/user-service');
 const UserBookingService = require('./../services/user-booking-service')
 
+const gynaeTimeService =  require('./../services/gynae/time-service');
+const gynaeBookService =  require('./../services/gynae/booking-service');
+
 /* GET Apis listing. */
 router.get('/', function(req, res, next) {
   res.send('the list of APIS');
 });
 
 
+
+///PCR---------
 
   router.use('/time', timeService);
 
@@ -23,7 +28,11 @@ router.get('/', function(req, res, next) {
   router.use('/user', UserService)
 
   router.use('/userbookings', UserBookingService)
+//----------------------------------------------------------
 
+///Gynaee ---------
+router.use('/gynae/time', gynaeTimeService);
+router.use('/gynae/book', gynaeBookService);
 
 
 
