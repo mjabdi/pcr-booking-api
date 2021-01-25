@@ -13,9 +13,9 @@ const gynaeBookService =  require('./../services/gynae/booking-service');
 
 const MedexUserService = require('./../services/medex/user/user-service')
 /* GET Apis listing. */
-router.get('/', function(req, res, next) {
-  res.send('the list of APIS');
-});
+// router.get('/', function(req, res, next) {
+//   res.send('the list of APIS');
+// });
 
 
 
