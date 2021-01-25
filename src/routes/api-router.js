@@ -10,6 +10,8 @@ const UserBookingService = require('./../services/user-booking-service')
 const gynaeTimeService =  require('./../services/gynae/time-service');
 const gynaeBookService =  require('./../services/gynae/booking-service');
 
+
+const MedexUserService = require('./../services/medex/user/user-service')
 /* GET Apis listing. */
 router.get('/', function(req, res, next) {
   res.send('the list of APIS');
@@ -30,10 +32,12 @@ router.get('/', function(req, res, next) {
   router.use('/userbookings', UserBookingService)
 //----------------------------------------------------------
 
-///Gynaee ---------
+/// Gynaee ---------
 router.use('/gynae/time', gynaeTimeService);
 router.use('/gynae/book', gynaeBookService);
 
+/// Medex -----------------------------
+router.use('/medex/user', MedexUserService)
 
 
 module.exports = router;
