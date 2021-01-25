@@ -65,7 +65,7 @@ process.on('SIGTERM', () => {
 process.on('SIGINT', () => {
   console.info('SIGINT signal received.');
   console.log('Closing http server.');
-  destroySockets(serverSockets);
+  // destroySockets(serverSockets);
   server.close(() => {
     console.log('Http server closed.');
     // boolean means [force], see in mongoose doc
