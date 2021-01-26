@@ -71,6 +71,11 @@ app.get('/tr/*', function (req, res) {
     res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
    });
 
+   app.use('/medexadmin', express.static(path.join(__dirname, ".." , "public_medexadmin")));
+   app.get('/medexadmin/*', function (req, res) {
+     res.sendFile(path.join(__dirname, ".." , "public_medexadmin","index.html"));
+    });
+
  app.use('/', express.static(path.join(__dirname, "..", "public")));
 
  app.get('/*', function (req, res) {

@@ -12,6 +12,7 @@ const {GlobalParams} = require('./../models/GlobalParams');
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../models/Notification');
 
+const DEFAULT_LIMIT = 25
 
 router.post('/paybooking' , async function (req,res,next) {
 
@@ -379,11 +380,15 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const result =  await Booking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+
          res.status(200).send(result);
     }
     catch(err)
     {
+        console.log(err)
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
@@ -391,8 +396,10 @@ router.get('/getallbookings', async function(req, res, next) {
 router.get('/getdeletedbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
-         res.status(200).send(result);
+
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const   result = await Booking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+        res.status(200).send(result);
     }
     catch(err)
     {
@@ -427,8 +434,11 @@ router.get('/getpositivebookings', async function(req, res, next) {
 router.get('/getcompletedbookings', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
-         res.status(200).send(result);
+        
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+        
+        res.status(200).send(result);
     }
     catch(err)
     {
@@ -453,9 +463,11 @@ router.get('/gettodaybookings', async function(req, res, next) {
 router.get('/getoldbookings', async function(req, res, next) {
 
     try{
-        const today = dateformat(new Date(), 'yyyy-mm-dd');
+         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await Booking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+
          res.status(200).send(result);
     }
     catch(err)
@@ -467,9 +479,11 @@ router.get('/getoldbookings', async function(req, res, next) {
 router.get('/getfuturebookings', async function(req, res, next) {
 
     try{
-        const today = dateformat(new Date(), 'yyyy-mm-dd');
+         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await Booking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).exec();
+         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await Booking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).limit(limit).exec();
+
          res.status(200).send(result);
     }
     catch(err)
@@ -493,11 +507,13 @@ router.get('/getrecentbookings', async function(req, res, next) {
 router.get('/getrecentbookingsall', async function(req, res, next) {
 
     try{
-         const result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).exec();
-         res.status(200).send(result);
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const  result = await Booking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(limit).exec();
+        res.status(200).send(result);
     }
     catch(err)
     {
+        console.log(err)
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
@@ -911,8 +927,11 @@ router.get('/getbestmatchedbookings', async function(req, res, next) {
 router.get('/getteststimereport', async function(req, res, next) {
 
     try{
-        const bookings = await Booking.find({$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]});
-        const Links = await Link.find();
+        const bookings = await Booking.find({$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]}).exec();
+        const Links = await Link.find({isPCR: true}).sort({timeStamp:-1}).limit(bookings.length+200).exec();
+
+        console.log(Links.length)
+        console.log(bookings.length)
     
         var lessThan12 = 0;
         var lessThan24 = 0;
