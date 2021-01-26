@@ -8,6 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 
+const DEFAULT_LIMIT = 25
 
 router.post('/paybooking' , async function (req,res,next) {
 
@@ -15,7 +16,8 @@ router.post('/paybooking' , async function (req,res,next) {
         const bookingId = ObjectId(req.query.id);
         const paidBy = req.query.paymentmethod;
         const corporate = req.query.corporate;
-        await GynaeBooking.updateOne({_id: bookingId} , {paid: true, paidBy: paidBy, corporate: corporate ? corporate : ''});
+        const price = parseFloat(req.query.price)
+        await GynaeBooking.updateOne({_id: bookingId} , {paid: true, price:price, paidBy: paidBy, corporate: corporate ? corporate : ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -28,7 +30,7 @@ router.post('/unpaybooking' , async function (req,res,next) {
 
     try{
         const bookingId = ObjectId(req.query.id);
-        await GynaeBooking.updateOne({_id: bookingId} , {paid: false, paidBy: '', corporate: ''});
+        await GynaeBooking.updateOne({_id: bookingId} , {paid: false, price:0, paidBy: '', corporate: ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -36,7 +38,6 @@ router.post('/unpaybooking' , async function (req,res,next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
-
 
 router.get('/getbookingscountbydatestr', async function(req, res, next) {
 
@@ -194,7 +195,8 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
-         const result = await GynaeBooking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await GynaeBooking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -206,7 +208,8 @@ router.get('/getallbookings', async function(req, res, next) {
 router.get('/getdeletedbookings', async function(req, res, next) {
 
     try{
-         const result = await GynaeBooking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await GynaeBooking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -234,8 +237,8 @@ router.get('/getoldbookings', async function(req, res, next) {
 
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
-
-         const result = await GynaeBooking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await GynaeBooking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -248,8 +251,8 @@ router.get('/getfuturebookings', async function(req, res, next) {
 
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
-
-         const result = await GynaeBooking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).exec();
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await GynaeBooking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -273,7 +276,8 @@ router.get('/getrecentbookings', async function(req, res, next) {
 router.get('/getrecentbookingsall', async function(req, res, next) {
 
     try{
-         const result = await GynaeBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).exec();
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await GynaeBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -464,6 +468,35 @@ router.post('/changebacktobookingmade', async function(req, res, next) {
     }
 
 });
+
+router.post('/changetopatientattended', async function(req, res, next) {
+   
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await GynaeBooking.updateOne({_id : req.query.id}, {status : 'patient_attended'});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+});
+
 
 
 router.post('/deletebookappointment', async function(req, res, next) {

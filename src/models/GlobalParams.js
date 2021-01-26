@@ -11,6 +11,11 @@ const GlobalParams = mongoose.model('global', new mongoose.Schema({
     lastExtRef: {
         type: Number,
         required: true
+    },
+
+    value: {
+        type: String,
+        required: false
     }
 
 

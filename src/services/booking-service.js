@@ -927,60 +927,9 @@ router.get('/getbestmatchedbookings', async function(req, res, next) {
 router.get('/getteststimereport', async function(req, res, next) {
 
     try{
-        const bookings = await Booking.find({$or: [{status: 'report_sent'}, {status: 'report_cert_sent'}]}).exec();
-        const Links = await Link.find({isPCR: true}).sort({timeStamp:-1}).limit(bookings.length+200).exec();
-
-        console.log(Links.length)
-        console.log(bookings.length)
-    
-        var lessThan12 = 0;
-        var lessThan24 = 0;
-        var lessThan36 = 0;
-        var lessThan48 = 0;
-        var totoalTime = 0;
-
-        var totalCount = 0;
-    
-        for (var i = 0; i < bookings.length ; i++)
-        {
-            let booking = bookings[i];
-    
-            if (!booking.samplingTimeStamp)
-            {
-                booking.samplingTimeStamp = createTimeStampFromBookingDate(booking.bookingDate, booking.bookingTime);
-            }
-    
-            const link = Links.find(link =>  link.filename === booking.filename);
-
-            if (link)
-            {
-    
-                const delay = parseInt((link.timeStamp - booking.samplingTimeStamp) / (3600*1000));
-        
-                if (delay <= 12)
-                    lessThan12++;
-                else if (delay <= 24)
-                    lessThan24++;
-                else if (delay <= 36)
-                    lessThan36++;
-                else if (delay <= 48)
-                    lessThan48++;   
-            
-                if (delay <= 48)
-                {
-                    totoalTime += delay; 
-                    totalCount ++;
-                }
-             }
-        }
-
-        const lessThan12Percent = ((lessThan12 / totalCount) * 100).toFixed(1);
-        const lessThan24Percent = ((lessThan24 / totalCount) * 100).toFixed(1);
-        const lessThan36Percent = ((lessThan36 / totalCount) * 100).toFixed(1);
-        const lessThan48Percent = ((lessThan48 / totalCount) * 100).toFixed(1);
-    
-        const result = {lessThan12, lessThan24, lessThan36, lessThan48, lessThan12Percent, lessThan24Percent, lessThan36Percent, lessThan48Percent  ,avg: (totoalTime / totalCount).toFixed(1)}
-         res.status(200).send({status:'OK' , result: result});
+         const result = await GlobalParams.findOne({name:"testTimeReport"})
+         console.log(result)
+         res.status(200).send({status:'OK' , result: JSON.parse(result.value)});
     }
     catch(err)
     {
@@ -988,30 +937,6 @@ router.get('/getteststimereport', async function(req, res, next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
-
-function createTimeStampFromBookingDate(date, time){
-
-    var hour = parseInt(time.substr(0,2));
-    const minutes = parseInt(time.substr(3,2));
-    const isPM = time.toLowerCase().indexOf('pm') > 0;
-
-    if (isPM && hour < 12)
-    {
-        hour += 12;
-    }
-
-    if (!isPM && hour === 12)
-    {
-        hour = 0;
-    }
-
-    const year = parseInt(date.substr(0,4));
-    const month = parseInt(date.substr(5,2)) - 1;
-    const day = parseInt(date.substr(8,2));
-
-    return new Date(year,month,day,hour,minutes,0,0);
-}
-
 
 const validateBookAppointment = (body) => {
 
