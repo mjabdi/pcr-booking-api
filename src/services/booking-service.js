@@ -243,6 +243,20 @@ router.get('/getbookingscountbydatestr', async function(req, res, next) {
     }
 });
 
+
+router.get('/getallbookingscountall', async function(req, res, next) {
+
+    try{
+         const result = await Booking.countDocuments({deleted : {$ne : true }}).exec();
+         res.status(200).send({status: "OK", count : result});
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.get('/getallbookingscountbydatestr', async function(req, res, next) {
 
     try{
