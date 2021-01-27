@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/medicalexpressclinic/static/js/main.7fdc21b0.chunk.js",
-    "main.js.map": "/medicalexpressclinic/static/js/main.7fdc21b0.chunk.js.map",
-    "runtime-main.js": "/medicalexpressclinic/static/js/runtime-main.45bd8204.js",
-    "runtime-main.js.map": "/medicalexpressclinic/static/js/runtime-main.45bd8204.js.map",
-    "static/js/2.0a4dd7ae.chunk.js": "/medicalexpressclinic/static/js/2.0a4dd7ae.chunk.js",
-    "static/js/2.0a4dd7ae.chunk.js.map": "/medicalexpressclinic/static/js/2.0a4dd7ae.chunk.js.map",
-    "index.html": "/medicalexpressclinic/index.html",
-    "static/js/2.0a4dd7ae.chunk.js.LICENSE.txt": "/medicalexpressclinic/static/js/2.0a4dd7ae.chunk.js.LICENSE.txt"
+    "main.js": "./static/js/main.780a679b.chunk.js",
+    "main.js.map": "./static/js/main.780a679b.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.381e1c6e.js",
+    "runtime-main.js.map": "./static/js/runtime-main.381e1c6e.js.map",
+    "static/js/2.6c271cab.chunk.js": "./static/js/2.6c271cab.chunk.js",
+    "static/js/2.6c271cab.chunk.js.map": "./static/js/2.6c271cab.chunk.js.map",
+    "index.html": "./index.html",
+    "static/js/2.6c271cab.chunk.js.LICENSE.txt": "./static/js/2.6c271cab.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.45bd8204.js",
-    "static/js/2.0a4dd7ae.chunk.js",
-    "static/js/main.7fdc21b0.chunk.js"
+    "static/js/runtime-main.381e1c6e.js",
+    "static/js/2.6c271cab.chunk.js",
+    "static/js/main.780a679b.chunk.js"
   ]
 }
