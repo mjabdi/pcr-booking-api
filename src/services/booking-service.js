@@ -638,9 +638,9 @@ router.post('/bookappointment', async function(req, res, next) {
             return;
         }
 
-        await booking.save();
+         await booking.save();
         
-        await sendConfirmationEmail(req.body);
+        await sendConfirmationEmail(booking);
 
         if (req.body.antiBodyTest)
         {
