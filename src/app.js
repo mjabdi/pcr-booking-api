@@ -61,15 +61,20 @@ app.get('/tr/*', function (req, res) {
   res.sendFile(path.join(__dirname, ".." , "public_tr","index.html"));
  });
 
- app.use('/portal', express.static(path.join(__dirname, ".." , "public_portal")));
- app.get('/portal/*', function (req, res) {
-   res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
-  });
-
   app.use('/gynae', express.static(path.join(__dirname, ".." , "public_gynae")));
   app.get('/gynae/*', function (req, res) {
     res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
    });
+
+   app.use('/medicalexpressclinic/admin', express.static(path.join(__dirname, ".." , "public_medex")));
+   app.get('/medicalexpressclinic/admin/*', function (req, res) {
+     res.sendFile(path.join(__dirname, ".." , "public_medex","index.html"));
+    });
+
+    app.use('/medicalexpressclinic/patient', express.static(path.join(__dirname, ".." , "public_portal")));
+    app.get('/medicalexpressclinic/patient/*', function (req, res) {
+      res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
+     });
 
  app.use('/', express.static(path.join(__dirname, "..", "public")));
 
