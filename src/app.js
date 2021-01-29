@@ -76,6 +76,13 @@ app.get('/tr/*', function (req, res) {
     res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
    });
 
+   app.use('/medicalexpressclinic/book/gynae', express.static(path.join(__dirname, ".." , "public_gynae")));
+   app.get('/medicalexpressclinic/book/gynae/*', function (req, res) {
+     res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
+    });
+
+    
+
    app.use('/medicalexpressclinic/admin', express.static(path.join(__dirname, ".." , "public_medex")));
    app.get('/medicalexpressclinic/admin/*', function (req, res) {
      res.sendFile(path.join(__dirname, ".." , "public_medex","index.html"));
