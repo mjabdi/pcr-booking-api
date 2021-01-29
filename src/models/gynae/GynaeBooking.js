@@ -87,7 +87,8 @@ const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
     price: {
         type: Number,
         default: 0
-    }
+    },
+
 
 }));
 
