@@ -376,7 +376,7 @@ router.post('/bookappointment', async function(req, res, next) {
 
         await booking.save();
         
-        await sendConfirmationEmail(req.body);
+        await sendConfirmationEmail(booking);
 
         res.status(200).send({status: 'OK', person: req.body});
 

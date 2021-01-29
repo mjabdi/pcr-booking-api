@@ -37,8 +37,7 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `<p> Please follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
 
-    // const target = `https://travelpcrtest.com/user/edit/${options.bookingRef}`;
-    const target="#"
+    const target = `https://md.co.uk/medicalexpressclinic/user/edit/gynae/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f280c4 5%, #ff9cd7 100%);background-color:#ff9cd7;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;

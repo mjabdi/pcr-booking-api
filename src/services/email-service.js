@@ -80,7 +80,7 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `<p> Please follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
 
-    const target = `https://travelpcrtest.com/user/edit/${options._id}`;
+    const target = `https://md.co.uk/medicalexpressclinic/user/edit/pcr/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);background-color:#33bdef;border-radius:6px;border:1px solid #057fd0;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
@@ -162,7 +162,7 @@ const sendConfirmationEmailForTR =  async (options) =>
 
     content += `<p> Please follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
 
-    const target = `https://travelpcrtest.com/user/edit/${options._id}`;
+    const target = `https://md.co.uk/medicalexpressclinic/user/edit/pcr/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);background-color:#33bdef;border-radius:6px;border:1px solid #057fd0;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
