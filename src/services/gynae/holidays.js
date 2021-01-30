@@ -15,6 +15,26 @@ const getHolidays = () =>
 }
 
 
+const TIME_SLOTS_THURSDAY = [
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:45 PM', true),
+    new TimeSlot('02:30 PM', true),
+    new TimeSlot('03:15 PM', true),
+    new TimeSlot('04:00 PM', true),
+    new TimeSlot('04:45 PM', true),
+    new TimeSlot('05:30 PM', true),
+];
+
+const TIME_SLOTS_FRIDAY = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:30 PM', true),
+    new TimeSlot('12:15 PM', true),
+];
+
+
+
+
 const TIME_SLOTS_NORMAL = [
     new TimeSlot('09:00 AM', true),
     new TimeSlot('09:45 AM', true),
@@ -45,13 +65,26 @@ const getDefaultTimeSlots = (date) =>
     var results = [];
     var finalResults = [];
 
-    if (isWeekend(someDate)) /// Weekend
+    // if (isWeekend(someDate)) /// Weekend
+    // {
+    //     results = TIME_SLOTS_WEEKEND;
+    // }
+    // else
+    // {
+    //     results = TIME_SLOTS_NORMAL;
+    // }
+
+    if (isThursday(someDate)) /// Weekend
     {
-        results = TIME_SLOTS_WEEKEND;
+        results = TIME_SLOTS_THURSDAY;
+    }
+    else if (isFriday(someDate))
+    {
+        results = TIME_SLOTS_FRIDAY;
     }
     else
     {
-        results = TIME_SLOTS_NORMAL;
+        result = []
     }
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
@@ -125,6 +158,16 @@ function getNow()
 const isWeekend = (date) =>
 {
     return (date.getDay() === 0 || date.getDay() === 6) /// Weekend
+}
+
+const isThursday = (date) =>
+{
+    return (date.getDay() === 4) /// Thursday
+}
+
+const isFriday = (date) =>
+{
+    return (date.getDay() === 5) /// Friday
 }
 
 const isHoliday = (date) =>

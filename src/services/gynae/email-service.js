@@ -31,6 +31,7 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+    content += `<li> Deposit : £100.00 </li>`;
 
 
     content += `</ul>`;

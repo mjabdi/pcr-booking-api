@@ -35,7 +35,7 @@ router.post("/dopayment", async function (req, res, next) {
       autocomplete: true,
       locationId: LOCATION_ID,
       amountMoney: {
-        amount: 100 * 100,
+        amount: 1 * 100,
         currency: "GBP",
       },
       idempotencyKey: personInfo.bookingRef,
