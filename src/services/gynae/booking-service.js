@@ -326,6 +326,8 @@ router.get('/getbookingbyid', async function(req, res, next) {
 });
 
 
+
+
 router.post('/bookappointment', async function(req, res, next) {
 
     try
@@ -567,7 +569,7 @@ router.post('/undeletebookappointment', async function(req, res, next) {
 });
 
 
-const validateBookAppointment = (body) => {
+ const validateBookAppointment = (body) => {
 
     console.log(body);
 
@@ -607,8 +609,6 @@ const validateBookAppointment = (body) => {
     }
 
 
-    // body.bookingDate = body.bookingDate;
-    // body.birthDate = body.birthDate;
     body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
 
     return true;

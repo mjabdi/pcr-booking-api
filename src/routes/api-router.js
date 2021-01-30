@@ -9,6 +9,7 @@ const UserBookingService = require('./../services/user-booking-service')
 
 const gynaeTimeService =  require('./../services/gynae/time-service');
 const gynaeBookService =  require('./../services/gynae/booking-service');
+const gynaePaymentService =  require('./../services/gynae/payment-service');
 
 
 const MedexUserService = require('./../services/medex/user/user-service')
@@ -35,6 +36,7 @@ const MedexUserService = require('./../services/medex/user/user-service')
 /// Gynaee ---------
 router.use('/gynae/time', gynaeTimeService);
 router.use('/gynae/book', gynaeBookService);
+router.use('/gynae/payment', gynaePaymentService);
 
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)

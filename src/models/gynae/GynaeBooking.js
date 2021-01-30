@@ -89,6 +89,16 @@ const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
         default: 0
     },
 
+    paymentInfo: {
+        type: String,
+        required: false
+    },
+
+    refund: {
+        type: String,
+        required: false
+    }
+
 
 }));
 
