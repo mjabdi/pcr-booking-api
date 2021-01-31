@@ -84,7 +84,12 @@ const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
         required: false,
     },
 
-    price: {
+    deposit: {
+        type: Number,
+        default: 0
+    },
+
+    OTCCharges: {
         type: Number,
         default: 0
     },

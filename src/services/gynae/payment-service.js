@@ -5,13 +5,19 @@ const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const {sendConfirmationEmail} = require('./email-service');
 
 
-const ACCESSTOKEN = "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt" // live
-// const ACCESSTOKEN = "EAAAEHpXroK4v3SCYQTdflulI8A8BlUGdy56BSVPX7-a5nicjp9dyF7ezj8iiFzm" // sandbox
+const SANDBOX = false
+
+const LIVE_ACCESSTOKEN = "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt" // live
+const SANDBOX_ACCESSTOKEN = "EAAAEHpXroK4v3SCYQTdflulI8A8BlUGdy56BSVPX7-a5nicjp9dyF7ezj8iiFzm" // sandbox
+
+const LIVE_LOCATION_ID = "L2SBNYPV0XWVJ"  // live
+const SANDBOX_LOCATION_ID = "LBR8YPCPR878R"  // sandbox
+
 
 
 const client = new Client({
-  environment: Environment.Production,
-  accessToken: ACCESSTOKEN
+  environment: SANDBOX ? Environment.Sandbox : Environment.Production ,
+  accessToken: SANDBOX ?  SANDBOX_ACCESSTOKEN : LIVE_ACCESSTOKEN
 });
 
 
@@ -19,10 +25,7 @@ const client = new Client({
 const paymentsApi = client.paymentsApi;
 const refundsApi = client.refundsApi;
 
-const LOCATION_ID = "L2SBNYPV0XWVJ"  // live
-
-// const LOCATION_ID = "LBR8YPCPR878R"  // sandbox
-
+const DEPOSIT = 100;
 
 
 router.post("/dopayment", async function (req, res, next) {
@@ -33,9 +36,9 @@ router.post("/dopayment", async function (req, res, next) {
       sourceId: req.body.nonce,
       verificationToken: req.body.token,
       autocomplete: true,
-      locationId: LOCATION_ID,
+      locationId: SANDBOX ? SANDBOX_LOCATION_ID : LIVE_LOCATION_ID,
       amountMoney: {
-        amount: 1 * 100,
+        amount: DEPOSIT * 100,
         currency: "GBP",
       },
       idempotencyKey: personInfo.bookingRef,
@@ -94,6 +97,7 @@ router.post("/dopayment", async function (req, res, next) {
       const booking = new GynaeBooking({
         ...personInfo,
         paymentInfo: paymentInfo,
+        deposit: DEPOSIT,
         timeStamp: new Date(),
       });
 
@@ -154,6 +158,7 @@ router.post("/refundpayment", async function (req, res, next) {
 
         if (result && result.refund && result.refund.id)
         {
+            booking.deposit = 0
             booking.refund = JSON.stringify(result.refund)
             await booking.save()
         }

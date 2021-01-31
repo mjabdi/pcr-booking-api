@@ -17,7 +17,7 @@ router.post('/paybooking' , async function (req,res,next) {
         const paidBy = req.query.paymentmethod;
         const corporate = req.query.corporate;
         const price = parseFloat(req.query.price)
-        await GynaeBooking.updateOne({_id: bookingId} , {paid: true, price:price, paidBy: paidBy, corporate: corporate ? corporate : ''});
+        await GynaeBooking.updateOne({_id: bookingId} , {paid: true, OTCCharges:price, paidBy: paidBy, corporate: corporate ? corporate : ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -30,13 +30,27 @@ router.post('/unpaybooking' , async function (req,res,next) {
 
     try{
         const bookingId = ObjectId(req.query.id);
-        await GynaeBooking.updateOne({_id: bookingId} , {paid: false, price:0, paidBy: '', corporate: ''});
+        await GynaeBooking.updateOne({_id: bookingId} , {paid: false, OTCCharges:0, paidBy: '', corporate: ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
     {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
+});
+
+
+router.get('/getshouldrefundscount', async function(req, res, next) {
+    try{
+        const count = await GynaeBooking.countDocuments({deleted : {$eq: true}, deposit: {$gt : 0} })
+        res.status(200).send({status : "OK", count: count });
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+
+
 });
 
 router.get('/getbookingscountbydatestr', async function(req, res, next) {
