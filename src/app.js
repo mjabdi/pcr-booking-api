@@ -93,6 +93,11 @@ app.get('/tr/*', function (req, res) {
       res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
      });
 
+     app.use('/medicalexpressclinic/home', express.static(path.join(__dirname, ".." , "public_medex_landing")));
+     app.get('/medicalexpressclinic/home/*', function (req, res) {
+       res.sendFile(path.join(__dirname, ".." , "public_medex_landing","index.html"));
+      });
+
  app.use('/', express.static(path.join(__dirname, "..", "public")));
 
  app.get('/*', function (req, res) {
