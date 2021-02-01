@@ -25,10 +25,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
- app.use('/', express.static(path.join(__dirname, ".." , "public_portal")));
- app.get('/*', function (req, res) {
-   res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
-  });
+app.use('/', express.static(path.join(__dirname, ".." , "public_medex_landing")));
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, ".." , "public_medex_landing","index.html"));
+ });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
