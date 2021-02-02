@@ -25,7 +25,7 @@ const client = new Client({
 const paymentsApi = client.paymentsApi;
 const refundsApi = client.refundsApi;
 
-const DEPOSIT = 1;
+const DEPOSIT = 100;
 
 
 router.post("/dopayment", async function (req, res, next) {
