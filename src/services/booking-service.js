@@ -450,7 +450,8 @@ router.get('/getcompletedbookings', async function(req, res, next) {
     try{
         
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-        const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+        // const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+        const result = await Booking.find({ $or: [{status: 'report_sent', deleted : {$ne : true }}, {status: 'report_cert_sent', deleted : {$ne : true }}]}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
         
         res.status(200).send(result);
     }
