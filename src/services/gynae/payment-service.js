@@ -5,7 +5,7 @@ const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const {sendConfirmationEmail} = require('./email-service');
 
 
-const SANDBOX = false
+const SANDBOX = process.env.NODE_ENV !== 'production'
 
 const LIVE_ACCESSTOKEN = "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt" // live
 const SANDBOX_ACCESSTOKEN = "EAAAEHpXroK4v3SCYQTdflulI8A8BlUGdy56BSVPX7-a5nicjp9dyF7ezj8iiFzm" // sandbox
