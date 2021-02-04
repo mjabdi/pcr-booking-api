@@ -102,6 +102,11 @@ const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
     refund: {
         type: String,
         required: false
+    },
+
+    formData: {
+        type: String,
+        required: false
     }
 
 

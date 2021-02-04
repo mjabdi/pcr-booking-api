@@ -55,6 +55,12 @@ app.get('/medicalexpressclinic/user/edit/gynae/*', function (req, res) {
   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
  });
 
+ app.use('/medicalexpressclinic/user/form/gynae/', express.static(path.join(__dirname, ".." , "public_admin")));
+ app.get('/medicalexpressclinic/user/form/gynae/*', function (req, res) {
+   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
+  });
+ 
+
  app.use('/medicalexpressclinic/user/edit/pcr/', express.static(path.join(__dirname, ".." , "public_admin")));
 app.get('/medicalexpressclinic/user/edit/pcr/*', function (req, res) {
   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));

@@ -10,6 +10,20 @@ const {Notification} = require('./../../models/Notification');
 
 const DEFAULT_LIMIT = 25
 
+router.post('/submitformdata' , async function (req,res,next) {
+
+    try{
+        const {bookingId, formData} = req.body;
+        await GynaeBooking.updateOne({_id: bookingId} , {formData: JSON.stringify(formData)});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.post('/paybooking' , async function (req,res,next) {
 
     try{
