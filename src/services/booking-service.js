@@ -161,7 +161,7 @@ router.get('/getlatebookings', async function(req, res, next) {
 
      const now = new Date();   
             
-     const bookings = await Booking.find({$and: [{status : 'sample_taken'} , {samplingTimeStamp : {$ne : null}}]});
+     const bookings = await Booking.find({$and: [{status : 'sample_taken'} , {deleted : {$ne : true}} ,{samplingTimeStamp : {$ne : null}}]});
  
     const result = [];
 
