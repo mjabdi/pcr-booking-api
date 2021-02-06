@@ -4,7 +4,8 @@ const router = express.Router();
 const {User} = require('./../models/User')
 const {CreateRandomVerificationCode} = require('../verfication-code.js')
 const uuid = require('uuid-random')
-const {sendVerificationEmail, sendForgotPasswordEmail} = require('./verification-email-service');
+const {sendVerificationEmail, sendForgotPasswordEmail, sendWelcomeEmail} = require('./verification-email-service');
+const { UserEmailMap } = require('../models/UserEmailMap');
 
 
 
@@ -18,7 +19,8 @@ router.post('/signin', async function(req, res, next) {
     
     try
     {
-        const {email, password} = req.body
+        let {email, password} = req.body
+        email = email.trim().toLowerCase()
         const user = await User.findOne({email: email})
         if (!user)
         {
@@ -72,7 +74,7 @@ router.post('/checktoken', async function(req, res, next) {
             return
         }
 
-        res.status(200).send({status:'OK', userId: user.email, forename: user.forename, surname: user.surname})
+        res.status(200).send({status:'OK', userId: user.email, fullname: user.fullname})
     }
     catch(err)
     {
@@ -85,7 +87,8 @@ router.post('/forgotpassword', async function(req, res, next) {
 
     try
     {
-        const {email} = req.body
+        let {email} = req.body
+        email = email.trim().toLowerCase()
         const found = await User.findOne({email: email})
         if (!found)
         {
@@ -100,7 +103,7 @@ router.post('/forgotpassword', async function(req, res, next) {
             ForgotPasswordKeys.delete(email)
         }, TIMEOUT);
 
-        await sendForgotPasswordEmail(email, found.forename, verficationCode)
+        await sendForgotPasswordEmail(email, found.fullname, verficationCode)
 
         res.status(200).send({status:'OK'})
     }
@@ -115,7 +118,8 @@ router.post('/resetpassword', async function(req, res, next) {
 
     try
     {
-        const {email, verficationCode, password} = req.body
+        let {email, verficationCode, password} = req.body
+        email = email.trim().toLowerCase()
         const user = await User.findOne({email: email})
         if (!user)
         {
@@ -188,7 +192,8 @@ router.post('/presignup', async function(req, res, next) {
 
     try
     {
-        const {forename, surname, email, password} = req.body
+        let {fullname , email, password} = req.body
+        email = email.trim().toLowerCase()
         const found = await User.findOne({email: email})
         if (found)
         {
@@ -198,13 +203,12 @@ router.post('/presignup', async function(req, res, next) {
 
         const verficationCode = CreateRandomVerificationCode()
 
-        signupKeys.set(email, {verficationCode, forename, surname, password})
+        signupKeys.set(email, {verficationCode, fullname, password})
         setTimeout(() => {
             signupKeys.delete(email)
         }, TIMEOUT);
 
-        await sendVerificationEmail(email, forename, verficationCode)
-
+        await sendVerificationEmail(email, fullname, verficationCode)
 
         res.status(200).send({status:'OK'})
     }
@@ -219,7 +223,9 @@ router.post('/signup', async function(req, res, next) {
 
     try
     {
-        const {email, verficationCode} = req.body
+        let {email, verficationCode} = req.body
+        email = email.trim().toLowerCase()
+
         const found = await User.findOne({email: email})
         if (found)
         {
@@ -243,8 +249,7 @@ router.post('/signup', async function(req, res, next) {
     
         const user = new User({
             timeStamp: new Date(),
-            forename: record.forename,
-            surname: record.surname,
+            fullname: record.fullname,
             email: email,
             password: record.password,
             isActive: true
@@ -260,5 +265,85 @@ router.post('/signup', async function(req, res, next) {
         res.status(500).send({status:'FAILED', error: err.message})
     }
 })
+
+router.post('/getusermapping', async function(req, res, next) {
+
+    try
+    {
+        const {token} = req.body
+
+        const usermap = await UserEmailMap.findOne({refNo: token})
+        if (!usermap)
+        {
+            res.status(200).send({status:'FAILED', error: 'Sorry, your Sign-Up link is invalid! You can easily register with us through the Sign-Up page.'})
+            return
+        }
+
+        const {email, fullname} = usermap
+
+        const found = await User.findOne({email: email})
+        if (found)
+        {
+            res.status(200).send({status:'FAILED', error: 'Your email address is already registered in the system, if you forgot your password please follow the Forgot-Password link in the Sign-in page.'})
+            return
+        }
+
+        res.status(200).send({status:'OK', user: usermap})
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED', error: err.message})
+    }
+})
+
+router.post('/rapidsignup', async function(req, res, next) {
+
+    try
+    {
+        const {token, password} = req.body
+
+        const usermap = await UserEmailMap.findOne({refNo: token})
+        if (!usermap)
+        {
+            res.status(200).send({status:'FAILED', error: 'Invalid Link'})
+            return
+        }
+
+        const {email, fullname} = usermap
+
+        const found = await User.findOne({email: email})
+        if (found)
+        {
+            res.status(200).send({status:'FAILED', error: 'This email address is already registered in the system, if you forgot your password please follow the Forgot-Password link in the Sign-in page.'})
+            return
+        }
+
+        const user = new User({
+            timeStamp: new Date(),
+            fullname: fullname,
+            email: email,
+            password: password,
+            isActive: true
+        }) 
+
+        await user.save()
+
+        const authToken = user.authToken ? user.authToken : uuid()
+
+        await User.updateOne({_id: user._id}, {authToken: authToken, lastLoginTimeStamp: new Date()})
+
+        await sendWelcomeEmail(email, fullname)
+
+
+        res.status(200).send({status: 'OK', token: authToken }) 
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED', error: err.message})
+    }
+})
+
 
 module.exports = router

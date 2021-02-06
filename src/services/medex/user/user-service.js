@@ -8,7 +8,10 @@ router.post('/signin', async function(req, res, next) {
     
     try
     {
-        const {username, password} = req.body
+        let {username, password} = req.body
+
+        username = username.trim().toLowerCase()
+
         const user = await User.findOne({username: username})
         if (!user)
         {
@@ -72,7 +75,9 @@ router.post('/changepassword', async function(req, res, next) {
 
     try
     {
-        const {username, newPassword} = req.body
+        let {username, newPassword} = req.body
+        username = username.trim().toLowerCase()
+
         const user = await User.findOne({username: username})
         if (!user)
         {
@@ -97,7 +102,8 @@ router.post('/signup', async function(req, res, next) {
 
     try
     {
-        const {username, password, roles} = req.body
+        let {username, password, roles} = req.body
+        username = username.trim().toLowerCase()
         const found = await User.findOne({username: username})
         if (found)
         {

@@ -4,6 +4,12 @@ const {createICS} = require('./ics-creator');
 
 
 const { FormatDateFromString } = require('./../DateFormatter');
+const {User} = require('../../models/User');
+
+const uuid = require('uuid-random');
+const { UserEmailMap } = require('../../models/UserEmailMap');
+const CreatePortalLink = require('../PortalLinkCreator');
+
 
 const faq = [
     {
@@ -50,8 +56,15 @@ const sendConfirmationEmail =  async (options) =>
     const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/gynae/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f280c4 5%, #ff9cd7 100%);background-color:#ff9cd7;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
 
+
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
+    content += await CreatePortalLink(options.email, options.fullname)
+
+    
+    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/gynae/${options._id}`;
+    content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
+    content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
   
     content += '<p style="font-weight:600"> Please Read our FAQs </p>';
 

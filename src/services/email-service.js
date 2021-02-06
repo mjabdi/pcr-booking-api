@@ -5,6 +5,7 @@ const {createICS} = require('./../ics-creator');
 const config = require('config');
 const { calculatePrice } = require('./PriceCalculator');
 const { FormatDateFromString } = require('./DateFormatter');
+const CreatePortalLink = require('./PortalLinkCreator');
 
 
 const faq = [
@@ -83,7 +84,10 @@ const sendConfirmationEmail =  async (options) =>
     const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/pcr/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);background-color:#33bdef;border-radius:6px;border:1px solid #057fd0;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
+
+    content += await CreatePortalLink(options.email, `${options.forename} ${options.surname}` )
+
 
     content += `<p style="width:80%"> * Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
 
@@ -165,8 +169,11 @@ const sendConfirmationEmailForTR =  async (options) =>
     const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/pcr/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);background-color:#33bdef;border-radius:6px;border:1px solid #057fd0;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Modify or Cancel Appointment </a></p>`;
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
 
+    content += await CreatePortalLink(options.email, `${options.forename} ${options.surname}` )
+
+  
     content += `<p style="width:80%"> * Your results are sent password protected, please ensure to check your spam box if results have not been received within 40 hours of your test date. The password will be your date of birth in the format DDMMYYYY. Please note your results will return from this email address: results@medicalexpressclinic.co.uk. </p>`
 
     content += '<p style="font-weight:600"> Please Read our PCR Test FAQs </p>';
