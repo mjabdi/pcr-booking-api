@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
+const GynaeBookingSchema = new mongoose.Schema({
   
     timeStamp: {
         type: Date,
@@ -110,7 +110,6 @@ const GynaeBooking = mongoose.model('GynaeBooking', new mongoose.Schema({
     }
 
 
-}));
+});
 
-
-exports.GynaeBooking = GynaeBooking; 
+module.exports.GynaeBooking =  mongoose.model('GynaeBooking', GynaeBookingSchema)
