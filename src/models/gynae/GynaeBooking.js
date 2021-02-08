@@ -112,4 +112,6 @@ const GynaeBookingSchema = new mongoose.Schema({
 
 });
 
-module.exports.GynaeBooking =  mongoose.model('GynaeBooking', GynaeBookingSchema)
+module.exports = {
+    GynaeBooking : mongoose.model('GynaeBooking', GynaeBookingSchema)
+}

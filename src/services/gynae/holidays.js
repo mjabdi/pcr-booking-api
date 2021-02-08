@@ -5,6 +5,7 @@ const holidays = [
         new Date(2020,11,25,0,0,0,0),
         new Date(2020,11,26,0,0,0,0),
         new Date(2021,0,1,0,0,0,0),
+        new Date(2021,1,12,0,0,0,0)
 ];
 
 const getHolidays = () =>
@@ -97,6 +98,7 @@ const getDefaultTimeSlots = (date) =>
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
     const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
+    const is11February = (dateStr === '2021-02-11');
 
 
     for (var i=0; i < results.length; i++)
@@ -119,6 +121,9 @@ const getDefaultTimeSlots = (date) =>
          }
          else if (is27Dec && results[i].time.toUpperCase().indexOf('AM') > 0 &&  parseInt(results[i].time.substr(0,2)) < 10)
          {
+            finalResults.push(new TimeSlot(results[i].time, false));
+         }
+         else if (is11February && (results[i].time.startsWith("02:"))){
             finalResults.push(new TimeSlot(results[i].time, false));
          }
          else 

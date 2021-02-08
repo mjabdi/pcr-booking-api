@@ -106,4 +106,6 @@ const GPBookingSchema = new mongoose.Schema({
 
 });
 
-module.exports.GPBooking =  mongoose.model('GPBooking', GPBookingSchema)
+module.exports = {
+        GPBooking : mongoose.model('GPBooking', GPBookingSchema)
+} 

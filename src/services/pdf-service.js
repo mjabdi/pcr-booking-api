@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const {createPDFForCovid1Form, createPDFForCovid2Form, createPDFForGynaeRegistration} = require('./../pdf-creator'); 
+const {createPDFForCovid1Form, createPDFForCovid2Form, createPDFForGynaeRegistration, createPDFForGPRegistration} = require('./../pdf-creator'); 
 const {getPdfResult, getPdfCert, getPdfLabReport} = require('./../pdf-finder'); 
 
 
 const {Booking} = require('./../models/Booking');
+const {GynaeBooking} = require('./../models/gynae/GynaeBooking');
+const {GPBooking} = require('./../models/gp/GPBooking');
+
+
 const {GlobalParams} = require('./../models/GlobalParams');
 
 router.get('/downloadcovidform1', async function(req, res, next) {
@@ -220,7 +224,7 @@ router.get('/downloadgynaeregform', async function(req, res, next) {
         
         const pdfBuffer = await createPDFForGynaeRegistration(id);        
         
-        await Booking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
+        await GynaeBooking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
 
         res.set( {
             'Content-Type': 'application/pdf',
@@ -234,6 +238,41 @@ router.get('/downloadgynaeregform', async function(req, res, next) {
         return;
     }
 });
+
+router.get('/downloadgpregform', async function(req, res, next) {
+
+    var id = null;
+    try{
+        id = ObjectId(req.query.id);
+        if (!id)
+            throw new Error();
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;
+    }
+
+    try{
+        
+        const pdfBuffer = await createPDFForGPRegistration(id);        
+        
+        await GPBooking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
+
+        res.set( {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=pcr-reg-form-${id}.pdf`,
+            'Content-Transfer-Encoding': 'Binary'
+          }).status(200).send(pdfBuffer);   
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
 
 
 
