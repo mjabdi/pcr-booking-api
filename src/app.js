@@ -59,6 +59,17 @@ app.get('/medicalexpressclinic/user/edit/gynae/*', function (req, res) {
  app.get('/medicalexpressclinic/user/form/gynae/*', function (req, res) {
    res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
   })
+
+  app.use('/medicalexpressclinic/user/edit/gp/', express.static(path.join(__dirname, ".." , "public_admin")));
+  app.get('/medicalexpressclinic/user/edit/gp/*', function (req, res) {
+    res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
+   });
+  
+   app.use('/medicalexpressclinic/user/form/gp/', express.static(path.join(__dirname, ".." , "public_admin")));
+   app.get('/medicalexpressclinic/user/form/gp/*', function (req, res) {
+     res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
+    })
+  
  
 
  app.use('/medicalexpressclinic/user/edit/pcr/', express.static(path.join(__dirname, ".." , "public_admin")));
@@ -86,6 +97,12 @@ app.get('/tr/*', function (req, res) {
    app.get('/medicalexpressclinic/book/gynae/*', function (req, res) {
      res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
     });
+
+    app.use('/medicalexpressclinic/book/gp', express.static(path.join(__dirname, ".." , "public_gp")));
+    app.get('/medicalexpressclinic/book/gp/*', function (req, res) {
+      res.sendFile(path.join(__dirname, ".." , "public_gp","index.html"));
+     });
+ 
 
     
 

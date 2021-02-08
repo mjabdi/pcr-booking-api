@@ -44,7 +44,6 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
 
 /// Get Fully Booked Days Date
 router.get('/getfullybookeddays', function(req, res, next) {
-  
     res.send(getHolidays());
 });
 

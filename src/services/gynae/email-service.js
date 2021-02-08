@@ -104,7 +104,7 @@ const sendConfirmationEmail =  async (options) =>
 
     const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
-    await sendMail(options.email, 'Gynae Clinic Appointment Confirmation' , content, event);
+    await sendMail(options.email, 'Gynae Clinic Appointment Confirmation - Medical Express Clinic' , content, event);
    
 }
 
