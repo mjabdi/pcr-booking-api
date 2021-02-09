@@ -2,13 +2,29 @@ const express = require('express');
 const router = express.Router();
 const {GPBooking} = require('../../models/gp/GPBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 
 const DEFAULT_LIMIT = 25
+
+router.post('/sendregformemail' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const booking =  await GPBooking.findOne({_id: id});
+        sendRegFormEmail(booking)
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 router.post('/submitformdata' , async function (req,res,next) {
 
