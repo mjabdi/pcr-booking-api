@@ -2,7 +2,6 @@
   "name": "pcr-booking-api",
   "version": "0.0.0",
   "private": true,
-
   "scripts": {
     "start": "nodemon ./src/bin/www"
   },
@@ -15,6 +14,7 @@
     "crypto": "^1.0.1",
     "dateformat": "^3.0.3",
     "debug": "~2.6.9",
+    "exceljs": "^4.2.0",
     "express": "~4.16.1",
     "get-stream": "^6.0.0",
     "gmail-send": "^1.8.10",

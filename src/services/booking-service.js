@@ -407,6 +407,22 @@ router.get('/getallbookings', async function(req, res, next) {
     }
 });
 
+router.get('/getalltrbookings', async function(req, res, next) {
+
+    try{
+
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const result =  await Booking.find( {deleted : {$ne : true }, tr: true} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.get('/getdeletedbookings', async function(req, res, next) {
 
     try{
