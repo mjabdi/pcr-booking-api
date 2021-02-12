@@ -77,6 +77,14 @@ app.get("/medicalexpressclinic/user/edit/gp/*", function (req, res) {
 });
 
 app.use(
+  "/medicalexpressclinic/user/edit/std/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/std/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+app.use(
   "/medicalexpressclinic/user/form/gp/",
   express.static(path.join(__dirname, "..", "public_admin"))
 );
