@@ -1,23 +1,22 @@
 // const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 // const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const logger = require("morgan");
 
-const apiRouter = require('./routes/api-router');
-const downloadRouter = require('./routes/download-router');
-const mailRouter = require('./routes/mail-router');
+const apiRouter = require("./routes/api-router");
+const downloadRouter = require("./routes/download-router");
+const mailRouter = require("./routes/mail-router");
 
-const apiSecurity = require('./middleware/api-security');
+const apiSecurity = require("./middleware/api-security");
 // const checkReferrer = require('./middleware/check-referrer');
-const mongodb = require('./mongodb');
-const cors = require('cors');
+const mongodb = require("./mongodb");
+const cors = require("cors");
 
 // const Promise = require('bluebird')
 // const fs = Promise.promisifyAll(require('fs'));
 
 // const crypto = require("crypto");
-
 
 const app = express();
 
@@ -37,93 +36,122 @@ app.use(express.urlencoded({ extended: false }));
 // }
 // else
 // {
-  app.use('/api', apiSecurity() , apiRouter);
+app.use("/api", apiSecurity(), apiRouter);
 // }
 
-app.use('/mail', mailRouter);
+app.use("/mail", mailRouter);
 
-app.use('/download', downloadRouter);
+app.use("/download", downloadRouter);
 // app.use('/api', apiRouter);
 
-app.use('/user/edit/', express.static(path.join(__dirname, ".." , "public_admin")));
-app.get('/user/edit/*', function (req, res) {
-  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
- });
+app.use(
+  "/user/edit/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/user/edit/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
- app.use('/medicalexpressclinic/user/edit/gynae/', express.static(path.join(__dirname, ".." , "public_admin")));
-app.get('/medicalexpressclinic/user/edit/gynae/*', function (req, res) {
-  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
- });
+app.use(
+  "/medicalexpressclinic/user/edit/gynae/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/gynae/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
- app.use('/medicalexpressclinic/user/form/gynae/', express.static(path.join(__dirname, ".." , "public_admin")));
- app.get('/medicalexpressclinic/user/form/gynae/*', function (req, res) {
-   res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
-  })
+app.use(
+  "/medicalexpressclinic/user/form/gynae/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/form/gynae/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
-  app.use('/medicalexpressclinic/user/edit/gp/', express.static(path.join(__dirname, ".." , "public_admin")));
-  app.get('/medicalexpressclinic/user/edit/gp/*', function (req, res) {
-    res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
-   });
-  
-   app.use('/medicalexpressclinic/user/form/gp/', express.static(path.join(__dirname, ".." , "public_admin")));
-   app.get('/medicalexpressclinic/user/form/gp/*', function (req, res) {
-     res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
-    })
-  
- 
+app.use(
+  "/medicalexpressclinic/user/edit/gp/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/gp/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
- app.use('/medicalexpressclinic/user/edit/pcr/', express.static(path.join(__dirname, ".." , "public_admin")));
-app.get('/medicalexpressclinic/user/edit/pcr/*', function (req, res) {
-  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
- });
+app.use(
+  "/medicalexpressclinic/user/form/gp/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/form/gp/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
+app.use(
+  "/medicalexpressclinic/user/edit/pcr/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/pcr/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
-app.use('/admin', express.static(path.join(__dirname, ".." , "public_admin")));
-app.get('/admin/*', function (req, res) {
-  res.sendFile(path.join(__dirname, ".." , "public_admin","index.html"));
- });
+app.use("/admin", express.static(path.join(__dirname, "..", "public_admin")));
+app.get("/admin/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
 
- app.use('/tr', express.static(path.join(__dirname, ".." , "public_tr")));
-app.get('/tr/*', function (req, res) {
-  res.sendFile(path.join(__dirname, ".." , "public_tr","index.html"));
- });
+app.use("/tr", express.static(path.join(__dirname, "..", "public_tr")));
+app.get("/tr/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_tr", "index.html"));
+});
 
-  app.use('/gynae', express.static(path.join(__dirname, ".." , "public_gynae")));
-  app.get('/gynae/*', function (req, res) {
-    res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
-   });
+app.use("/gynae", express.static(path.join(__dirname, "..", "public_gynae")));
+app.get("/gynae/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_gynae", "index.html"));
+});
 
-   app.use('/medicalexpressclinic/book/gynae', express.static(path.join(__dirname, ".." , "public_gynae")));
-   app.get('/medicalexpressclinic/book/gynae/*', function (req, res) {
-     res.sendFile(path.join(__dirname, ".." , "public_gynae","index.html"));
-    });
+app.use(
+  "/medicalexpressclinic/book/gynae",
+  express.static(path.join(__dirname, "..", "public_gynae"))
+);
+app.get("/medicalexpressclinic/book/gynae/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_gynae", "index.html"));
+});
 
-    app.use('/medicalexpressclinic/book/gp', express.static(path.join(__dirname, ".." , "public_gp")));
-    app.get('/medicalexpressclinic/book/gp/*', function (req, res) {
-      res.sendFile(path.join(__dirname, ".." , "public_gp","index.html"));
-     });
- 
+app.use(
+  "/medicalexpressclinic/book/gp",
+  express.static(path.join(__dirname, "..", "public_gp"))
+);
+app.get("/medicalexpressclinic/book/gp/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_gp", "index.html"));
+});
 
-    
+app.use(
+  "/medicalexpressclinic/book/std",
+  express.static(path.join(__dirname, "..", "public_std"))
+);
+app.get("/medicalexpressclinic/book/std/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_std", "index.html"));
+});
 
-   app.use('/medicalexpressclinic/admin', express.static(path.join(__dirname, ".." , "public_medex")));
-   app.get('/medicalexpressclinic/admin/*', function (req, res) {
-     res.sendFile(path.join(__dirname, ".." , "public_medex","index.html"));
-    });
+app.use(
+  "/medicalexpressclinic/admin",
+  express.static(path.join(__dirname, "..", "public_medex"))
+);
+app.get("/medicalexpressclinic/admin/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_medex", "index.html"));
+});
 
-    app.use('/medicalexpressclinic/patient', express.static(path.join(__dirname, ".." , "public_portal")));
-    app.get('/medicalexpressclinic/patient/*', function (req, res) {
-      res.sendFile(path.join(__dirname, ".." , "public_portal","index.html"));
-     });
+app.use(
+  "/medicalexpressclinic/patient",
+  express.static(path.join(__dirname, "..", "public_portal"))
+);
+app.get("/medicalexpressclinic/patient/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_portal", "index.html"));
+});
 
+app.use("/", express.static(path.join(__dirname, "..", "public")));
 
-
- app.use('/', express.static(path.join(__dirname, "..", "public")));
-
- app.get('/*', function (req, res) {
+app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
- });
-
+});
 
 //  const getNewToken = () =>
 //  {
@@ -135,7 +163,7 @@ app.get('/tr/*', function (req, res) {
 //      req.params[0].indexOf("main") === 0 &&
 //      req.params[0].indexOf(".js") > 0
 //    ) {
-     
+
 //     if (!fs.existsSync(path.join(__dirname, "..", "tokens", "public", "static", "js", 'main.js')))
 //      {
 //         let contents = await fs.readFileAsync(
@@ -172,20 +200,16 @@ app.get('/tr/*', function (req, res) {
 //         await fs.writeFileAsync(path.join(__dirname, "..", "tokens", "public", "static", "js", "token.jwt"), newToken ,'utf8');
 //         await fs.writeFileAsync(path.join(__dirname, "..", "tokens", "public", "static", "js", "main.js"), replaced_contents,'utf8');
 //      }
-    
+
 //      res.sendFile(
 //        path.join(__dirname, "..", "tokens", "public", "static", "js", 'main.js')
-//      ); 
+//      );
 
 //      return;
 //    }
 
 //    next();
 //  });
-
-
-
-
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

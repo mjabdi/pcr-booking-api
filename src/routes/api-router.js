@@ -14,6 +14,9 @@ const gynaePaymentService =  require('./../services/gynae/payment-service');
 const gpTimeService =  require('./../services/gp/time-service');
 const gpBookService =  require('./../services/gp/booking-service');
 
+const stdTimeService =  require('./../services/std/time-service');
+const stdBookService =  require('./../services/std/booking-service');
+
 
 const MedexUserService = require('./../services/medex/user/user-service')
 /* GET Apis listing. */
@@ -44,6 +47,12 @@ router.use('/gynae/payment', gynaePaymentService);
 /// GP ---------
 router.use('/gp/time', gpTimeService);
 router.use('/gp/book', gpBookService);
+
+
+/// STD ---------
+router.use('/std/time', stdTimeService);
+router.use('/std/book', stdBookService);
+
 
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)

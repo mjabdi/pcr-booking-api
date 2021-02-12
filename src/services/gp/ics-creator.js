@@ -17,15 +17,15 @@ const createICS = async (date, time, name, email) => {
         const event = {
             start: [year, month, day, hour, minute],
             duration: { hours: 0, minutes: 15 },
-            title: 'Gynae Clinic',
-            description: 'Appointment for Gynae Clinic.',
+            title: 'Medical Express Clinic',
+            description: 'Appointment for Private GP Visit.',
             location: 'Suite E, 117a Harley St, Marylebone, London W1G 6AT',
             url: 'https://www.gynae-clinic.co.uk/',
             geo: { lat: 51.521740, lon: -0.148420},
             categories: ['Doctor Appointment'],
             status: 'CONFIRMED',
             busyStatus: 'BUSY',
-            organizer: { name: 'Gynae Clinic', email: 'info@gynae-clinic.co.uk' },
+            organizer: { name: 'Medical Express Clinic', email: 'info@medicalexpressclinic.co.uk' },
             attendees: [
               { name: name, email: email, rsvp: true, partstat: 'ACCEPTED', role: 'REQ-PARTICIPANT' }
             ]

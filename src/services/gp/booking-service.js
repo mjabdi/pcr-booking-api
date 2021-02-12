@@ -411,7 +411,7 @@ router.post('/bookappointment', async function(req, res, next) {
             const alaram = new Notification(
                 {
                     timeStamp: new Date(),
-                    type: 'InvalidBooking-Gynae',
+                    type: 'InvalidBooking-GP',
                     text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (Gynae)`
                 }
             );
