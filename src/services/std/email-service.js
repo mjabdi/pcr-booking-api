@@ -41,7 +41,7 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone ? options.phone : '-'} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
     content += `<li> Package : ${options.packageName ? options.packageName : '-'} </li>`;
-    content += `<li> Price : £${options.OTCCharges ? options.OTCCharges : '-'} </li>`;
+    content += `<li> Estimated Price : ${options.estimatedPrice ? options.estimatedPrice.toLocaleString("en-GB", { style: 'currency', currency: 'GBP' }) : '-'} </li>`;
 
     content += `</ul>`;
 

@@ -94,6 +94,11 @@ const STDBookingSchema = new mongoose.Schema({
         default: 0
     },
 
+    estimatedPrice: {
+        type: Number,
+        default: 0
+    },
+
     paymentInfo: {
         type: String,
         required: false
