@@ -123,6 +123,26 @@ router.post("/getalluserbookings", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [
+                  { email: email },
+                  { email: email.toLowerCase() },
+                  { email: email.toUpperCase() },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
         $sort: { timeStamp: -1 },
       },
     ]).exec();
