@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Client, Environment } = require("square");
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
-const {sendConfirmationEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRefundNotificationEmail} = require('./email-service');
 
 
 const SANDBOX = process.env.NODE_ENV !== 'production'
@@ -161,9 +161,23 @@ router.post("/refundpayment", async function (req, res, next) {
             booking.deposit = 0
             booking.refund = JSON.stringify(result.refund)
             await booking.save()
+        
+
+        try{
+          await sendRefundNotificationEmail(booking)
+
+        }catch(err)
+        {
+          console.log(err)
         }
 
         res.status(200).send({ status: "OK" });
+      
+      }
+      else
+      {
+        res.status(500).send({ status: "FAILED"});
+      }
 
     }
     catch(err){
