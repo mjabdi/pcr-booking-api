@@ -666,7 +666,6 @@ router.post('/bookappointment', async function(req, res, next) {
             await sendAntiBodyEmail(req.body);
         }
 
-        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_STD_BOOKED, booking)
 
         res.status(200).send({status: 'OK', person: req.body});
 

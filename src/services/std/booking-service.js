@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
+const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -427,6 +428,7 @@ router.post('/bookappointment', async function(req, res, next) {
             await sendConfirmationEmail(booking);
         }
     
+        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_STD_BOOKED, booking)
 
         res.status(200).send({status: 'OK', person: req.body});
 
