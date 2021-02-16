@@ -580,6 +580,8 @@ router.post('/deletebookappointment', async function(req, res, next) {
 
         await GynaeBooking.updateOne({_id : req.query.id}, {deleted : true});
 
+        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_CANCELED)
+
         res.status(200).send({status: 'OK'});
 
     }catch(err)
