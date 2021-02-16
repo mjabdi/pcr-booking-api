@@ -11,6 +11,7 @@ const stringSimilarity = require('string-similarity');
 const {GlobalParams} = require('./../models/GlobalParams');
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../models/Notification');
+const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('./mail-notification-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -664,6 +665,8 @@ router.post('/bookappointment', async function(req, res, next) {
         {
             await sendAntiBodyEmail(req.body);
         }
+
+        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_STD_BOOKED, booking)
 
         res.status(200).send({status: 'OK', person: req.body});
 

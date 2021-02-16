@@ -12,7 +12,7 @@ const sendMail = async (to, subject, content, event) =>
       });
       
       const mailOptions = {
-        from: config.MailAccount,
+        from: config.PortalMailAccount,
         to: to,
         subject: subject,
         html : content,
