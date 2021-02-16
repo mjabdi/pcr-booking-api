@@ -11,7 +11,7 @@ const createICS = async (date, time, name, email) => {
         const hour = parseInt(time.substr(0,2));
         const minute = parseInt(time.substr(3,2));
 
-        console.log(`date : ${date}   time : ${time}`);
+        // console.log(`date : ${date}   time : ${time}`);
         
 
         const event = {

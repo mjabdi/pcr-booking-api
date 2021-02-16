@@ -8,6 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
+const getNewRef = require('../refgenatator-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -222,7 +223,7 @@ router.get('/getbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GynaeBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:-1}).exec();
+        const result = await GynaeBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -242,7 +243,7 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GynaeBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:-1}).exec();
+        const result = await GynaeBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -372,7 +373,55 @@ router.get('/getbookingbyid', async function(req, res, next) {
     }
 });
 
+router.post('/addnewbooking', async function(req, res, next) {
+    try{
+        const ref = await getNewRef()
+        let {fullname, bookingDate, bookingTime, phone, email, service, notes} = req.body
 
+        
+        if (!service || service.length < 1) {
+            service = "Consultation";
+          }
+  
+          if (!email || email.length < 1) {
+            email = "-";
+          }
+  
+          if (!phone || phone.length < 1) {
+            phone = "-";
+          }
+
+        const payload =  {fullname, bookingDate, bookingTime, phone, email, service, notes}
+
+
+        const booking = new GynaeBooking(
+            {
+                ...payload,
+                bookingRef: ref,
+                bookingTimeNormalized : NormalizeTime(payload.bookingTime),
+                timeStamp: new Date()
+            }
+        );
+
+        await booking.save()
+        if (email && email.length > 3)
+        {
+            await sendConfirmationEmail(booking);
+        }
+      
+
+        // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
+
+        res.status(200).send({status: 'OK', person: req.body});
+
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+})
 
 
 router.post('/bookappointment', async function(req, res, next) {

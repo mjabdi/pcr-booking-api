@@ -36,7 +36,6 @@ const CreatePortalLink = async (email, fullname) =>
         console.log(err)
     }
 
-    console.log(targetPortal)
 
     let content = ''
 

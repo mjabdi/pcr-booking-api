@@ -220,7 +220,7 @@ router.get('/getbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:-1}).exec();
+        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -240,7 +240,7 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:-1}).exec();
+        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
