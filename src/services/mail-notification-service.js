@@ -7,6 +7,8 @@ const NOTIFY_TYPE_GYNAE_CANCELED = 4;
 
 const MailTo = process.env.NODE_ENV === 'production' ? 'info@medicalexpressclinic.co.uk' : 'm.jafarabdi@gmail.com'
 
+
+
 const sendAdminNotificationEmail = async (notifyType, booking) => {
   try {
     const subject = `Admin Notification : ${createSubject(notifyType)}`;
@@ -60,11 +62,11 @@ function createSubject(notifyType) {
 function createMessage(notifyType, booking) {
     switch (notifyType) {
       case NOTIFY_TYPE_GP_BOOKED:
-        return `You have a new booking for <strong>GP</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
+        return `You have a new booking for <strong>GP</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
       case NOTIFY_TYPE_GYNAE_BOOKED:
-        return `You have a new booking for <strong>Gynae</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
+        return `You have a new booking for <strong>Gynae</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}`;
       case NOTIFY_TYPE_STD_BOOKED:
-        return `You have a new booking for <strong>STD</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
+        return `You have a new booking for <strong>STD</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}`;
       case NOTIFY_TYPE_GYNAE_CANCELED:
         return `You have a new <strong>canceled</strong> appointment for <strong>Gynae</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
       default:
