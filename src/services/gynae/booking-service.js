@@ -28,6 +28,23 @@ router.post('/sendregformemail' , async function (req,res,next) {
     }
 });
 
+router.post('/changedepositbooking' , async function (req,res,next) {
+
+    try{
+        const {id, deposit} = req.query;
+        const booking =  await GynaeBooking.findOne({_id: id});
+        booking.deposit = deposit
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 
 
 router.post('/submitformdata' , async function (req,res,next) {
