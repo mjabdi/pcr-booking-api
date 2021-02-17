@@ -9,7 +9,7 @@ const sendMail = require('./../mail-sender')
 
 const ExcelJS = require('exceljs');
 
-const mailTo = "m.jafarabdi@gmail.com";
+const mailTo = "phe.lcrc@nhs.net";
 
 (async () => {
 
@@ -38,6 +38,12 @@ const mailTo = "m.jafarabdi@gmail.com";
               {"timeStamp":  {$lt : endDate}}
           ]}},
     ]);
+
+    if (!bookings || bookings.length === 0)
+    {
+        process.exit(0)
+        return
+    }
 
     const workbook = new ExcelJS.Workbook();
 
