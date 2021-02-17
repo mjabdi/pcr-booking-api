@@ -4,18 +4,22 @@ const dateformat = require('dateformat');
 const {Booking} = require('../models/Booking');
 const {Link} = require('./../models/link');
 const config = require('config');
+const path = require('path')
+const sendMail = require('./../mail-sender')
 
 const ExcelJS = require('exceljs');
+
+const mailTo = "m.jafarabdi@gmail.com";
 
 (async () => {
 
     await mongodb();
 
     const date = new Date(); 
-    const startDate = new Date(date.getFullYear() - 1, date.getMonth() , date.getDate(), 0,0,0,0);
+    const startDate = new Date(date.getFullYear() , date.getMonth() , date.getDate(), 0,0,0,0);
     const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 23,59,59,99);
 
-    const filename = 'd:/testExcel.xlsx'
+    const filename = `TestToRelease-MedicalExpressClinic-${dateformat(date,'yyyy-mm-dd')}.xlsx`
 
     const bookings = await Link.aggregate([
       
@@ -148,17 +152,23 @@ const ExcelJS = require('exceljs');
 
  
 
-    await workbook.xlsx.writeFile(filename);
+    await workbook.xlsx.writeFile(path.join(config.ExcelFolder, filename));
 
-      process.exit(0)
+    const attachments = [
+        {
+            path: path.join(config.ExcelFolder, filename),
+            filename: filename
+        }
+    ]
 
-    // const Links = await Link.find({$and: [
-    //                                         {timeStamp : {$gt : startDate}}
-    //                                         ,{timeStamp : {$lt : endDate}},
-    //                                         {isPCR: true},
-    //                                         {status : 'sent'}
-    //                                      ]
-    //                                 });
+    await sendMail(mailTo,"Statutory COVID-19 Notification for Test to Release","Statutory COVID-19 Notification for Test to Release - Medical Express Clinic",attachments)
+
+    
+    
+    
+    process.exit(0)
+
+   
 
 
 
