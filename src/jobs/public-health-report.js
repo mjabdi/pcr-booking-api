@@ -172,7 +172,7 @@ const mailTo = "phe.lcrc@nhs.net";
         }
     ]
 
-   // await sendMail(mailTo,"Statutory COVID-19 Notification for Test to Release","Statutory COVID-19 Notification for Test to Release - Medical Express Clinic",attachments)
+   await sendMail(mailTo,"Statutory COVID-19 Notification for Test to Release","Statutory COVID-19 Notification for Test to Release - Medical Express Clinic",attachments)
 
     
     
