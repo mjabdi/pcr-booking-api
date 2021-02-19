@@ -13,11 +13,11 @@ const mailTo = "phe.lcrc@nhs.net";
 
 (async () => {
 
-    await mongodb();
-
     const date = new Date(); 
-    const startDate = new Date(date.getFullYear() , date.getMonth() , date.getDate(), 0,0,0,0);
-    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate(), 23,59,59,99);
+    const startDate = new Date(date.getFullYear() , date.getMonth() , date.getDate() , 0,0,0,0);
+    const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() , 23,59,59,99);
+
+    await mongodb();
 
     const filename = `TestToRelease-MedicalExpressClinic-${dateformat(date,'yyyy-mm-dd')}.xlsx`
 
@@ -38,6 +38,10 @@ const mailTo = "phe.lcrc@nhs.net";
               {"timeStamp":  {$lt : endDate}}
           ]}},
     ]);
+
+    console.log(startDate)
+    console.log(endDate)
+    console.log(bookings)
 
     if (!bookings || bookings.length === 0)
     {
