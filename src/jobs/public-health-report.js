@@ -40,9 +40,9 @@ const mailTo = "phe.lcrc@nhs.net";
           ]}},
     ]);
 
-    console.log(startDate)
-    console.log(endDate)
-    console.log(bookings)
+    // console.log(startDate)
+    // console.log(endDate)
+    // console.log(bookings)
 
     if (!bookings || bookings.length === 0)
     {
