@@ -13,7 +13,8 @@ const mailTo = "phe.lcrc@nhs.net";
 
 (async () => {
 
-    const date = new Date(); 
+    const today = new Date()
+    const date = new Date(today.getTime() - 24 * 60 * 60 * 1000 ); 
     const startDate = new Date(date.getFullYear() , date.getMonth() , date.getDate() , 0,0,0,0);
     const endDate = new Date(date.getFullYear(), date.getMonth() , date.getDate() , 23,59,59,99);
 
@@ -171,7 +172,7 @@ const mailTo = "phe.lcrc@nhs.net";
         }
     ]
 
-    await sendMail(mailTo,"Statutory COVID-19 Notification for Test to Release","Statutory COVID-19 Notification for Test to Release - Medical Express Clinic",attachments)
+   // await sendMail(mailTo,"Statutory COVID-19 Notification for Test to Release","Statutory COVID-19 Notification for Test to Release - Medical Express Clinic",attachments)
 
     
     
