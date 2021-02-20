@@ -34,6 +34,15 @@ const sendConfirmationEmail =  async (options) =>
     // content += `<p style="font-size:18px; font-weight:800">‘If you have received this email your appointment is confirmed. Please <u>DON'T CALL</u> the clinic to confirm your appointment.’</p>`;
 
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment. You will now also be able to register and access your patient portal by visiting the link on our website homepage. This will have details of all of your past and future appointments, and allow you to directly book appointments with the clinic without the need to re-enter all of your personal information. </p>`;
+   
+    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/std/${options._id}`;
+    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+
+    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/std/${options._id}`;
+    content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
+    content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
+
+   
     content += `<p>Below is your booking information : </p>`;
     content += '<ul>';
     content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
@@ -47,8 +56,6 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `<p>Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
 
-    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/std/${options._id}`;
-    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
