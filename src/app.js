@@ -156,8 +156,11 @@ app.get("/medicalexpressclinic/patient/*", function (req, res) {
 });
 
 app.use("/widgets", express.static(path.join(__dirname, "..", "public_widget")));
+app.get("/widgets/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_widget", "index.html"));
+});
 
-app.use("/widgets", express.static(path.join(__dirname, "..", "public_widget")));
+app.use("/", express.static(path.join(__dirname, "..", "public")));
 
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
