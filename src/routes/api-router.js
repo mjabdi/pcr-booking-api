@@ -17,6 +17,9 @@ const gpBookService =  require('./../services/gp/booking-service');
 const stdTimeService =  require('./../services/std/time-service');
 const stdBookService =  require('./../services/std/booking-service');
 
+const adminBookService =  require('./../services/admin/booking-service');
+
+
 
 const MedexUserService = require('./../services/medex/user/user-service')
 /* GET Apis listing. */
@@ -56,6 +59,9 @@ router.use('/std/book', stdBookService);
 
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)
+
+/// Admin
+router.use('/admin/book', adminBookService)
 
 
 module.exports = router;
