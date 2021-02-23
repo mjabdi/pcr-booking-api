@@ -8,6 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
+const getNewRef = require('../refgenatator-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -371,6 +372,52 @@ router.get('/getbookingbyid', async function(req, res, next) {
 });
 
 
+router.post('/addnewbooking', async function(req, res, next) {
+    try{
+        const ref = await getNewRef()
+        let {fullname, bookingDate, bookingTime, phone, email, notes, packageName} = req.body
+
+  
+          if (!email || email.length < 1) {
+            email = "-";
+          }
+  
+          if (!phone || phone.length < 1) {
+            phone = "-";
+          }
+
+        const payload =  {fullname, bookingDate, bookingTime, phone, email, notes, packageName}
+
+
+        const booking = new STDBooking(
+            {
+                ...payload,
+                bookingRef: ref,
+                bookingTimeNormalized : NormalizeTime(payload.bookingTime),
+                timeStamp: new Date()
+            }
+        );
+
+        await booking.save()
+        if (email && email.length > 3)
+        {
+            await sendConfirmationEmail(booking);
+        }
+      
+
+        // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
+
+        res.status(200).send({status: 'OK', person: req.body});
+
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+})
+
 
 
 router.post('/bookappointment', async function(req, res, next) {
@@ -462,7 +509,7 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
         const newBooking = await STDBooking.findOne({_id : req.body.bookingId});
 
-        if (newBooking.email && newBooking.email.trim().length > 0)
+        if (newBooking.email && newBooking.email.trim().length > 1)
         {
             await sendConfirmationEmail(newBooking);
         }
@@ -497,7 +544,7 @@ router.post('/updatebookappointmenttime', async function(req, res, next) {
 
         const booking = await STDBooking.findOne({_id : req.body.bookingId});
 
-        if (booking.email && booking.email.trim().length > 0)
+        if (booking.email && booking.email.trim().length > 1)
         {
             await sendConfirmationEmail(booking);
         }
