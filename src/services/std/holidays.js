@@ -52,7 +52,7 @@ const TIME_SLOTS_NORMAL = [
     new TimeSlot('05:00 PM', true),
     new TimeSlot('05:15 PM', true),
     new TimeSlot('05:30 PM', true),
-    new TimeSlot('05:45 PM', true)
+    // new TimeSlot('05:45 PM', true)
 ];
 
 const TIME_SLOTS_WEEKEND = [
