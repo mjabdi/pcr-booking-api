@@ -133,10 +133,33 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
         .send({ status: "FAILED", error: "datestr query param not present!" });
       return;
     }
-    const result = await GPBooking.countDocuments({
+    const gpCount = await GPBooking.countDocuments({
       bookingDate: dateStr,
       deleted: { $ne: true },
     }).exec();
+
+    const pcrCount = await Booking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+    const stdCount = await STDBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+    const gynaeCount = await GynaeBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+    const result = [
+      {clinic: "pcr", count: pcrCount},
+      {clinic: "gynae", count: gynaeCount},
+      {clinic: "gp", count: gpCount},
+      {clinic: "std", count: stdCount}
+    ]
+
     res.status(200).send({ status: "OK", count: result });
   } catch (err) {
     console.log(err);
@@ -220,13 +243,39 @@ router.get(
           });
         return;
       }
-      const result = await GPBooking.countDocuments({
+      const gpCount = await GPBooking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
+  
+      const pcrCount = await Booking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+  
+      const stdCount = await STDBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+  
+      const gynaeCount = await GynaeBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+  
+      const result = [
+        {clinic: "pcr", count: pcrCount},
+        {clinic: "gynae", count: gynaeCount},
+        {clinic: "gp", count: gpCount},
+        {clinic: "std", count: stdCount}
+      ]
+  
       res.status(200).send({ status: "OK", count: result });
-    } catch (err) {
+      } catch (err) {
       console.log(err);
       res.status(500).send({ status: "FAILED", error: err.message });
     }
@@ -268,13 +317,85 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
         .send({ status: "FAILED", error: "datestr query param not present!" });
       return;
     }
-    const result = await GPBooking.find({
-      bookingDate: dateStr,
-      bookingTime: timeStr,
-      deleted: { $ne: true },
-    })
-      .sort({ timeStamp: 1 })
-      .exec();
+
+    const result = await Booking.aggregate([
+      {
+        $match: {
+          $and: [
+            {bookingDate: dateStr},
+            {bookingTime: timeStr},
+            {deleted: { $ne: true }},
+          ],
+        },
+      },
+      {
+        $addFields: { clinic: "pcr" },
+      },
+      {
+        $unionWith: {
+          coll: "gynaebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gynae" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "gpbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $sort: { timeStamp: 1 },
+      },
+    ]).exec();
+
     res.status(200).send({ status: "OK", bookings: result });
   } catch (err) {
     console.log(err);
