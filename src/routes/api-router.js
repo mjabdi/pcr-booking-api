@@ -22,6 +22,8 @@ const adminBookService =  require('./../services/admin/booking-service');
 
 
 const MedexUserService = require('./../services/medex/user/user-service')
+const InvoiceService = require('./../services/medex/invoice-service')
+
 /* GET Apis listing. */
 // router.get('/', function(req, res, next) {
 //   res.send('the list of APIS');
@@ -59,6 +61,7 @@ router.use('/std/book', stdBookService);
 
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)
+router.use('/medex/invoice', InvoiceService)
 
 /// Admin
 router.use('/admin/book', adminBookService)
