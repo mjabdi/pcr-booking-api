@@ -16,9 +16,9 @@ router.post('/createinvoice', async function(req, res, next) {
     
     try
     {
-        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode} = req.body
+        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes} = req.body
 
-        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode}
+        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes}
 
         if (!validateInvoice(payload))
         {
@@ -52,9 +52,9 @@ router.post('/updateinvoice', async function(req, res, next) {
     try
     {
         const {invoiceNumber} = req.query
-        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode} = req.body
+        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes} = req.body
 
-        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode}
+        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes}
 
         if (!validateInvoice(payload))
         {
@@ -138,6 +138,37 @@ router.get('/getinvoicebyinvoicenumber', async function(req, res, next) {
     }
 })
 
+
+router.get('/getallcodes', async function(req, res, next) {
+    try
+    {
+
+        const result = await MedexCode.aggregate([
+            {
+              $unionWith: {
+                coll: "bloodcodes",
+                pipeline: [
+                  {
+                    $addFields: { section: "blood" },
+                  },
+                ],
+              },
+            },
+            {
+              $sort: { index: 1 },
+            },
+          ]).exec();
+      
+
+        res.status(200).send({status:'OK', result: result})
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED', error: err.message})
+    }
+
+})
 
 router.post('/getcodedetails', async function(req, res, next) {
     try

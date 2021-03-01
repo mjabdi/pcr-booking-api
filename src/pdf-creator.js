@@ -947,7 +947,7 @@ const createPDFForInvoice = async (id) => {
         }
       );
 
-    let pageNumber = 1;
+    let pageNumber = 1
     doc.on("pageAdded", () => {
       pageNumber++;
       doc.image("assets/certificate-template.png", 0, 0, {
@@ -956,6 +956,15 @@ const createPDFForInvoice = async (id) => {
         valign: "top",
       });
     });
+
+    if (invoice.notes && invoice.notes.trim().length > 0)
+    {
+        invoice.items.push({
+            description: `notes$:_${invoice.notes}`,
+            price: invoice.grandTotal,
+          });
+    }
+
 
     invoice.items.push({
       description: "Grand Total",
@@ -994,45 +1003,68 @@ const createPDFForInvoice = async (id) => {
         item_startY -= 500;
       }
 
-      let fontSize = 9;
-      let font = "Courier";
-      if (item.description === "Grand Total") {
-        font = "Courier-Bold";
-        fontSize = 12;
-        doc.rect(startX, item_startY - 10, 470, 30).stroke();
-      }
-
-      doc
+      if (item.description.indexOf('notes$:_') === 0)
+      {
+        doc
         .fillColor("black")
-        .fontSize(fontSize)
-        .font(font)
-        .text(`${item.description}`, startX + 10, item_startY, {
-          width: 370,
-          align: "left",
-          characterSpacing: 0.5,
-          wordSpacing: 0.5,
-          lineGap: 2,
-        });
-
-      doc
-        .fillColor("black")
-        .fontSize(fontSize)
-        .font("Courier-Bold")
+        .fontSize(10)
+        .font("Times-Bold")
         .text(
-          `${parseFloat(item.price).toLocaleString("en-GB", {
-            style: "currency",
-            currency: "GBP",
-          })}`,
-          startX + 350,
+          `${item.description.substr(8)}`,
+          startX,
           item_startY,
           {
-            width: 100,
-            align: "right",
+            width: 480,
+            align: "left",
+            characterSpacing: 0.8,
+            wordSpacing: 1,
+            lineGap: 7,
+          }
+        );
+      }
+      else
+      {
+        let fontSize = 9;
+        let font = "Courier";
+        if (item.description === "Grand Total") {
+          font = "Courier-Bold";
+          fontSize = 12;
+          doc.rect(startX, item_startY - 10, 470, 30).stroke();
+        }
+  
+        doc
+          .fillColor("black")
+          .fontSize(fontSize)
+          .font(font)
+          .text(`${item.description}`, startX + 10, item_startY, {
+            width: 370,
+            align: "left",
             characterSpacing: 0.5,
             wordSpacing: 0.5,
             lineGap: 2,
-          }
-        );
+          });
+  
+        doc
+          .fillColor("black")
+          .fontSize(fontSize)
+          .font("Courier-Bold")
+          .text(
+            `${parseFloat(item.price).toLocaleString("en-GB", {
+              style: "currency",
+              currency: "GBP",
+            })}`,
+            startX + 350,
+            item_startY,
+            {
+              width: 100,
+              align: "right",
+              characterSpacing: 0.5,
+              wordSpacing: 0.5,
+              lineGap: 2,
+            }
+          );
+      }
+
     });
 
     item_startY += 70;
