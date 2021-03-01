@@ -7,7 +7,10 @@ const {MedexCode} = require('./../../models/medex/MedexCode')
 
 
 const uuid = require('uuid-random')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { randomBytes } = require('crypto');
+const { GlobalParams } = require('../../models/GlobalParams');
+const { LastMonthInstance } = require('twilio/lib/rest/api/v2010/account/usage/record/lastMonth');
 
 router.post('/createinvoice', async function(req, res, next) {
     
@@ -136,10 +139,10 @@ router.get('/getinvoicebyinvoicenumber', async function(req, res, next) {
 })
 
 
-router.get('/getcodedetails', async function(req, res, next) {
+router.post('/getcodedetails', async function(req, res, next) {
     try
     {
-        const {code} = req.query
+        const {code} = req.body
 
         const result = await MedexCode.aggregate([
             {
@@ -184,7 +187,21 @@ function validateInvoice(payload){
 
 async function generateNewInvoiceNumber()
 {
-    return null
+    let lastInvoiceNumber = await GlobalParams.findOne({name:'lastInvoiceNumber'});
+    if (!lastInvoiceNumber)
+    {
+        lastInvoiceNumber = new GlobalParams(
+            {
+                name: "lastInvoiceNumber",
+                lastExtRef: 1
+            })
+         await lastInvoiceNumber.save()
+         return 1   
+    }
+
+    lastInvoiceNumber.lastExtRef += 1
+    await lastInvoiceNumber.save()
+    return lastInvoiceNumber.lastExtRef
 }
 
 
