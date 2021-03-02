@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs')
+const path = require('path')
+const config = require('config')
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {createPDFForCovid1Form, createPDFForCovid2Form, createPDFForGynaeRegistration, createPDFForGPRegistration, createPDFForSTDRegistration, createPDFForInvoice} = require('./../pdf-creator'); 
 const {getPdfResult, getPdfCert, getPdfLabReport} = require('./../pdf-finder'); 
-
+const sendMail = require('./../invoice-mail-sender')
 
 const {Booking} = require('./../models/Booking');
 const {GynaeBooking} = require('./../models/gynae/GynaeBooking');
@@ -325,7 +328,7 @@ router.get('/downloadinvoice', async function(req, res, next) {
 
     try{
         
-        const pdfBuffer = await createPDFForInvoice(id);        
+        const pdfBuffer = await createPDFForInvoice(id);      
         
         res.set( {
             'Content-Type': 'application/pdf',
@@ -335,13 +338,68 @@ router.get('/downloadinvoice', async function(req, res, next) {
     }
     catch(err)
     {
+        console.log(err)
         res.status(500).send({status:'FAILED' , error: err.message });
         return;
     }
 });
 
 
+router.post('/emailinvoice', async function(req, res, next) {
 
+    var id = null;
+    const email = req.query.email
+    if (!email || email.length < 2)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;   
+    }
+    try{
+        id = ObjectId(req.query.id);
+        if (!id)
+            throw new Error();
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;
+    }
+
+    try{
+        
+        const pdfBuffer = await createPDFForInvoice(id);      
+        
+        const filename = `invoice-${id}.pdf`
+        const filePath =  path.join(config.InvoiceFolder, filename)
+       
+        const stream = fs.createWriteStream(filePath)
+        stream.write(pdfBuffer)
+        stream.end()
+
+        const subject = "Invoice/Receipt - Medical Express Clinic"
+        let content = ``
+        const attachments = [
+            {
+                path: filePath,
+                filename: filename
+            }
+        ]
+
+
+        await sendMail(email,subject,content,attachments)
+    
+        res.status(200).send({status:'OK'});
+
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
 
 
 

@@ -808,14 +808,15 @@ const createPDFForInvoice = async (id) => {
         }
       );
 
+      doc.moveDown(0.3)
     doc
       .fillColor("black")
       .fontSize(10)
       .font("Times-Bold")
       .text(
         `${invoice.postCode ? invoice.postCode.toUpperCase() : ""}`,
-        startX,
-        startY + 115,
+        // startX,
+        // startY + 115,
         {
           width: 615,
           align: "left",
