@@ -155,7 +155,7 @@ router.get('/getallcodes', async function(req, res, next) {
               },
             },
             {
-              $sort: { index: 1 },
+              $sort: { code: 1 },
             },
           ]).exec();
       
