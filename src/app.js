@@ -168,6 +168,16 @@ app.get("/widgets/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_widget", "index.html"));
 });
 
+
+app.use(
+  "/optimalvision/book",
+  express.static(path.join(__dirname, "..", "public_optimalvision"))
+);
+app.get("/optimalvision/book/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_optimalvision", "index.html"));
+});
+
+
 app.use("/", express.static(path.join(__dirname, "..", "public")));
 
 app.get("/*", function (req, res) {

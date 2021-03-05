@@ -45,6 +45,8 @@ router.post('/setdatetime' , async function (req,res,next) {
         const booking = await OVBooking.findOne({_id: bookingId})
         if (booking)
         {
+            booking.bookingDate = bookingDate
+            booking.bookingTime = bookingTime
             await booking.save()
             res.status(200).send({status : "OK", booking: booking});
         }else
