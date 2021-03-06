@@ -25,6 +25,7 @@ const MedexUserService = require('./../services/medex/user/user-service')
 const InvoiceService = require('./../services/medex/invoice-service')
 
 const OptimalVisionBookService =  require('./../services/optimalvision/booking-service')
+const OptimalVisionUserService =  require('./../services/optimalvision/user-service')
 
 /* GET Apis listing. */
 // router.get('/', function(req, res, next) {
@@ -71,6 +72,7 @@ router.use('/admin/book', adminBookService)
 
 /// Optimal Vision
 router.use('/optimalvision/book', OptimalVisionBookService)
+router.use('/optimalvision/user', OptimalVisionUserService)
 
 
 

@@ -145,6 +145,172 @@ function getDays () {
      }
 }
 
+router.get('/getallbookings', async function(req, res, next) {
+
+    try{
+         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await OVBooking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getdeletedbookings', async function(req, res, next) {
+
+    try{
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await OVBooking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+router.get('/gettodaybookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+
+         const result = await OVBooking.find({bookingDate : today, deleted : {$ne : true }}).sort({bookingTimeNormalized: 1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getoldbookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await OVBooking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getfuturebookings', async function(req, res, next) {
+
+    try{
+        const today = dateformat(new Date(), 'yyyy-mm-dd');
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await OVBooking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getrecentbookings', async function(req, res, next) {
+
+    try{
+         const result = await OVBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(10).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getrecentbookingsall', async function(req, res, next) {
+
+    try{
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await OVBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+router.post('/deletebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await OVBooking.updateOne({_id : req.query.id}, {deleted : true});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/undeletebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await OVBooking.updateOne({_id : req.query.id}, {deleted : false});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+
+router.get('/getbookingbyid', async function(req, res, next) {
+
+    try{
+        req.query.id = ObjectId(req.query.id);
+         const result = await OVBooking.findOne({_id : req.query.id});
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+
+
 
 const defaultTimes = [
     "09:00 AM - 11:00 AM",

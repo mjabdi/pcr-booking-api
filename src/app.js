@@ -177,6 +177,15 @@ app.get("/optimalvision/book/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_optimalvision", "index.html"));
 });
 
+app.use(
+  "/optimalvision/admin",
+  express.static(path.join(__dirname, "..", "public_optimalvision_admin"))
+);
+app.get("/optimalvision/admin/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_optimalvision_admin", "index.html"));
+});
+
+
 
 app.use("/", express.static(path.join(__dirname, "..", "public")));
 
