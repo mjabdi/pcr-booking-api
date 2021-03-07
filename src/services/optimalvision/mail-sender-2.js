@@ -12,7 +12,7 @@ const sendMail = async (to, subject, content, event) =>
       });
       
       const mailOptions = {
-        from: config.PortalMailAccount,
+        from: `Optimal Vision ${config.PortalMailAccount}`,
         to: to,
         subject: subject,
         html : content,
