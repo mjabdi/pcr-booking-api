@@ -6,8 +6,8 @@ const sendMail = async (to, subject, content, event) =>
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: config.PortalMailAccount,
-          pass: config.PortalMailPassword // naturally, replace both with your real credentials or an application-specific password
+          user: config.OVMailAccount,
+          pass: config.OVMailPassword // naturally, replace both with your real credentials or an application-specific password
         }
       });
       
