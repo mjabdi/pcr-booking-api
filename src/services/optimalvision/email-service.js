@@ -35,8 +35,8 @@ const sendNotificationEmail =  async (options) =>
                                     .replace('$PHONE$', options.phone)
                                     .replace('$APPOINTMENT$', Appointment)
 
-    // const email = process.env.NODE_ENV === 'production' ? 'info@optimalvision.co.uk' : 'm.jafarabdi@gmail.com'
-    const email = "m.jafarabdi@gmail.com"
+    const email = process.env.NODE_ENV === 'production' ? 'info@optimalvision.co.uk' : 'm.jafarabdi@gmail.com'
+    // const email = "m.jafarabdi@gmail.com"
    
     await sendMail(email, `NEW BOOKING NOTIFICATION - ${options.fullname}`, content, null);
    
