@@ -133,12 +133,18 @@ function getDays () {
  
         const tomorrow = new Date(now.getTime() + 1 * DAY_MILISECONDS )
         AvailableDays.push({date : dateformat(tomorrow,'yyyy-mm-dd'), dayLabel: "Tomorrow" ,  available: true})
- 
-        for (var i = 1 ; i <= 2 ; i++)
+
+        if (!todayAvailable)
         {
-            let _date = new Date(tomorrow.getTime() + i * DAY_MILISECONDS )
-            AvailableDays.push({date : dateformat(_date,'yyyy-mm-dd'), dayLabel: dateformat(_date,'dddd, mmmm dS') ,  available: true})
+            let _date = new Date(tomorrow.getTime() + 1 * DAY_MILISECONDS )
+            AvailableDays.push({date : dateformat(_date,'yyyy-mm-dd'), dayLabel: dateformat(_date,'dddd, mmmm dS') ,  available: true}) 
         }
+ 
+        // for (var i = 1 ; i <= 2 ; i++)
+        // {
+        //     let _date = new Date(tomorrow.getTime() + i * DAY_MILISECONDS )
+        //     AvailableDays.push({date : dateformat(_date,'yyyy-mm-dd'), dayLabel: dateformat(_date,'dddd, mmmm dS') ,  available: true})
+        // }
  
  
         return({status : "OK", days: AvailableDays, defaultTimes: defaultTimes, firstTimeIndex: firstTimeIndex});
