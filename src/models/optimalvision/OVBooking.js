@@ -48,6 +48,12 @@ const OVBookingSchema = new mongoose.Schema({
         default: 'booked'
     },
 
+    questions: {
+        type: String,
+        required: false,
+    },
+
+
     deleted: {
         type: Boolean,
         required: true,

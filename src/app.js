@@ -178,6 +178,14 @@ app.get("/optimalvision/book/*", function (req, res) {
 });
 
 app.use(
+  "/optimalvision/self-test",
+  express.static(path.join(__dirname, "..", "public_optimalvision_selftest"))
+);
+app.get("/optimalvision/self-test/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_optimalvision_selftest", "index.html"));
+});
+
+app.use(
   "/optimalvision/admin",
   express.static(path.join(__dirname, "..", "public_optimalvision_admin"))
 );

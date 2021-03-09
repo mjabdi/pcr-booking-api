@@ -11,7 +11,8 @@ const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 router.post('/bookconsultation' , async function (req,res,next) {
 
     try{
-        const {fullname, email, phone, faceToFaceConsultation, telephoneConsultation} = req.body;
+        const {fullname, email, phone, faceToFaceConsultation, telephoneConsultation, questions} = req.body;
+
         const booking =  new OVBooking(
             {
                 timeStamp : new Date(),
@@ -19,7 +20,8 @@ router.post('/bookconsultation' , async function (req,res,next) {
                 email: email,
                 phone: phone,
                 faceToFaceConsultation: faceToFaceConsultation,
-                telephoneConsultation: telephoneConsultation
+                telephoneConsultation: telephoneConsultation,
+                questions : questions ? JSON.stringify(questions) : null
             }
         )
 
