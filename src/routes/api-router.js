@@ -17,6 +17,9 @@ const gpBookService =  require('./../services/gp/booking-service');
 const stdTimeService =  require('./../services/std/time-service');
 const stdBookService =  require('./../services/std/booking-service');
 
+const bloodTimeService =  require('./../services/blood/time-service');
+const bloodBookService =  require('./../services/blood/booking-service');
+
 const adminBookService =  require('./../services/admin/booking-service');
 
 
@@ -60,6 +63,10 @@ router.use('/gp/book', gpBookService);
 /// STD ---------
 router.use('/std/time', stdTimeService);
 router.use('/std/book', stdBookService);
+
+/// STD ---------
+router.use('/blood/time', bloodTimeService);
+router.use('/blood/book', bookingService);
 
 
 /// Medex -----------------------------

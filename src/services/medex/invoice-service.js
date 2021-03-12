@@ -232,7 +232,7 @@ async function generateNewInvoiceNumber()
 
     lastInvoiceNumber.lastExtRef += 1
     await lastInvoiceNumber.save()
-    return lastInvoiceNumber.lastExtRef
+    return `MX21${lastInvoiceNumber.lastExtRef}`
 }
 
 
