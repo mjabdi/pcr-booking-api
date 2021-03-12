@@ -30,15 +30,15 @@ const sendConfirmationEmail =  async (options) =>
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
     content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p>Thank you for booking your appointment for <strong>"Private STD Check"</strong> at the Medical Express Clinic. We look forward to welcoming you.</p>`;
+    content += `<p>Thank you for booking your appointment for <strong>"Blood Test"</strong> at the Medical Express Clinic. We look forward to welcoming you.</p>`;
     // content += `<p style="font-size:18px; font-weight:800">‘If you have received this email your appointment is confirmed. Please <u>DON'T CALL</u> the clinic to confirm your appointment.’</p>`;
 
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment. You will now also be able to register and access your patient portal by visiting the link on our website homepage. This will have details of all of your past and future appointments, and allow you to directly book appointments with the clinic without the need to re-enter all of your personal information. </p>`;
    
-    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/std/${options._id}`;
+    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/blood/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/std/${options._id}`;
+    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/blood/${options._id}`;
     content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
     content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
 
@@ -104,7 +104,7 @@ const sendConfirmationEmail =  async (options) =>
 
     const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
-    await sendMail(options.email, 'STD Clinic Appointment Confirmation - Medical Express Clinic' , content, event);
+    await sendMail(options.email, 'Blood Test Appointment Confirmation - Medical Express Clinic' , content, event);
    
 }
 
@@ -119,7 +119,7 @@ const sendRegFormEmail =  async (options) =>
     content += `<p> Please complete patient registration form online by following this link : </p>`;
 
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/gp/${options._id}`;
+    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/blood/${options._id}`;
     
     content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
   
@@ -149,7 +149,7 @@ const sendRegFormEmail =  async (options) =>
     content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     content += "</div>"
     
-    await sendMail(options.email, 'Registration Form for STD - Medical Express Clinic' , content, null);
+    await sendMail(options.email, 'Registration Form for Blood Test - Medical Express Clinic' , content, null);
 }
 
 

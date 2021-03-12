@@ -93,6 +93,24 @@ app.get("/medicalexpressclinic/user/form/std/*", function (req, res) {
 });
 
 app.use(
+  "/medicalexpressclinic/user/edit/blood/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/blood/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+app.use(
+  "/medicalexpressclinic/user/form/blood/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/form/blood/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+
+
+app.use(
   "/medicalexpressclinic/user/form/gp/",
   express.static(path.join(__dirname, "..", "public_admin"))
 );
@@ -145,6 +163,14 @@ app.use(
 );
 app.get("/medicalexpressclinic/book/std/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_std", "index.html"));
+});
+
+app.use(
+  "/medicalexpressclinic/book/blood",
+  express.static(path.join(__dirname, "..", "public_blood"))
+);
+app.get("/medicalexpressclinic/book/blood/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_blood", "index.html"));
 });
 
 app.use(

@@ -66,7 +66,7 @@ router.use('/std/book', stdBookService);
 
 /// STD ---------
 router.use('/blood/time', bloodTimeService);
-router.use('/blood/book', bookingService);
+router.use('/blood/book', bloodBookService);
 
 
 /// Medex -----------------------------

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const TimeSlot = require('../../models/TimeSlot');
 const dateformat = require('dateformat');
-const {STDBooking} = require('../../models/std/STDBooking');
+const {BloodBooking} = require('../../models/blood/BloodBooking');
 const { isWeekend, getDefaultTimeSlots, getHolidays } = require('./holidays');
 
 
@@ -70,7 +70,7 @@ router.get('/gettimeslots', async function(req, res, next) {
 
         const defaultTimeSlots = getDefaultTimeSlots(date);     
        
-         const result2 = await STDBooking.aggregate([
+         const result2 = await BloodBooking.aggregate([
             {
                 $match: {
                   bookingDate: date,

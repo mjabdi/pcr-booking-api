@@ -460,7 +460,7 @@ router.post('/bookappointment', async function(req, res, next) {
                 {
                     timeStamp: new Date(),
                     type: 'InvalidBooking-STD',
-                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (Gynae)`
+                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (STD)`
                 }
             );
             await alaram.save();

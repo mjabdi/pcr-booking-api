@@ -119,7 +119,7 @@ const sendRegFormEmail =  async (options) =>
     content += `<p> Please complete patient registration form online by following this link : </p>`;
 
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/gp/${options._id}`;
+    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/std/${options._id}`;
     
     content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
   
