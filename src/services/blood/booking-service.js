@@ -435,6 +435,7 @@ router.post('/bookappointment', async function(req, res, next) {
 
     try{
 
+
         const found = await BloodBooking.findOne({email : req.body.email,
                                          bookingDate: req.body.bookingDate,
                                          deleted: {$ne: true}                                      

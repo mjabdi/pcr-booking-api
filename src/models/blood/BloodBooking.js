@@ -24,12 +24,22 @@ const BloodBookingSchema = new mongoose.Schema({
 
     packageName: {
         type: String,
-        required: true
+        required: false
     }, 
+
+    indivisualTests: {
+        type: String,
+        required: false
+    },
     
     notes: {
         type: String,
         required: false,
+    },
+
+    birthDate: {
+        type: String,
+        required: true,
     },
 
     bookingDate: {
