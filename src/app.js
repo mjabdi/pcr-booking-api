@@ -212,6 +212,16 @@ app.get("/optimalvision/self-test/*", function (req, res) {
 });
 
 app.use(
+  "/optimalvision/callback",
+  express.static(path.join(__dirname, "..", "public_optimalvision_callback"))
+);
+app.get("/optimalvision/callback/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_optimalvision_callback", "index.html"));
+});
+
+
+
+app.use(
   "/optimalvision/admin",
   express.static(path.join(__dirname, "..", "public_optimalvision_admin"))
 );
