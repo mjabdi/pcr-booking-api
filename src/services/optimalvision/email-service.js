@@ -34,6 +34,8 @@ const sendNotificationEmail =  async (options) =>
                                     .replace('$EMAIL$',  options.email)
                                     .replace('$PHONE$', options.phone)
                                     .replace('$APPOINTMENT$', Appointment)
+                                    .replace('$DATE$', FormatDateFromString(options.bookingDate))
+                                    .replace('$TIME$', options.bookingTime)
 
     const email = process.env.NODE_ENV === 'production' ? 'info@optimalvision.co.uk' : 'm.jafarabdi@gmail.com'
     // const email = "m.jafarabdi@gmail.com"
