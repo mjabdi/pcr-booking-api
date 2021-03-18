@@ -5,7 +5,7 @@ const path = require('path')
 const config = require('config')
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const {createPDFForCovid1Form, createPDFForCovid2Form, createPDFForGynaeRegistration, createPDFForGPRegistration, createPDFForSTDRegistration, createPDFForInvoice} = require('./../pdf-creator'); 
+const {createPDFForCovid1Form, createPDFForCovid2Form, createPDFForGynaeRegistration, createPDFForGPRegistration, createPDFForSTDRegistration, createPDFForBloodRegistration, createPDFForInvoice} = require('./../pdf-creator'); 
 const {getPdfResult, getPdfCert, getPdfLabReport} = require('./../pdf-finder'); 
 const sendMail = require('./../invoice-mail-sender')
 
@@ -13,6 +13,7 @@ const {Booking} = require('./../models/Booking');
 const {GynaeBooking} = require('./../models/gynae/GynaeBooking');
 const {GPBooking} = require('./../models/gp/GPBooking');
 const {STDBooking} = require('./../models/std/STDBooking');
+const {BloodBooking} = require('./../models/blood/BloodBooking');
 
 
 const {GlobalParams} = require('./../models/GlobalParams');
@@ -310,6 +311,43 @@ router.get('/downloadstdregform', async function(req, res, next) {
         return;
     }
 });
+
+
+router.get('/downloadbloodregform', async function(req, res, next) {
+
+    var id = null;
+    try{
+        id = ObjectId(req.query.id);
+        if (!id)
+            throw new Error();
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;
+    }
+
+    try{
+        
+        const pdfBuffer = await createPDFForBloodRegistration(id);        
+        
+        await BloodBooking.updateOne({_id: id, status:'booked'}, {status: 'patient_attended'});
+
+        res.set( {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=blood-reg-form-${id}.pdf`,
+            'Content-Transfer-Encoding': 'Binary'
+          }).status(200).send(pdfBuffer);   
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+
 
 router.get('/downloadinvoice', async function(req, res, next) {
 
