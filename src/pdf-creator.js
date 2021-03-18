@@ -1274,5 +1274,6 @@ module.exports = {
   createPDFForGynaeRegistration: createPDFForGynaeRegistration,
   createPDFForGPRegistration: createPDFForGPRegistration,
   createPDFForSTDRegistration: createPDFForSTDRegistration,
+  createPDFForBloodRegistration: createPDFForBloodRegistration,
   createPDFForInvoice: createPDFForInvoice,
 };
