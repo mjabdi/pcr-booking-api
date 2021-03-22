@@ -60,6 +60,11 @@ const OVBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    referrer: {
+        type: String,
+        required: false
+    }
+
 });
 
 module.exports = {
