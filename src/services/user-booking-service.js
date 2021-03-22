@@ -143,6 +143,27 @@ router.post("/getalluserbookings", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [
+                  { email: email },
+                  { email: email.toLowerCase() },
+                  { email: email.toUpperCase() },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+      {
         $sort: { timeStamp: -1 },
       },
     ]).exec();
