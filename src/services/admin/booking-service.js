@@ -3,6 +3,8 @@ const router = express.Router();
 const { GPBooking } = require("../../models/gp/GPBooking");
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const { STDBooking } = require("../../models/std/STDBooking");
+const { BloodBooking } = require("../../models/blood/BloodBooking");
+
 const { Booking } = require("../../models/Booking");
 
 const dateformat = require("dateformat");
@@ -153,11 +155,18 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
+    const bloodCount = await BloodBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+
     const result = [
       {clinic: "pcr", count: pcrCount},
       {clinic: "gynae", count: gynaeCount},
       {clinic: "gp", count: gpCount},
-      {clinic: "std", count: stdCount}
+      {clinic: "std", count: stdCount},
+      {clinic: "blood", count: bloodCount}
     ]
 
     res.status(200).send({ status: "OK", count: result });
@@ -266,12 +275,21 @@ router.get(
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
+
+      const bloodCount = await BloodBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+
   
       const result = [
         {clinic: "pcr", count: pcrCount},
         {clinic: "gynae", count: gynaeCount},
         {clinic: "gp", count: gpCount},
-        {clinic: "std", count: stdCount}
+        {clinic: "std", count: stdCount},
+        {clinic: "blood", count: bloodCount}
+
       ]
   
       res.status(200).send({ status: "OK", count: result });
@@ -392,6 +410,48 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+
+      {
         $sort: { timeStamp: 1 },
       },
     ]).exec();
@@ -464,6 +524,23 @@ router.get("/getallbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
@@ -538,6 +615,23 @@ router.get("/getdeletedbookings", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $eq: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+      {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
     ])
@@ -611,6 +705,23 @@ router.get("/gettodaybookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, { bookingDate: today }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { bookingTimeNormalized: 1 },
       },
@@ -694,6 +805,26 @@ router.get("/getoldbookings", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $lt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+      {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
     ])
@@ -776,6 +907,26 @@ router.get("/getfuturebookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $gt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { bookingDate: 1, bookingTimeNormalized: 1 },
       },
@@ -861,6 +1012,23 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
         },
       },
       {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+      {
         $sort: { timeStamp: -1 },
       },
     ])
@@ -933,6 +1101,23 @@ router.get("/getbookingsbyref", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ bookingRef: ref }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { timeStamp: -1 },
       },
