@@ -70,12 +70,25 @@ router.get('/gettimeslots', async function(req, res, next) {
 
         const defaultTimeSlots = getDefaultTimeSlots(date);     
        
-         const result2 = await STDBooking.aggregate([
+        const result2 = await STDBooking.aggregate([
             {
                 $match: {
                   bookingDate: date,
                   deleted: {$ne : true}
                 }
+              },
+              {
+                $unionWith: {
+                  coll: "gpbookings",
+                  pipeline: [
+                    {
+                        $match: {
+                            bookingDate: date,
+                            deleted: {$ne : true}
+                          }
+                     },
+                  ],
+                },
               },
         
               { $group:
@@ -85,6 +98,7 @@ router.get('/gettimeslots', async function(req, res, next) {
             } ,
         
          ]).sort({_id: 1}).exec();
+
 
         if (result2.length === 0)
         {
