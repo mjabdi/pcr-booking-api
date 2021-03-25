@@ -74,6 +74,18 @@ const TIME_SLOTS_WEEKEND = [
     new TimeSlot('01:45 PM', true),
 ];
 
+const TIME_SLOTS_WEEKEND_30MIN = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+];
+
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -85,9 +97,20 @@ const getDefaultTimeSlots = (date) =>
     var results = [];
     var finalResults = [];
 
+    // var is30Min = someDateStr === '2021-03-27' ||
+    //               someDateStr === '2021-03-27' ||
+    //               someDateStr === '2021-03-27' ||
+    //               someDateStr === '2021-03-27' ||
+
+    // if (is30Min)
+    // {
+    //     results = TIME_SLOTS_WEEKEND_30MIN;
+    // }
+    // else 
+    
     if (isWeekend(someDate) && someDateStr !== '2020-12-27') /// Weekend
     {
-        results = TIME_SLOTS_WEEKEND;
+        results = TIME_SLOTS_WEEKEND_30MIN;
     }
     else
     {
