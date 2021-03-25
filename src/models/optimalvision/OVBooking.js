@@ -63,7 +63,22 @@ const OVBookingSchema = new mongoose.Schema({
     referrer: {
         type: String,
         required: false
-    }
+    },
+
+    birthDate: {
+        type: String,
+        required: false
+    },
+
+    notes: {
+        type: String,
+        required: false
+    },
+
+    clinic: {
+        type: String,
+        required: false
+    },
 
 });
 
