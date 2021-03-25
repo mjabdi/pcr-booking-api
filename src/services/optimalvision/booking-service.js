@@ -438,7 +438,61 @@ router.get('/getallbookingsbydatestrandtime', async function (req, res, next) {
 });
 
 
+router.post('/updatebookappointment', async function(req, res, next) {
 
+    try
+    {
+        req.body.bookingId = ObjectId(req.body.bookingId);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        const oldBooking = await OVBooking.findOne({_id : req.body.bookingId});
+
+        await OVBooking.updateOne({_id : req.body.bookingId}, {...req.body});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/deletebookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await OVBooking.deleteOne({_id : req.query.id});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
 
 
 
