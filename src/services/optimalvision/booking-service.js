@@ -222,7 +222,7 @@ router.get('/gettodaybookings', async function (req, res, next) {
     try {
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-        const result = await OVBooking.find({ bookingDate: today, deleted: { $ne: true } }).sort({ bookingTimeNormalized: 1 }).exec();
+        const result = await OVBooking.find({ bookingDate: today, deleted: { $ne: true }, clinic: {$eq: null} }).sort({ bookingTimeNormalized: 1 }).exec();
         res.status(200).send(result);
     }
     catch (err) {
@@ -248,7 +248,7 @@ router.get('/getfuturebookings', async function (req, res, next) {
     try {
         const today = dateformat(new Date(), 'yyyy-mm-dd');
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-        const result = await OVBooking.find({ bookingDate: { $gt: today }, deleted: { $ne: true } }).sort({ bookingDate: 1, bookingTimeNormalized: 1 }).limit(limit).exec();
+        const result = await OVBooking.find({ bookingDate: { $gt: today }, deleted: { $ne: true }, clinic: {$eq: null}  }).sort({ bookingDate: 1, bookingTimeNormalized: 1 }).limit(limit).exec();
         res.status(200).send(result);
     }
     catch (err) {
@@ -259,7 +259,7 @@ router.get('/getfuturebookings', async function (req, res, next) {
 router.get('/getrecentbookings', async function (req, res, next) {
 
     try {
-        const result = await OVBooking.find({ deleted: { $ne: true } }).sort({ timeStamp: -1 }).limit(10).exec();
+        const result = await OVBooking.find({ deleted: { $ne: true }, clinic: {$eq: null}  }).sort({ timeStamp: -1 }).limit(10).exec();
         res.status(200).send(result);
     }
     catch (err) {
@@ -271,7 +271,7 @@ router.get('/getrecentbookingsall', async function (req, res, next) {
 
     try {
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-        const result = await OVBooking.find({ deleted: { $ne: true } }).sort({ timeStamp: -1 }).limit(limit).exec();
+        const result = await OVBooking.find({ deleted: { $ne: true }, clinic: {$eq: null}  }).sort({ timeStamp: -1 }).limit(limit).exec();
         res.status(200).send(result);
     }
     catch (err) {
