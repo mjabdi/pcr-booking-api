@@ -11,7 +11,8 @@ router.post('/signin', async function(req, res, next) {
 
         username = username.trim().toLowerCase()
 
-        const isMatch = username.toLowerCase() === 'admin' && password === 'ov$2021'
+        const isMatch = (username.toLowerCase() === 'admin' && password === 'ov$2021')
+                        || (username.toLowerCase() === 'ovadmin' && password === 'vision$2021')
         if (!isMatch)
         {
             res.status(200).send({status:'FAILED', error: 'Invalid username or password'})
