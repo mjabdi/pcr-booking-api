@@ -81,6 +81,11 @@ const BloodReport = mongoose.model('bloodreport', new mongoose.Schema({
     emailSent: {
         type: Boolean,
         default: false
+    },
+
+    notes: {
+        type: String,
+        required: false
     }
 
 }));
