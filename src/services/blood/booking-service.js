@@ -10,7 +10,130 @@ const {Notification} = require('../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
 
+const {BloodReport} = require('../../models/blood/BloodReport')
+
 const DEFAULT_LIMIT = 25
+
+router.get('/getnewmatchedbloodreports', async function(req, res, next) {
+
+    try{
+
+        const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({timeStamp:1}).exec();
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+router.get('/getarchivedmatchedbloodreports', async function(req, res, next) {
+
+    try{
+
+        const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({timeStamp:1}).exec();
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
+router.get('/getnewunmatchedbloodreports', async function(req, res, next) {
+
+    try{
+
+        const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({timeStamp:1}).exec();
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+router.get('/getarchivedunmatchedbloodreports', async function(req, res, next) {
+
+    try{
+
+        const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({timeStamp:1}).exec();
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
+router.post('/archivebloodreport' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const bloodreport =  await BloodReport.findOne({_id: id});
+        bloodreport.seen = true
+        await bloodreport.save()
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/unarchivebloodreport' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const bloodreport =  await BloodReport.findOne({_id: id});
+        bloodreport.seen = false
+        await bloodreport.save()
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/sendbloodreportemail' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const bloodreport =  await BloodReport.findOne({_id: id});
+
+        ///* send blood report email
+
+        // *** to be done ***
+
+        /////
+
+        bloodreport.emailSent = true
+        await bloodreport.save()
+
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
+
+
 
 router.post('/sendregformemail' , async function (req,res,next) {
 

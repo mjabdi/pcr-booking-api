@@ -411,26 +411,6 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
       },
       {
         $unionWith: {
-          coll: "stdbookings",
-          pipeline: [
-            {
-              $match: {
-                $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
-                ],
-              },
-            },
-
-            {
-              $addFields: { clinic: "std" },
-            },
-          ],
-        },
-      },
-      {
-        $unionWith: {
           coll: "bloodbookings",
           pipeline: [
             {

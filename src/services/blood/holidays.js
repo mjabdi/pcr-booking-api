@@ -107,6 +107,9 @@ const getDefaultTimeSlots = (date) =>
     //     results = TIME_SLOTS_WEEKEND_30MIN;
     // }
     // else 
+
+
+
     
     if (isWeekend(someDate) && someDateStr !== '2020-12-27') /// Weekend
     {
@@ -115,6 +118,11 @@ const getDefaultTimeSlots = (date) =>
     else
     {
         results = TIME_SLOTS_NORMAL;
+    }
+
+    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05')
+    {
+        results = TIME_SLOTS_WEEKEND_30MIN
     }
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');

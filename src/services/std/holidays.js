@@ -94,6 +94,12 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL;
     }
 
+    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05')
+    {
+        results = TIME_SLOTS_WEEKEND;
+    }
+
+
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
     const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
