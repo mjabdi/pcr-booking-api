@@ -18,7 +18,7 @@ router.get('/getnewmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({timeStamp:1}).exec();
+        const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({testDate:1, timeStamp:1}).exec();
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -32,7 +32,7 @@ router.get('/getarchivedmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({timeStamp:1}).exec();
+        const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:1,timeStamp:1}).exec();
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -47,7 +47,7 @@ router.get('/getnewunmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({timeStamp:1}).exec();
+        const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({testDate:1,timeStamp:1}).exec();
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -61,7 +61,7 @@ router.get('/getarchivedunmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({timeStamp:1}).exec();
+        const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:1,timeStamp:1}).exec();
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
