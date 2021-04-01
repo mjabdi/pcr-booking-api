@@ -110,6 +110,9 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
 
     try{
         const {id} = req.query;
+        const {email, notes} = req.body
+
+
         const bloodreport =  await BloodReport.findOne({_id: id});
 
         ///* send blood report email
@@ -119,7 +122,11 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
         /////
 
         bloodreport.emailSent = true
+        bloodreport.notes = notes
+        bloodreport.email = email
         await bloodreport.save()
+
+        
 
 
         res.status(200).send({status : "OK"});
