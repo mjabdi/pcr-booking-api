@@ -66,7 +66,13 @@ const sendConfirmationEmail =  async (options) =>
             testsString += ' , '
         } )
         content += `<li> Indivisual Tests : ${testsString} </li>`;
-    }    
+    }   
+    
+    if (options.doctorConsultation)
+    {
+        content += `<li> + Full Doctor Consultation </li>`;
+
+    }
     
     content += `<li> Estimated Price : ${options.estimatedPrice} </li>`;
 

@@ -122,6 +122,11 @@ const BloodBookingSchema = new mongoose.Schema({
     formData: {
         type: String,
         required: false
+    },
+
+    doctorConsultation: {
+        type: Boolean,
+        default: false
     }
 
 });
