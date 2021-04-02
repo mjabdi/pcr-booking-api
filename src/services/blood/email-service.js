@@ -1,5 +1,7 @@
 
 const {sendMail} = require('./mail-sender-2');
+const {sendMailBloodReport} = require('./mail-sender');
+
 const {createICS} = require('./ics-creator');
 
 
@@ -10,6 +12,9 @@ const uuid = require('uuid-random');
 const { UserEmailMap } = require('../../models/UserEmailMap');
 const CreatePortalLink = require('../PortalLinkCreator');
 const { test } = require('uuid-random');
+
+const path = require("path")
+const config = require("config")
 
 
 const faq = [
@@ -166,10 +171,62 @@ const sendRegFormEmail =  async (options) =>
     await sendMail(options.email, 'Registration Form for Blood Test - Medical Express Clinic' , content, null);
 }
 
+const sendBloodResultEmail =  async (options, email, notes) =>
+{
+
+    var content = '';
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<p>Dear ${options.name},</p>`;
+    content += `<p> Please find attached result of your blood test with Medical Express Clinic.</p>`;
+
+    if (notes)
+    {
+        content += `<p style="font-weight:700"> * Doctor Notes: </p>`;
+        content += `<p style="font-weight:700;font-size:18px"> ${notes} </p>`;
+    }
+
+
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Medical Express Clinic</p>`;
+    content += `</div>`;
+  
+  
+    content += '</div>'
+
+    content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    // content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
+    content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment.</p>'
+    content += `<br/>`
+    content += `<i>117a Harley Street </i> <br/>`
+    content += `<i>London </i> <br/>`
+    content += `<i>W1G 6AT </i><br/>`
+    content += '<br/>'
+    content += "T - 0207 499 1991 <br/>"
+    content += "F - 0207 486 2615 <br/>"
+    content += '</div>'
+
+    content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
+    content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
+    content += "</div>"
+
+    const attachmets = [
+        {
+            path: path.join(config.PdfFolder, "attachments" ,options.filename),
+            filename: options.filename
+        }
+    ]
+    
+    await sendMailBloodReport(email, null, 'Blood Test Report - Medical Express Clinic' , content, attachmets);
+}
+
+
 
 
 
 module.exports = {
     sendConfirmationEmail : sendConfirmationEmail,
-    sendRegFormEmail: sendRegFormEmail
+    sendRegFormEmail: sendRegFormEmail,
+    sendBloodResultEmail: sendBloodResultEmail
 };

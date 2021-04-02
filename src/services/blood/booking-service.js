@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {BloodBooking} = require('../../models/blood/BloodBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendBloodResultEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
@@ -117,13 +117,16 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
 
         ///* send blood report email
 
-        // *** to be done ***
+        await sendBloodResultEmail(bloodreport, email, notes)
 
         /////
 
         bloodreport.emailSent = true
         bloodreport.notes = notes
-        bloodreport.email = email
+        if (!bloodreport.email)
+        {
+            bloodreport.email = email
+        }
         await bloodreport.save()
 
         
