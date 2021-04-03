@@ -11,7 +11,7 @@ const { getDefaultTimeSlots, getHolidays } = require('./holidays');
 router.post('/bookappointment', async function (req, res, next) {
 
     try {
-        let { fullname, email, phone, birthDate, notes, clinic, bookingDate, bookingTime } = req.body;
+        let { fullname, email, phone, birthDate, notes, clinic, bookingDate, bookingTime, patientID, prescriptionLeft, prescriptionRight } = req.body;
 
         if (!email) {
             email = "-"
@@ -30,7 +30,10 @@ router.post('/bookappointment', async function (req, res, next) {
                 notes: notes,
                 clinic: clinic,
                 bookingDate: bookingDate,
-                bookingTime: bookingTime
+                bookingTime: bookingTime,
+                patientID: patientID,
+                prescriptionLeft: prescriptionLeft,
+                prescriptionRight: prescriptionRight
             }
         )
 

@@ -80,6 +80,21 @@ const OVBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    patientID: {
+        type: String,
+        required: false
+    },
+
+    prescriptionLeft: {
+        type: String,
+        required: false
+    },
+
+    prescriptionRight: {
+        type: String,
+        required: false
+    },
+
 });
 
 module.exports = {
