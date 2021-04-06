@@ -14,11 +14,29 @@ const {BloodReport} = require('../../models/blood/BloodReport')
 
 const DEFAULT_LIMIT = 25
 
+router.get('/getarchivedbloodreports', async function(req, res, next) {
+
+    try{
+        // const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
 router.get('/getnewmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+        // const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+        const result = await BloodReport.find({email: {$ne: null}, seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -32,7 +50,10 @@ router.get('/getarchivedmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        
+        // const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({email: {$ne: null}, seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -47,7 +68,9 @@ router.get('/getnewunmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        // const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({email: {$eq: null}, seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -61,7 +84,9 @@ router.get('/getarchivedunmatchedbloodreports', async function(req, res, next) {
 
     try{
 
-        const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        // const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({email: {$eq: null}, seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+
         res.status(200).send({status: "OK", result : result});
    }
    catch(err)
@@ -121,16 +146,13 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
 
         /////
 
-        bloodreport.emailSent = true
-        bloodreport.notes = notes
-        if (!bloodreport.email)
-        {
-            bloodreport.email = email
-        }
-        await bloodreport.save()
-
         
 
+        bloodreport.emailSent = true
+        bloodreport.notes = notes
+        bloodreport.email = email
+        
+        await bloodreport.save()
 
         res.status(200).send({status : "OK"});
     }
@@ -141,8 +163,33 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
     }
 });
 
+router.post('/updatebloodreport' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        let {email, notes} = req.body
+
+        if (!email || email.trim().length === 0)
+        {
+            email = null
+        }
 
 
+        const bloodreport =  await BloodReport.findOne({_id: id});
+
+        bloodreport.notes = notes
+        bloodreport.email = email
+        
+        await bloodreport.save()
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
 
 
 router.post('/sendregformemail' , async function (req,res,next) {
