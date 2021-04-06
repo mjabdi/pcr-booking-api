@@ -18,7 +18,7 @@ router.get('/getarchivedbloodreports', async function(req, res, next) {
 
     try{
         // const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
-        const result = await BloodReport.find({seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , seen : {$eq : true}, emailSent: {$ne: true}}).sort({testDate:-1,timeStamp:-1}).exec();
 
         res.status(200).send({status: "OK", result : result});
    }
@@ -35,7 +35,7 @@ router.get('/getnewmatchedbloodreports', async function(req, res, next) {
     try{
 
         // const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
-        const result = await BloodReport.find({email: {$ne: null}, seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , email: {$ne: null}, seen : {$ne : true}, emailSent: {$ne: true}}).sort({testDate:-1, timeStamp:-1}).exec();
 
         res.status(200).send({status: "OK", result : result});
    }
@@ -52,7 +52,7 @@ router.get('/getarchivedmatchedbloodreports', async function(req, res, next) {
 
         
         // const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
-        const result = await BloodReport.find({email: {$ne: null}, seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , email: {$ne: null}, seen : {$eq : true}, emailSent: {$ne: true}}).sort({testDate:-1,timeStamp:-1}).exec();
 
         res.status(200).send({status: "OK", result : result});
    }
@@ -69,7 +69,7 @@ router.get('/getnewunmatchedbloodreports', async function(req, res, next) {
     try{
 
         // const result = await BloodReport.find({status: "unmatched", seen : {$ne : true}}).sort({testDate:-1,timeStamp:-1}).exec();
-        const result = await BloodReport.find({email: {$eq: null}, seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , email: {$eq: null}, seen : {$ne : true}, emailSent: {$ne: true}}).sort({testDate:-1, timeStamp:-1}).exec();
 
         res.status(200).send({status: "OK", result : result});
    }
@@ -85,7 +85,7 @@ router.get('/getarchivedunmatchedbloodreports', async function(req, res, next) {
     try{
 
         // const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
-        const result = await BloodReport.find({email: {$eq: null}, seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , email: {$eq: null}, seen : {$eq : true}, emailSent: {$ne: true}}).sort({testDate:-1,timeStamp:-1}).exec();
 
         res.status(200).send({status: "OK", result : result});
    }
@@ -95,6 +95,40 @@ router.get('/getarchivedunmatchedbloodreports', async function(req, res, next) {
        res.status(500).send({status:'FAILED' , error: err.message });
    }
 });
+
+router.get('/getsentbloodreports', async function(req, res, next) {
+
+    try{
+
+        // const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.find({status: {$ne: "new"} , emailSent: {$eq: true}}).sort({testDate:-1,timeStamp:-1}).exec();
+
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+router.get('/getnewbloodresultscount', async function(req, res, next) {
+
+    try{
+
+        // const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+        const result = await BloodReport.countDocuments({status: {$ne: "new"} , emailSent: {$ne: true}, seen: {$ne : true}});
+
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
 
 
 router.post('/archivebloodreport' , async function (req,res,next) {
