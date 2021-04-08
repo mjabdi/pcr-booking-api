@@ -534,6 +534,107 @@ router.get("/getallbookings", async function (req, res, next) {
   }
 });
 
+router.post("/searchallbookings", async function (req, res, next) {
+  try {
+    const {filter} = req.body
+
+    const regexp = new RegExp(filter,"i")
+
+    const condition = {fullname: {$regex: regexp }}
+
+    const result = await Booking.aggregate([
+      {
+        $match: {
+          $and: [{ deleted: { $ne: true } }, condition],
+          
+        },
+      },
+      {
+        $addFields: { clinic: "pcr" },
+      },
+      {
+        $unionWith: {
+          coll: "gynaebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "gynae" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "gpbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+
+      {
+        $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
+      },
+    ])
+      .limit(100)
+      .exec();
+     
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+
 router.get("/getdeletedbookings", async function (req, res, next) {
   try {
     const limit = parseInt(req.query.limit) || DEFAULT_LIMIT;
