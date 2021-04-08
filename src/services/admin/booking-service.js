@@ -543,6 +543,7 @@ router.post("/searchallbookings", async function (req, res, next) {
     const condition = {fullname: {$regex: regexp }}
 
     const result = await Booking.aggregate([
+      { $addFields: { fullname: { $concat: [ "$forename", " ", "$surname" ] } } },
       {
         $match: {
           $and: [{ deleted: { $ne: true } }, condition],
@@ -627,6 +628,8 @@ router.post("/searchallbookings", async function (req, res, next) {
     ])
       .limit(100)
       .exec();
+
+      console.log(result)
      
     res.status(200).send(result);
   } catch (err) {
