@@ -623,6 +623,26 @@ router.post("/searchallbookings", async function (req, res, next) {
       },
 
       {
+        $unionWith: {
+          coll: "bloodreports",
+          pipeline: [
+            { $addFields: { fullname: "$name"} },
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "Blood Result" },
+            },
+          ],
+        },
+      },
+
+
+      {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
     ])
