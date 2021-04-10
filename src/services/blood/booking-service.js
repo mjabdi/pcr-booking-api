@@ -216,6 +216,12 @@ router.post('/updatebloodreport' , async function (req,res,next) {
         
         await bloodreport.save()
 
+        if (bloodreport.name && bloodreport.name.trim().length > 10)
+        {
+            await BloodReport.updateMany({name: bloodreport.name, email: {$eq: null}}, {email: email});
+        }
+      
+
         res.status(200).send({status : "OK"});
     }
     catch(err)
