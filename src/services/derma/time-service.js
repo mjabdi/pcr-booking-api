@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const TimeSlot = require('../../models/TimeSlot');
 const dateformat = require('dateformat');
-const {GPBooking} = require('../../models/gp/GPBooking');
+const {DermaBooking} = require('../../models/derma/DermaBooking');
 const { isWeekend, getDefaultTimeSlots, getHolidays } = require('./holidays');
 
 
@@ -70,7 +70,7 @@ router.get('/gettimeslots', async function(req, res, next) {
 
         const defaultTimeSlots = getDefaultTimeSlots(date);     
        
-         const result2 = await GPBooking.aggregate([
+         const result2 = await DermaBooking.aggregate([
             {
                 $match: {
                   bookingDate: date,

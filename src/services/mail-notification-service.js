@@ -1,10 +1,11 @@
-const { sendMail } = require("./gp/mail-sender-2");
+const { sendMail } = require("./derma/mail-sender-2");
 
 const NOTIFY_TYPE_GP_BOOKED = 1;
 const NOTIFY_TYPE_GYNAE_BOOKED = 2;
 const NOTIFY_TYPE_STD_BOOKED = 3;
 const NOTIFY_TYPE_GYNAE_CANCELED = 4;
 const NOTIFY_TYPE_BLOOD_BOOKED = 5;
+const NOTIFY_TYPE_DERMATOLOGY_BOOKED = 6;
 
 
 const MailTo =
@@ -54,6 +55,8 @@ function createSubject(notifyType) {
       return "New Booking for BLOOD";
     case NOTIFY_TYPE_GYNAE_CANCELED:
       return "GYNAE Canceled";
+    case NOTIFY_TYPE_DERMATOLOGY_BOOKED:
+        return "New Booking for DERMATOLOGY";
     default:
       return "";
   }
@@ -69,9 +72,11 @@ function createMessage(notifyType, booking) {
       return `You have a new booking for <strong>STD</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}`;
     case NOTIFY_TYPE_BLOOD_BOOKED:
       return `You have a new booking for <strong>BLOOD</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}`;
-
     case NOTIFY_TYPE_GYNAE_CANCELED:
       return `You have a new <strong>canceled</strong> appointment for <strong>Gynae</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
+    case NOTIFY_TYPE_DERMATOLOGY_BOOKED:
+        return `You have a new booking for <strong>DERMATOLOGY</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+       
     default:
       return "";
   }
@@ -80,10 +85,12 @@ function createMessage(notifyType, booking) {
 module.exports = {
   sendAdminNotificationEmail: sendAdminNotificationEmail,
   NOTIFY_TYPE: {
-    NOTIFY_TYPE_GP_BOOKED,
+    NOTIFY_TYPE_GP_BOOKED,   
     NOTIFY_TYPE_GYNAE_BOOKED,
     NOTIFY_TYPE_STD_BOOKED,
     NOTIFY_TYPE_BLOOD_BOOKED,
     NOTIFY_TYPE_GYNAE_CANCELED,
+    NOTIFY_TYPE_DERMATOLOGY_BOOKED,
+
   },
 };
