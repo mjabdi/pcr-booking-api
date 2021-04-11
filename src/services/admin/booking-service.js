@@ -18,6 +18,7 @@ const {
   NOTIFY_TYPE,
 } = require("../mail-notification-service");
 const getNewRef = require("../refgenatator-service");
+const {DermaBooking} = require("../../models/derma/DermaBooking");
 
 const DEFAULT_LIMIT = 25;
 
@@ -160,13 +161,21 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
+    const dermaCount = await DermaBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+
 
     const result = [
       {clinic: "pcr", count: pcrCount},
       {clinic: "gynae", count: gynaeCount},
       {clinic: "gp", count: gpCount},
       {clinic: "std", count: stdCount},
-      {clinic: "blood", count: bloodCount}
+      {clinic: "blood", count: bloodCount},
+      {clinic: "derma", count: dermaCount}
+
     ]
 
     res.status(200).send({ status: "OK", count: result });
@@ -282,13 +291,22 @@ router.get(
         deleted: { $ne: true },
       }).exec();
 
+      const dermaCount = await DermaBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+
+
   
       const result = [
         {clinic: "pcr", count: pcrCount},
         {clinic: "gynae", count: gynaeCount},
         {clinic: "gp", count: gpCount},
         {clinic: "std", count: stdCount},
-        {clinic: "blood", count: bloodCount}
+        {clinic: "blood", count: bloodCount},
+        {clinic: "derma", count: bloodCount}
+
 
       ]
   
@@ -429,6 +447,26 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
 
 
       {
@@ -520,6 +558,24 @@ router.get("/getallbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
+
 
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
@@ -621,6 +677,24 @@ router.post("/searchallbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $unionWith: {
@@ -734,6 +808,23 @@ router.get("/getdeletedbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $eq: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
@@ -825,6 +916,23 @@ router.get("/gettodaybookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, { bookingDate: today }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { bookingTimeNormalized: 1 },
@@ -927,6 +1035,26 @@ router.get("/getoldbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $lt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
@@ -1030,6 +1158,26 @@ router.get("/getfuturebookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $gt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { bookingDate: 1, bookingTimeNormalized: 1 },
@@ -1131,6 +1279,23 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { timeStamp: -1 },
@@ -1221,6 +1386,23 @@ router.get("/getbookingsbyref", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ bookingRef: ref }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { timeStamp: -1 },
