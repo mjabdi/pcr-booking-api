@@ -9,6 +9,7 @@ const { Invoice } = require("./models/medex/Invoice");
 
 const dateformat = require("dateformat");
 const {BloodBooking} = require("./models/blood/BloodBooking");
+const {DermaBooking} = require("./models/derma/DermaBooking");
 
 function NormalizeDate(date) {
   return `${date.substr(8, 2)}/${date.substr(5, 2)}/${date.substr(0, 4)}`;
@@ -890,6 +891,149 @@ const createPDFForBloodRegistration = async (id) => {
   }
 };
 
+const createPDFForDermaRegistration = async (id) => {
+  try {
+    const booking = await DermaBooking.findOne({ _id: id });
+
+    if (!booking || !booking.formData) return;
+
+    const formData = JSON.parse(booking.formData);
+
+    formData.birthDate = NormalizeDate(formData.birthDate);
+    booking.bookingDate = NormalizeDate(booking.bookingDate);
+    formData.address = NormalizeAddress(formData.address);
+
+    const doc = new PDFDocument();
+    //const stream = fs.createWriteStream(filePath);
+    //doc.pipe(stream);
+    doc.image("assets/gynae-reg-form.png", 0, 0, {
+      fit: [590, 720],
+      align: "center",
+      valign: "center",
+    });
+
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(formData.surname.toUpperCase(), 100, 187, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(formData.birthDate.toUpperCase(), 360, 187, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(formData.forename.toUpperCase(), 100, 215, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(formData.title.toUpperCase(), 305, 215, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+
+    doc
+      .fillColor("black")
+      .fontSize(9)
+      .font("Courier-Bold")
+      .text(formData.address.toUpperCase(), 100, 245, {
+        width: 480,
+        characterSpacing: 0.5,
+        wordSpacing: 0.5,
+        lineGap: 1,
+      });
+
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(formData.postCode.toUpperCase(), 100, 272, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(booking.email.toUpperCase(), 290, 272, {
+        characterSpacing: 0.5,
+        wordSpacing: 0.5,
+        lineGap: 2,
+      });
+
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(booking.phone.toUpperCase(), 100, 300, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+    doc
+      .fillColor("black")
+      .fontSize(12)
+      .font("Courier-Bold")
+      .text(booking.bookingDate, 360, 313, {
+        characterSpacing: 2,
+        wordSpacing: 2,
+        lineGap: 2,
+      });
+
+    doc
+      .fillColor("black")
+      .fontSize(9)
+      .font("Courier-Bold")
+      .text(formData.attendReason.toUpperCase(), 105, 447, {
+        width: 480,
+        characterSpacing: 0.5,
+        wordSpacing: 0.5,
+        lineGap: 1,
+      });
+
+    ///check boxes
+    formData.gender.toLowerCase() === "male"
+      ? doc.image("assets/checkbox-tick.jpg", 390, 213, { scale: 0.55 })
+      : doc.image("assets/checkbox.jpg", 390, 213, { scale: 0.55 });
+
+    formData.gender.toLowerCase() === "female"
+      ? doc.image("assets/checkbox-tick.jpg", 452, 213, { scale: 0.55 })
+      : doc.image("assets/checkbox.jpg", 452, 213, { scale: 0.55 });
+
+    formData.gender.toLowerCase() === "other"
+      ? doc.image("assets/checkbox-tick.jpg", 510, 213, { scale: 0.55 })
+      : doc.image("assets/checkbox.jpg", 510, 213, { scale: 0.55 });
+
+    /// passport here
+
+    doc.end();
+    return await getStream.buffer(doc);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+
 
 
 const createPDFForInvoice = async (id) => {
@@ -1276,4 +1420,5 @@ module.exports = {
   createPDFForSTDRegistration: createPDFForSTDRegistration,
   createPDFForBloodRegistration: createPDFForBloodRegistration,
   createPDFForInvoice: createPDFForInvoice,
+  createPDFForDermaRegistration: createPDFForDermaRegistration
 };

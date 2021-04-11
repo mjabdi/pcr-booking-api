@@ -374,7 +374,7 @@ router.get('/getbookingbyid', async function(req, res, next) {
 router.post('/addnewbooking', async function(req, res, next) {
     try{
         const ref = await getNewRef()
-        let {fullname, bookingDate, bookingTime, phone, email, notes} = req.body
+        let {fullname, bookingDate, bookingTime, phone, email, notes, service} = req.body
 
   
           if (!email || email.length < 1) {
@@ -384,8 +384,13 @@ router.post('/addnewbooking', async function(req, res, next) {
           if (!phone || phone.length < 1) {
             phone = "-";
           }
+          if (!service)
+          {
+              service = "Consultation"
+          }
+          const package = service
 
-        const payload =  {fullname, bookingDate, bookingTime, phone, email, notes}
+        const payload =  {fullname, bookingDate, bookingTime, phone, email, notes, package}
 
 
         const booking = new DermaBooking(
