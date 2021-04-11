@@ -162,6 +162,27 @@ router.post("/getalluserbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [
+                  { email: email },
+                  { email: email.toLowerCase() },
+                  { email: email.toUpperCase() },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { timeStamp: -1 },
