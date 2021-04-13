@@ -211,7 +211,7 @@ router.get('/getdeletedbookings', async function (req, res, next) {
 
     try {
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-        const result = await OVBooking.find({ deleted: { $eq: true } }).sort({ bookingDate: -1, bookingTimeNormalized: -1 }).limit(limit).exec();
+        const result = await OVBooking.find({ deleted: { $eq: true }, clinic: {$eq: null}  }).sort({ bookingDate: -1, bookingTimeNormalized: -1 }).limit(limit).exec();
         res.status(200).send(result);
     }
     catch (err) {
