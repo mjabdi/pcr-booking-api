@@ -38,6 +38,14 @@ const sendAdminNotificationEmail = async (notifyType, booking) => {
     content += "</div>";
 
     await sendMail(MailTo, subject, content, null);
+    if (process.env.NODE_ENV === "production" && notifyType === NOTIFY_TYPE_DERMATOLOGY_BOOKED)
+    {
+      await sendMail("dermatologist@medicalexpressclinic.co.uk", subject, content, null);
+    }
+  
+  
+
+
   } catch (err) {
     console.log(err);
   }
