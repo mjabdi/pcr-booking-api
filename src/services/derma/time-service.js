@@ -76,21 +76,7 @@ router.get('/gettimeslots', async function(req, res, next) {
                   bookingDate: date,
                   deleted: {$ne : true}
                 }
-              },
-              {
-                $unionWith: {
-                  coll: "stdbookings",
-                  pipeline: [
-                    {
-                        $match: {
-                            bookingDate: date,
-                            deleted: {$ne : true}
-                          }
-                     },
-                  ],
-                },
-              },
-        
+              },        
               { $group:
                  {_id : "$bookingTime",
                  total : { $sum: 1 }               
