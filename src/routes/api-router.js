@@ -33,6 +33,8 @@ const InvoiceService = require('./../services/medex/invoice-service')
 
 const OptimalVisionBookService =  require('./../services/optimalvision/booking-service')
 const OptimalVisionUserService =  require('./../services/optimalvision/user-service')
+const OptimalVisionPatientService =  require('../services/optimalvision/patient-service');
+
 
 /* GET Apis listing. */
 // router.get('/', function(req, res, next) {
@@ -89,6 +91,7 @@ router.use('/admin/book', adminBookService)
 /// Optimal Vision
 router.use('/optimalvision/book', OptimalVisionBookService)
 router.use('/optimalvision/user', OptimalVisionUserService)
+router.use('/optimalvision/patient', OptimalVisionPatientService)
 
 
 

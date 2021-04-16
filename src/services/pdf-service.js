@@ -14,7 +14,7 @@ const {GynaeBooking} = require('./../models/gynae/GynaeBooking');
 const {GPBooking} = require('./../models/gp/GPBooking');
 const {STDBooking} = require('./../models/std/STDBooking');
 const {BloodBooking} = require('./../models/blood/BloodBooking');
-const {DermaBooking} = require('./../models/derma/DermaBooking');
+const {DermaBooking} = require('../models/optimalvision/Patient');
 
 
 const {GlobalParams} = require('./../models/GlobalParams');

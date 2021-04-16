@@ -9,7 +9,7 @@ const { Invoice } = require("./models/medex/Invoice");
 
 const dateformat = require("dateformat");
 const {BloodBooking} = require("./models/blood/BloodBooking");
-const {DermaBooking} = require("./models/derma/DermaBooking");
+const {DermaBooking} = require("./models/optimalvision/Patient");
 
 function NormalizeDate(date) {
   return `${date.substr(8, 2)}/${date.substr(5, 2)}/${date.substr(0, 4)}`;
