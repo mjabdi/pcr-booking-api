@@ -68,6 +68,11 @@ const PatientSchema = new mongoose.Schema({
         required: false
     },
 
+    history: {
+        type: Array,
+        required: false
+    }
+
 });
 
 module.exports = {

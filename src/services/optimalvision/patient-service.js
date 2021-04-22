@@ -34,6 +34,10 @@ router.post('/registernewpatient', async function(req, res, next) {
             return;
         }
 
+        let formData = JSON.parse(patient.formData)
+        formData.timeStamp = new Date()
+        patient.formData = JSON.stringify(formData)
+
         const newPatient = new Patient(
             {
                 ...patient,
@@ -69,7 +73,18 @@ router.post('/updatepatient', async function(req, res, next) {
 
     try{
 
-        await Patient.updateOne({_id : req.body.id}, {...req.body.patient});
+       const oldPatient = await Patient.findOne({_id: req.body.id});
+       const oldFormData = oldPatient.formData
+       const oldHistory = oldPatient.history || []
+       oldHistory.push(oldFormData)
+
+       const formData = JSON.parse(req.body.patient.formData)
+       formData.timeStamp = new Date()
+       req.body.patient.formData = JSON.stringify(formData)
+
+       
+
+        await Patient.updateOne({_id : req.body.id}, {...req.body.patient, history: oldHistory});
 
         res.status(200).send({status: 'OK'});
 
