@@ -65,8 +65,6 @@ router.get('/gettimeslots', async function(req, res, next) {
 
     var timeSlots = [];
 
-    return timeSlot; //// Temporary Close All Dates
-
     const date = req.query.date;  //dateformat(req.query.date, 'yyyy-mm-dd');
 
     try{
@@ -95,7 +93,7 @@ router.get('/gettimeslots', async function(req, res, next) {
         else
         {
             defaultTimeSlots.forEach((timeSlot) => {
-                if (result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT)) 
+                if (result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT) || true) 
                         // || result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT))
                     )
                 {
