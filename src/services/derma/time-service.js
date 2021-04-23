@@ -93,7 +93,7 @@ router.get('/gettimeslots', async function(req, res, next) {
         else
         {
             defaultTimeSlots.forEach((timeSlot) => {
-                if (result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT) || true) 
+                if (result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT)) 
                         // || result2.find( (element) => (element._id === timeSlot.time) && (element.total >= MAX_BOOKING_PER_SLOT))
                     )
                 {

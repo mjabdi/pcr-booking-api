@@ -80,6 +80,10 @@ const getDefaultTimeSlots = (date) =>
 
     for (var i=0; i < results.length; i++)
     {
+        if (true)
+        {
+            finalResults.push(new TimeSlot(results[i].time, false));
+        }
       
         if (isHoliday(date))
         {
