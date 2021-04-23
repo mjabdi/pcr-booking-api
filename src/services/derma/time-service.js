@@ -64,6 +64,9 @@ router.get('/gettimeslots', async function(req, res, next) {
     }
 
     var timeSlots = [];
+
+    return timeSlot; //// Temporary Close All Dates
+
     const date = req.query.date;  //dateformat(req.query.date, 'yyyy-mm-dd');
 
     try{
