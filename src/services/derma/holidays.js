@@ -85,7 +85,7 @@ const getDefaultTimeSlots = (date) =>
             finalResults.push(new TimeSlot(results[i].time, false));
         }
       
-        if (isHoliday(date))
+        else if (isHoliday(date))
         {
             finalResults.push(new TimeSlot(results[i].time, false));
         }
