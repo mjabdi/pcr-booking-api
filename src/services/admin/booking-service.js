@@ -18,7 +18,7 @@ const {
   NOTIFY_TYPE,
 } = require("../mail-notification-service");
 const getNewRef = require("../refgenatator-service");
-const {DermaBooking} = require("../../models/optimalvision/Patient");
+const {DermaBooking} = require("../../models/derma/DermaBooking");
 
 const DEFAULT_LIMIT = 25;
 
