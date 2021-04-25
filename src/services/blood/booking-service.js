@@ -14,6 +14,22 @@ const {BloodReport} = require('../../models/blood/BloodReport')
 
 const DEFAULT_LIMIT = 25
 
+router.get('/getbloodreportsbybookingid', async function(req, res, next) {
+
+    try{
+        const id = ObjectId(req.query.id)
+        const result = await BloodReport.find({bookingId: id}).sort({testDate:-1,timeStamp:-1}).exec();
+
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
 router.get('/getarchivedbloodreports', async function(req, res, next) {
 
     try{
@@ -28,6 +44,8 @@ router.get('/getarchivedbloodreports', async function(req, res, next) {
        res.status(500).send({status:'FAILED' , error: err.message });
    }
 });
+
+
 
 
 router.get('/getnewmatchedbloodreports', async function(req, res, next) {

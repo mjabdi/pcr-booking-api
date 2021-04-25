@@ -1418,10 +1418,116 @@ router.get("/getbookingsbyref", async function (req, res, next) {
 router.get("/getbookingbyid", async function (req, res, next) {
   try {
     req.query.id = ObjectId(req.query.id);
-    const result = await GPBooking.findOne({ _id: req.query.id });
+    const result = await Booking.aggregate([
+      {
+        $match: {
+          $and: [
+            {_id: req.query.id},
+          ],
+        },
+      },
+      {
+        $addFields: { clinic: "pcr" },
+      },
+      {
+        $unionWith: {
+          coll: "gynaebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gynae" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "gpbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+      {
+        $sort: { timeStamp: 1 },
+      },
+    ]).exec();
+
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send({ status: "FAILED", error: err.message });
+    console.log(err)
   }
 });
 
