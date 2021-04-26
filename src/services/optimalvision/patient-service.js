@@ -184,7 +184,16 @@ router.get('/getpatientbypatientid', async function(req, res, next) {
 router.get('/getallpatients', async function(req, res, next) {
 
     try{
-         const result = await Patient.find( {deleted : {$ne : true }} ).sort({timeStamp: -1}).exec();
+
+        const result = await Patient.aggregate(
+            [
+                { $addFields: { fullname: { $concat: [ "$name", " ", "$surname" ] } } },
+                { $match :  {deleted : {$ne : true }}}
+            ]
+            ).sort({timeStamp: -1}).exec();
+
+
+        //  const result = await Patient.find( {deleted : {$ne : true }} ).sort({timeStamp: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
