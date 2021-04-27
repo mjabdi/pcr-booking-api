@@ -94,7 +94,7 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL;
     }
 
-    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05')
+    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05' || someDateStr === '2021-05-03' )
     {
         results = TIME_SLOTS_WEEKEND;
     }
