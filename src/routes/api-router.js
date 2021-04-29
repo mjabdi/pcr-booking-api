@@ -36,6 +36,11 @@ const OptimalVisionUserService =  require('./../services/optimalvision/user-serv
 const OptimalVisionPatientService =  require('../services/optimalvision/patient-service');
 
 
+const dentistTimeService =  require('./../services/dentist/time-service');
+const dentistBookService =  require('./../services/dentist/booking-service');
+const dentistUserService =  require('./../services/dentist/user-service')
+
+
 /* GET Apis listing. */
 // router.get('/', function(req, res, next) {
 //   res.send('the list of APIS');
@@ -92,6 +97,13 @@ router.use('/admin/book', adminBookService)
 router.use('/optimalvision/book', OptimalVisionBookService)
 router.use('/optimalvision/user', OptimalVisionUserService)
 router.use('/optimalvision/patient', OptimalVisionPatientService)
+
+
+/// Dentist ---------
+router.use('/dentist/time', dentistTimeService);
+router.use('/dentist/book', dentistBookService);
+router.use('/dentist/user', dentistUserService);
+
 
 
 
