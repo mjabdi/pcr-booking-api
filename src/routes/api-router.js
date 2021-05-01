@@ -39,6 +39,8 @@ const OptimalVisionPatientService =  require('../services/optimalvision/patient-
 const dentistTimeService =  require('./../services/dentist/time-service');
 const dentistBookService =  require('./../services/dentist/booking-service');
 const dentistUserService =  require('./../services/dentist/user-service')
+const dentistPaymentService =  require('./../services/dentist/payment-service');
+
 
 
 /* GET Apis listing. */
@@ -103,6 +105,7 @@ router.use('/optimalvision/patient', OptimalVisionPatientService)
 router.use('/dentist/time', dentistTimeService);
 router.use('/dentist/book', dentistBookService);
 router.use('/dentist/user', dentistUserService);
+router.use('/dentist/payment', dentistPaymentService);
 
 
 

@@ -6,6 +6,8 @@ const {createICS} = require('./ics-creator');
 const { FormatDateFromString } = require('./../DateFormatter');
 const uuid = require('uuid-random');
 
+const config = require("config")
+
 
 const faq = [
     {
@@ -23,6 +25,45 @@ const faq = [
 
 ];
 
+const sendAdminNotificationEmail = async (booking) => {
+    try {
+      const subject = `Admin Notification : New Booking`;
+      const message = `You have a new booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+  
+      let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
+      const butonStylePortal = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+  
+      let content = "";
+  
+      content += '<div style="font-size:16px;">';
+  
+      content += `<p>${message}</p>`;
+
+      content += `<p>Below is the booking information : </p>`;
+      content += '<ul>';
+      content += `<li> Appointment Time : ${FormatDateFromString(booking.bookingDate)} at ${booking.bookingTime} </li>`;
+      content += `<li> Full Name : ${booking.fullname} </li>`;
+      content += `<li> Telephone : ${booking.phone} </li>`;
+      content += `<li> Package : ${booking.service} </li>`;
+      content += `<li> Notes : ${booking.notes ? booking.notes : '-'} </li>`;
+      content += `<li> Deposit : £${parseFloat(booking.deposit) / 100}  </li>`;
+  
+  
+      content += `<p>You can see more details via the Admin Console by following the link below: </p>`;
+      content += `<p> <a href="${targetPortal}" style="${butonStylePortal}" target="_blank"> Enter Admin Console </a></p>`;
+  
+      content += `<p style="font-size:14px;margin-top:50px">* This message is automatically created by the system, please don't reply to this email.</p>`;
+  
+      content += "</div>";
+  
+      await sendMail(config.DentistNotificationEmail, subject, content, null);
+  
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+
 
 const sendConfirmationEmail =  async (options) =>
 {
@@ -31,17 +72,17 @@ const sendConfirmationEmail =  async (options) =>
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
     content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p>Thank you for booking your appointment at the our Clinic. We look forward to welcoming you.</p>`;
+    content += `<p>Thank you for booking your appointment online. We look forward to welcoming you.</p>`;
     // content += `<p style="font-size:18px; font-weight:800">‘If you have received this email your appointment is confirmed. Please <u>DON'T CALL</u> the clinic to confirm your appointment.’</p>`;
 
-    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment. You will now also be able to register and access your patient portal by visiting the link on our website homepage. This will have details of all of your past and future appointments, and allow you to directly book appointments with the clinic without the need to re-enter all of your personal information. </p>`;
+    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment.</p>`;
    
-    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/gynae/${options._id}`;
-    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f280c4 5%, #ff9cd7 100%);background-color:#ff9cd7;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+    const target = `https://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}`;
+    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/gynae/${options._id}`;
-    content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
-    content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
+    // const targetForm = `https://londonmedicalclinic.co.uk/drsia/user/form/dentist/${options._id}`;
+    // content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
+    // content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
 
 
     content += `<p>Below is your booking information : </p>`;
@@ -51,7 +92,7 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    content += `<li> Deposit : £${parseFloat(options.deposit) / 100}  </li>`;
 
 
     content += `</ul>`;
@@ -60,12 +101,12 @@ const sendConfirmationEmail =  async (options) =>
 
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
-    content += await CreatePortalLink(options.email, options.fullname)
+    // content += await CreatePortalLink(options.email, options.fullname)
 
   
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600"></p>`;
+    content += `<p style="font-weight:600">Dr Sia Dentistry</p>`;
     content += `</div>`;
   
   
@@ -91,7 +132,7 @@ const sendConfirmationEmail =  async (options) =>
 
     const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
-    await sendMail(options.email, 'Dental Clinic Appointment Confirmation' , content, event);
+    await sendMail(options.email, 'Dr SIA Dentistry Appointment Confirmation' , content, event);
    
 }
 
@@ -135,7 +176,7 @@ const sendRegFormEmail =  async (options) =>
     content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     content += "</div>"
     
-    await sendMail(options.email, 'Registration Form for Gynae Clinic - Medical Express Clinic' , content, null);
+    //await sendMail(options.email, 'Registration Form for Gynae Clinic - Medical Express Clinic' , content, null);
 }
 
 
@@ -152,7 +193,7 @@ const sendRefundNotificationEmail =  async (options) =>
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Gynae Clinic</p>`;
+    content += `<p style="font-weight:600">Dr Sia Dentistry</p>`;
     content += `</div>`;
   
   
@@ -175,7 +216,7 @@ const sendRefundNotificationEmail =  async (options) =>
     // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     // content += "</div>"
     
-    await sendMail(options.email, 'Refund Deposit Notification (Dental Clinic)' , content, null);
+    await sendMail(options.email, 'Refund Deposit Notification (Dr Sia Dentistry)' , content, null);
 }
 
 
@@ -185,5 +226,6 @@ const sendRefundNotificationEmail =  async (options) =>
 module.exports = {
     sendConfirmationEmail : sendConfirmationEmail,
     sendRegFormEmail: sendRegFormEmail,
-    sendRefundNotificationEmail: sendRefundNotificationEmail
+    sendRefundNotificationEmail: sendRefundNotificationEmail,
+    sendAdminNotificationEmail: sendAdminNotificationEmail
 };

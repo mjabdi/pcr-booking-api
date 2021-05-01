@@ -1,47 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const { Client, Environment } = require("square");
-const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
+const { DentistBooking } = require("../../models/dentist/DentistBooking");
+
 const {
   sendConfirmationEmail,
   sendRefundNotificationEmail,
+  sendAdminNotificationEmail,
 } = require("./email-service");
 
-const SANDBOX = process.env.NODE_ENV !== "production";
+const config = require("config")
 
-const LIVE_ACCESSTOKEN =
-  "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt"; // live
-const SANDBOX_ACCESSTOKEN =
-  "EAAAEHpXroK4v3SCYQTdflulI8A8BlUGdy56BSVPX7-a5nicjp9dyF7ezj8iiFzm"; // sandbox
+const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
+  config.StripeTestKey
+  :
+  config.StripeLiveKey
+);
 
-const LIVE_LOCATION_ID = "L2SBNYPV0XWVJ"; // live
-const SANDBOX_LOCATION_ID = "LBR8YPCPR878R"; // sandbox
-
-const client = new Client({
-  environment: SANDBOX ? Environment.Sandbox : Environment.Production,
-  accessToken: SANDBOX ? SANDBOX_ACCESSTOKEN : LIVE_ACCESSTOKEN,
-});
-
-const paymentsApi = client.paymentsApi;
-const refundsApi = client.refundsApi;
-
-const DEPOSIT = 100;
+const DEPOSIT = 95 * 100;
 
 router.post("/dopayment", async function (req, res, next) {
   try {
     const personInfo = req.body.personInfo;
 
-    const payload = {
-      sourceId: req.body.nonce,
-      verificationToken: req.body.token,
-      autocomplete: true,
-      locationId: SANDBOX ? SANDBOX_LOCATION_ID : LIVE_LOCATION_ID,
-      amountMoney: {
-        amount: DEPOSIT * 100,
-        currency: "GBP",
-      },
-      idempotencyKey: personInfo.bookingRef,
-    };
+    const { paymentId } = req.body;
 
     try {
       validateBookAppointment(personInfo);
@@ -51,59 +32,29 @@ router.post("/dopayment", async function (req, res, next) {
       return;
     }
 
-    const found = await GynaeBooking.findOne({
-      email: personInfo.email,
-      bookingDate: personInfo.bookingDate,
-      deleted: { $ne: true },
+    const payment = await stripe.paymentIntents.create({
+      amount: DEPOSIT,
+      currency: "GBP",
+      description: "Online Deposit",
+      payment_method: paymentId,
+      confirm: true,
     });
 
-    if (found) {
-      res.status(200).send({
-        status: "FAILED",
-        error: "Repeated Booking!",
-        person: req.body,
-      });
-      return;
-    }
+    console.log(payment)
 
-    const { result } = await paymentsApi.createPayment(payload);
+    const booking = new DentistBooking({
+      ...personInfo,
+      paymentInfo: JSON.stringify(payment),
+      deposit: DEPOSIT,
+      timeStamp: new Date(),
+    });
 
-    const payment = result.payment;
-    console.log(payment);
-    if (payment.status === "COMPLETED") {
-      const {
-        id,
-        createdAt,
-        cardDetails,
-        locationId,
-        orderId,
-        receiptNumber,
-        receiptUrl,
-        totalMoney,
-      } = payment;
+    await booking.save();
 
-      const paymentInfo = JSON.stringify({
-        id,
-        createdAt,
-        cardDetails,
-        locationId,
-        orderId,
-        receiptNumber,
-        receiptUrl,
-        totalMoney,
-      });
+    await sendConfirmationEmail(booking);
+    await sendAdminNotificationEmail(booking)
 
-      const booking = new GynaeBooking({
-        ...personInfo,
-        paymentInfo: paymentInfo,
-        deposit: DEPOSIT,
-        timeStamp: new Date(),
-      });
-
-      await booking.save();
-
-      await sendConfirmationEmail(booking);
-
+    if (payment) {
       res.status(200).send({ status: "OK", person: personInfo });
     } else {
       res.status(500).send({ status: "FAILED" });
@@ -117,7 +68,7 @@ router.post("/dopayment", async function (req, res, next) {
 router.post("/refundpayment", async function (req, res, next) {
   try {
     const bookingId = req.body.bookingId;
-    const booking = await GynaeBooking.findOne({ _id: bookingId });
+    const booking = await DentistBooking.findOne({ _id: bookingId });
 
     if (!booking) {
       res.status(200).send({ status: "FAILED", result: "Booking Not Found" });
@@ -143,75 +94,72 @@ router.post("/refundpayment", async function (req, res, next) {
     const paymentInfo = JSON.parse(booking.paymentInfo);
 
     const payload = {
-      idempotencyKey: booking._id.toString(),
-      amountMoney: paymentInfo.totalMoney,
-      paymentId: paymentInfo.id,
-      autocomplete: true,
+      payment_intent:  paymentInfo.id
     };
 
-    const { result } = await refundsApi.refundPayment(payload);
+    const refund = await stripe.refunds.create(payload)
 
-    if (result && result.refund && result.refund.id) {
+    if (refund)
+    {
       booking.deposit = 0;
-      booking.refund = JSON.stringify(result.refund);
+      booking.refund = JSON.stringify(refund);
       await booking.save();
-
       try {
         await sendRefundNotificationEmail(booking);
       } catch (err) {
         console.log(err);
       }
-
       res.status(200).send({ status: "OK" });
-    } else {
+    }else{
       res.status(500).send({ status: "FAILED" });
     }
+
   } catch (err) {
     console.log(err);
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 });
 
-router.post("/manualrefundpayment", async function (req, res, next) {
-  try {
-    const bookingId = req.body.bookingId;
-    const booking = await GynaeBooking.findOne({ _id: bookingId });
+// router.post("/manualrefundpayment", async function (req, res, next) {
+//   try {
+//     const bookingId = req.body.bookingId;
+//     const booking = await GynaeBooking.findOne({ _id: bookingId });
 
-    if (!booking) {
-      res.status(200).send({ status: "FAILED", result: "Booking Not Found" });
-      return;
-    }
-    if (booking.status !== "booked") {
-      res
-        .status(200)
-        .send({ status: "FAILED", result: "Invalid Booking Status" });
-      return;
-    }
+//     if (!booking) {
+//       res.status(200).send({ status: "FAILED", result: "Booking Not Found" });
+//       return;
+//     }
+//     if (booking.status !== "booked") {
+//       res
+//         .status(200)
+//         .send({ status: "FAILED", result: "Invalid Booking Status" });
+//       return;
+//     }
 
-    if (booking.paymentInfo) {
-      res.status(200).send({ status: "FAILED", result: "Booking Paid Online" });
-      return;
-    }
+//     if (booking.paymentInfo) {
+//       res.status(200).send({ status: "FAILED", result: "Booking Paid Online" });
+//       return;
+//     }
 
-    booking.deposit = 0;
-    booking.refund = "manual refund";
-    await booking.save();
+//     booking.deposit = 0;
+//     booking.refund = "manual refund";
+//     await booking.save();
 
-    try {
-      await sendRefundNotificationEmail(booking);
-    } catch (err) {
-      console.log(err);
-    }
+//     try {
+//       await sendRefundNotificationEmail(booking);
+//     } catch (err) {
+//       console.log(err);
+//     }
 
-    res.status(200).send({ status: "OK" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ status: "FAILED", error: err.message });
-  }
-});
+//     res.status(200).send({ status: "OK" });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send({ status: "FAILED", error: err.message });
+//   }
+// });
 
 const validateBookAppointment = (body) => {
-  console.log(body);
+  // console.log(body);
 
   if (!body.fullname) {
     throw new Error("fullname field not present");
