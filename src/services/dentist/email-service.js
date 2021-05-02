@@ -56,7 +56,7 @@ const sendAdminNotificationEmail = async (booking) => {
   
       content += "</div>";
   
-    //   await sendMail(config.DentistNotificationEmail, subject, content, null);
+      await sendMail(config.DentistNotificationEmail, subject, content, null);
   
     } catch (err) {
       console.log(err);
