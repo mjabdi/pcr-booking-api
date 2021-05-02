@@ -12,7 +12,7 @@ const sendMail = async (to, subject, content, event) =>
       });
       
       const mailOptions = {
-        from: `Dr SIA ${config.DentistMailAccount}`,
+        from: config.DentistMailAccount,
         to: to,
         subject: subject,
         html : content,

@@ -132,7 +132,7 @@ const sendConfirmationEmail =  async (options) =>
 
     const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
-    await sendMail(options.email, 'Dr SIA Dentistry Appointment Confirmation' , content, event);
+    await sendMail(options.email, 'Appointment Confirmation' , content, event);
    
 }
 
@@ -216,7 +216,7 @@ const sendRefundNotificationEmail =  async (options) =>
     // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     // content += "</div>"
     
-    await sendMail(options.email, 'Refund Deposit Notification (Dr Sia Dentistry)' , content, null);
+    await sendMail(options.email, 'Refund Deposit Notification' , content, null);
 }
 
 
