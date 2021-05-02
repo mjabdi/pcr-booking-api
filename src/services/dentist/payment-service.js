@@ -13,10 +13,10 @@ const config = require("config")
 const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   config.StripeTestKey
   :
-  config.StripeLiveKey
+  config.StripeTestKey
 );
 
-const DEPOSIT = 95 * 100;
+const DEPOSIT = 95;
 
 router.post("/dopayment", async function (req, res, next) {
   try {
@@ -33,14 +33,14 @@ router.post("/dopayment", async function (req, res, next) {
     }
 
     const payment = await stripe.paymentIntents.create({
-      amount: DEPOSIT,
+      amount: DEPOSIT * 100,
       currency: "GBP",
       description: "Online Deposit",
       payment_method: paymentId,
       confirm: true,
     });
 
-    console.log(payment)
+    // console.log(payment)
 
     const booking = new DentistBooking({
       ...personInfo,

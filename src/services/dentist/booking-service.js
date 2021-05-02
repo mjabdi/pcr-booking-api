@@ -527,7 +527,10 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
         const newBooking = await DentistBooking.findOne({_id : req.body.bookingId});
 
-        await sendConfirmationEmail(newBooking);
+        if (newBooking.email && newBooking.email.length > 3)
+        {
+            await sendConfirmationEmail(newBooking);
+        }
 
         res.status(200).send({status: 'OK'});
 
@@ -559,7 +562,10 @@ router.post('/updatebookappointmenttime', async function(req, res, next) {
 
         const booking = await DentistBooking.findOne({_id : req.body.bookingId});
 
-        await sendConfirmationEmail(booking);
+        if (booking.email && booking.email.length > 3)
+        {
+            await sendConfirmationEmail(booking);
+        }
 
         res.status(200).send({status: 'OK'});
 

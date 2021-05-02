@@ -256,6 +256,33 @@ app.get("/optimalvision/admin/*", function (req, res) {
 });
 
 
+app.use(
+  "/drsia/book",
+  express.static(path.join(__dirname, "..", "public_dentist"))
+);
+app.get("/drsia/book/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_dentist", "index.html"));
+});
+
+app.use(
+  "/drsia/admin",
+  express.static(path.join(__dirname, "..", "public_dentist_admin"))
+);
+app.get("/drsia/admin/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_dentist_admin", "index.html"));
+});
+
+app.use(
+  "/drsia/user/edit/dentist/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/drsia/user/edit/dentist/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+
+
+
 
 app.use("/", express.static(path.join(__dirname, "..", "public")));
 

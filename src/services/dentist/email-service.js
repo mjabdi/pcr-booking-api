@@ -46,7 +46,7 @@ const sendAdminNotificationEmail = async (booking) => {
       content += `<li> Telephone : ${booking.phone} </li>`;
       content += `<li> Package : ${booking.service} </li>`;
       content += `<li> Notes : ${booking.notes ? booking.notes : '-'} </li>`;
-      content += `<li> Deposit : £${parseFloat(booking.deposit) / 100}  </li>`;
+      content += `<li> Deposit : £${booking.deposit}  </li>`;
   
   
       content += `<p>You can see more details via the Admin Console by following the link below: </p>`;
@@ -56,7 +56,7 @@ const sendAdminNotificationEmail = async (booking) => {
   
       content += "</div>";
   
-      await sendMail(config.DentistNotificationEmail, subject, content, null);
+    //   await sendMail(config.DentistNotificationEmail, subject, content, null);
   
     } catch (err) {
       console.log(err);
@@ -92,7 +92,7 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${parseFloat(options.deposit) / 100}  </li>`;
+    content += `<li> Deposit : £${options.deposit}  </li>`;
 
 
     content += `</ul>`;
