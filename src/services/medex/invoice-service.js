@@ -187,6 +187,24 @@ router.get('/getallbloodcodes', async function(req, res, next) {
 
 })
 
+router.get('/getallbloodcodesadmin', async function(req, res, next) {
+    try
+    {
+
+        const result = await BloodCode.find().sort({code:1}).exec()
+      
+
+        res.status(200).send({status:'OK', result: result})
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED', error: err.message})
+    }
+
+})
+
+
 
 router.post('/getcodedetails', async function(req, res, next) {
     try
