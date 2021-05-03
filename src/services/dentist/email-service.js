@@ -97,7 +97,7 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `</ul>`;
 
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment providing us with at least 48 hours notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
 
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
@@ -106,7 +106,7 @@ const sendConfirmationEmail =  async (options) =>
   
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dr Sia Dentistry</p>`;
+    content += `<p style="font-weight:600">Dental Clinic</p>`;
     content += `</div>`;
   
   
