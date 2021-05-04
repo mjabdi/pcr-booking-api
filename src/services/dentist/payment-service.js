@@ -13,8 +13,8 @@ const config = require("config")
 const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   config.StripeTestKey
   :
-  config.StripeTestKey
-  // config.StripeLiveKey
+  // config.StripeTestKey
+  config.StripeLiveKey
 );
 
 const DEPOSIT = 0.95;
