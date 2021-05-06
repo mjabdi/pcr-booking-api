@@ -1,7 +1,5 @@
 
 const {sendMail} = require('./mail-sender-2');
-const {createICS} = require('./ics-creator');
-
 
 const { FormatDateFromString } = require('./../DateFormatter');
 const uuid = require('uuid-random');

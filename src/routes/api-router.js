@@ -44,6 +44,7 @@ const dentistPaymentService =  require('./../services/dentist/payment-service');
 
 
 const museumUserService =  require('./../services/museum/user-service')
+const museumPaymentService =  require('./../services/museum/payment-service')
 
 
 /* GET Apis listing. */
@@ -112,6 +113,7 @@ router.use('/dentist/payment', dentistPaymentService);
 
 /// Museum Dental ---------
 router.use('/museumdental/user', museumUserService);
+router.use('/museumdental/payment', museumPaymentService);
 
 
 module.exports = router;

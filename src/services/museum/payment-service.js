@@ -117,9 +117,9 @@ router.post("/createpayment", async function (req, res, next) {
       }
     )
 
-    await museumPayment.save()
+    const payment = await museumPayment.save()
 
-    res.status(200).send({ status: "OK" });
+    res.status(200).send({ status: "OK" , payment: payment});
 
   }
   catch (err) {
@@ -152,7 +152,7 @@ router.post("/deletepayment", async function (req, res, next) {
 
 router.get("/getallpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}})
+    const payments = await MuseumPayment.find({deleted : {$ne: true}}).sort({timeStamp:-1}).exec()
     res.status(200).send({ status: "OK", result : payments });
   }
   catch (err) {
@@ -163,7 +163,7 @@ router.get("/getallpayments", async function (req, res, next) {
 
 router.get("/getdeletedpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$eq: true}})
+    const payments = await MuseumPayment.find({deleted : {$eq: true}}).sort({timeStamp:-1}).exec()
     res.status(200).send({ status: "OK", result : payments });
   }
   catch (err) {
@@ -174,7 +174,7 @@ router.get("/getdeletedpayments", async function (req, res, next) {
 
 router.get("/getpaidpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$eq : null}})
+    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$eq : null}}).sort({timeStamp:-1}).exec()
     res.status(200).send({ status: "OK", result : payments });
   }
   catch (err) {
@@ -185,7 +185,7 @@ router.get("/getpaidpayments", async function (req, res, next) {
 
 router.get("/getrefundpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$ne : null}})
+    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$ne : null}}).sort({timeStamp:-1}).exec()
     res.status(200).send({ status: "OK", result : payments });
   }
   catch (err) {
@@ -196,7 +196,7 @@ router.get("/getrefundpayments", async function (req, res, next) {
 
 router.get("/getpaymentbyid", async function (req, res, next) {
   try {
-    const museumPaymentId = ObjectId(req.body.museumPaymentId)
+    const museumPaymentId = ObjectId(req.query.id)
     const museumPayment = await MuseumPayment.findOne({ _id: museumPaymentId });
 
     res.status(200).send({ status: "OK", result : museumPayment });

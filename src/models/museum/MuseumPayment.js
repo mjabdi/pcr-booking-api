@@ -32,6 +32,11 @@ const MuseumPaymentSchema = new mongoose.Schema({
         required: false
     },
 
+    notes : {
+        type: String,
+        required: false
+    },
+
     deleted: {
         type: Boolean,
         required: true,
@@ -56,5 +61,5 @@ const MuseumPaymentSchema = new mongoose.Schema({
 });
 
 module.exports = {
-    MuseumPayment : mongoose.model('DentistPayment', MuseumPaymentSchema)
+    MuseumPayment : mongoose.model('MuseumDentalPayment', MuseumPaymentSchema)
 }
