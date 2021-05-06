@@ -24,10 +24,13 @@ router.post("/dopayment", async function (req, res, next) {
   try {
     const museumPaymentId = ObjectId(req.body.museumPaymentId)
 
+   
+
     const { paymentId } = req.body;
 
 
     const museumPayment = await MuseumPayment.findOne({ _id: museumPaymentId });
+
 
     if (!museumPayment) {
       res.status(400).send({ status: "FAILED", result: "Payment_Not_Found" });
@@ -41,6 +44,7 @@ router.post("/dopayment", async function (req, res, next) {
       payment_method: paymentId,
       confirm: true,
     });
+
 
     if (payment.status === "succeeded") {
 
