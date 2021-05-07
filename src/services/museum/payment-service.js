@@ -60,7 +60,7 @@ router.post("/dopayment", async function (req, res, next) {
   try {
     const museumPaymentId = ObjectId(req.body.museumPaymentId)
 
-   
+
 
     const { paymentId } = req.body;
 
@@ -85,6 +85,7 @@ router.post("/dopayment", async function (req, res, next) {
     if (payment.status === "succeeded") {
 
       museumPayment.paymentInfo = JSON.stringify(payment)
+      museumPayment.paymentTimeStamp = new Date()
       await museumPayment.save()
       res.status(200).send({ status: "OK", payment: payment });
     }
@@ -128,6 +129,8 @@ router.post("/refundpayment", async function (req, res, next) {
 
     if (refund) {
       museumPayment.refund = JSON.stringify(refund);
+      museumPayment.refundTimeStamp = new Date()
+
       await museumPayment.save();
       try {
         await sendRefundNotificationEmail(museumPayment);
@@ -159,7 +162,7 @@ router.post("/createpayment", async function (req, res, next) {
 
     const payment = await museumPayment.save()
 
-    res.status(200).send({ status: "OK" , payment: payment});
+    res.status(200).send({ status: "OK", payment: payment });
 
   }
   catch (err) {
@@ -178,7 +181,7 @@ router.post("/deletepayment", async function (req, res, next) {
       return;
     }
 
-    await MuseumPayment.updateOne({_id : museumPaymentId}, {deleted: true});
+    await MuseumPayment.updateOne({ _id: museumPaymentId }, { deleted: true });
 
     res.status(200).send({ status: "OK" });
 
@@ -190,10 +193,22 @@ router.post("/deletepayment", async function (req, res, next) {
 })
 
 
+router.get("/getrecentpayments", async function (req, res, next) {
+  try {
+    const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $ne: null }, refund: { $eq: null } }).sort({ timeStamp: -1 }).limit(10).exec()
+    res.status(200).send({ status: "OK", result: payments });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+
 router.get("/getallpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}}).sort({timeStamp:-1}).exec()
-    res.status(200).send({ status: "OK", result : payments });
+    const payments = await MuseumPayment.find({ deleted: { $ne: true } }).sort({ timeStamp: -1 }).exec()
+    res.status(200).send({ status: "OK", result: payments });
   }
   catch (err) {
     console.log(err);
@@ -203,8 +218,8 @@ router.get("/getallpayments", async function (req, res, next) {
 
 router.get("/getdeletedpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$eq: true}}).sort({timeStamp:-1}).exec()
-    res.status(200).send({ status: "OK", result : payments });
+    const payments = await MuseumPayment.find({ deleted: { $eq: true } }).sort({ timeStamp: -1 }).exec()
+    res.status(200).send({ status: "OK", result: payments });
   }
   catch (err) {
     console.log(err);
@@ -214,8 +229,8 @@ router.get("/getdeletedpayments", async function (req, res, next) {
 
 router.get("/getpaidpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$eq : null}}).sort({timeStamp:-1}).exec()
-    res.status(200).send({ status: "OK", result : payments });
+    const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $ne: null }, refund: { $eq: null } }).sort({ timeStamp: -1 }).exec()
+    res.status(200).send({ status: "OK", result: payments });
   }
   catch (err) {
     console.log(err);
@@ -225,8 +240,8 @@ router.get("/getpaidpayments", async function (req, res, next) {
 
 router.get("/getrefundpayments", async function (req, res, next) {
   try {
-    const payments = await MuseumPayment.find({deleted : {$ne: true}, paymentInfo : {$ne : null}, refund: {$ne : null}}).sort({timeStamp:-1}).exec()
-    res.status(200).send({ status: "OK", result : payments });
+    const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $ne: null }, refund: { $ne: null } }).sort({ timeStamp: -1 }).exec()
+    res.status(200).send({ status: "OK", result: payments });
   }
   catch (err) {
     console.log(err);
@@ -239,7 +254,7 @@ router.get("/getpaymentbyid", async function (req, res, next) {
     const museumPaymentId = ObjectId(req.query.id)
     const museumPayment = await MuseumPayment.findOne({ _id: museumPaymentId });
 
-    res.status(200).send({ status: "OK", result : museumPayment });
+    res.status(200).send({ status: "OK", result: museumPayment });
 
   }
   catch (err) {
@@ -247,5 +262,144 @@ router.get("/getpaymentbyid", async function (req, res, next) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 })
+
+
+router.get("/gettotalreceivedamount", async function (req, res, next) {
+  try {
+    const result = await MuseumPayment.aggregate([
+      {
+        $match: {
+          $and: [
+            { deleted: { $ne: true } },
+            { paymentInfo: { $ne: null } },
+            { refund: { $eq: null } },
+          ]
+        }
+      }
+      ,
+      { $group: { _id: null, sum: { $sum: "$amount" } } }
+    ]
+    ).exec();
+
+    let sum = 0
+    if (result && result.length > 0)
+    {
+      sum = result[0].sum
+    }
+
+
+    res.status(200).send({ status: "OK", result: sum});
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+router.get("/gettodayreceivedamount", async function (req, res, next) {
+  try {
+    const today = new Date()
+    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0,0)
+    const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59,0)
+
+    const result = await MuseumPayment.aggregate([
+      {
+        $match: {
+          $and: [
+            { deleted: { $ne: true } },
+            { paymentInfo: { $ne: null } },
+            { refund: { $eq: null } },
+            { paymentTimeStamp: {$gte : startDate}},
+            { paymentTimeStamp: {$lte : endDate}},
+          ]
+        }
+      }
+      ,
+      { $group: { _id: null, sum: { $sum: "$amount" } } }
+    ]
+    ).exec();
+
+    let sum = 0
+    if (result && result.length > 0)
+    {
+      sum = result[0].sum
+    }
+
+    res.status(200).send({ status: "OK", result: sum });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+router.get("/gettotallinksent", async function (req, res, next) {
+  try {
+    const result = await MuseumPayment.aggregate([
+      {
+        $match: {
+          $and: [
+            { deleted: { $ne: true } },
+            { $or : [ {emailSent: true}, {textSent: true}]},
+          ]
+        }
+      }
+      ,
+      { $group: { _id: null, sum: { $sum: 1} } }
+    ]
+    ).exec();
+
+    let sum = 0
+    if (result && result.length > 0)
+    {
+      sum = result[0].sum
+    }
+
+    res.status(200).send({ status: "OK", result: sum});
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+router.get("/gettodaylinksent", async function (req, res, next) {
+  try {
+    const today = new Date()
+    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0,0,0,0)
+    const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23,59,59,0)
+
+    const result = await MuseumPayment.aggregate([
+      {
+        $match: {
+          $and: [
+            { deleted: { $ne: true } },
+            { $or : [ {emailSent: true}, {textSent: true}]},
+            { timeStamp: {$gte : startDate}},
+            { timeStamp: {$lte : endDate}},
+          ]
+        }
+      }
+      ,
+      { $group: { _id: null, sum: { $sum: 1 } } }
+    ]
+    ).exec();
+
+    let sum = 0
+    if (result && result.length > 0)
+    {
+      sum = result[0].sum
+    }
+
+    res.status(200).send({ status: "OK", result: sum });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+
+
 
 module.exports = router;

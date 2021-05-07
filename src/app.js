@@ -281,6 +281,24 @@ app.get("/drsia/user/edit/dentist/*", function (req, res) {
 });
 
 
+app.use(
+  "/museumdentalpayment/admin",
+  express.static(path.join(__dirname, "..", "public_museumdentalpayment_admin"))
+);
+app.get("/museumdentalpayment/admin/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_museumdentalpayment_admin", "index.html"));
+});
+
+app.use(
+  "/museumdentalpayment/payment/pay",
+  express.static(path.join(__dirname, "..", "public_museumdentalpayment_ui"))
+);
+app.get("/museumdentalpayment/payment/pay/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_museumdentalpayment_ui", "index.html"));
+});
+
+
+
 
 
 

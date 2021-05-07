@@ -66,6 +66,16 @@ const MuseumPaymentSchema = new mongoose.Schema({
     textSent: {
         type: Boolean,
         required: false
+    },
+
+    paymentTimeStamp: {
+        type: Date,
+        required : false
+    },
+
+    refundTimeStamp: {
+        type: Date,
+        required : false
     }
 
 
