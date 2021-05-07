@@ -63,50 +63,30 @@ const sendAdminNotificationEmail = async (booking) => {
   
 
 
-const sendConfirmationEmail =  async (options) =>
+const sendPaymentLinkEmail =  async (options) =>
 {
 
     var content = '';
-    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%; max-width:500px ; font-size: 16px; line-height: 30px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
-    content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p>Thank you for booking your appointment online. We look forward to welcoming you.</p>`;
-    // content += `<p style="font-size:18px; font-weight:800">‘If you have received this email your appointment is confirmed. Please <u>DON'T CALL</u> the clinic to confirm your appointment.’</p>`;
-
-    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment.</p>`;
+    content += `<p>Dear <span style="font-weight:600;margin-bottom:20px"> <i>${options.fullname}</i></span> ,</p>`;
+    content += `<p>We would like to kindly ask you to follow the link below to complete the payment for the <b>Museum Dental Suites</b> : </p>`;
    
-    const target = `https://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}`;
-    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+    const target = `https://londonmedicalclinic.co.uk/museumdentalpayment/pay/${options._id}`;
+    const butonStyle = `margin-top:5px; margin-bottom:10px ;box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #05acb2 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 70px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
-    // const targetForm = `https://londonmedicalclinic.co.uk/drsia/user/form/dentist/${options._id}`;
-    // content += '<p> Also, please complete patient registration form online before attending the clinic by following this link :  </p>'
-    // content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Pay Online Now </a></p>`;
 
-
-    content += `<p>Below is your booking information : </p>`;
-    content += '<ul>';
-    content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
-    content += `<li> Full Name : ${options.fullname} </li>`;
-    content += `<li> Telephone : ${options.phone} </li>`;
-    content += `<li> Package : ${options.service} </li>`;
-    content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    content += `<div style="padding-top:10px;line-height: 15px;">`;
+    content += `<p style="font-weight:400">Kind Regards,</p>`;
+    content += `<p style="font-weight:400">Museum Dental Suites</p>`;
+    content += `<p style="font-weight:400;margin-top:20px;color:#777;font-size:12px">70 Great Russell St, Holborn, London WC1B 3BN, United Kingdom</p>`;
+    content += `<p style="font-weight:400;color:#777;font-size:12px">0207 183 0886</p>`;
+    content += `<p style="font-weight:400;color:#777;font-size:12px">info@museumdentalsuites.co.uk</p>`;
 
 
-    content += `</ul>`;
-
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
-
-
-    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
-    // content += await CreatePortalLink(options.email, options.fullname)
-
-  
-    content += `<div style="padding-top:10px">`;
-    content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    
     content += `</div>`;
-  
   
     content += '</div>'
 
@@ -126,11 +106,8 @@ const sendConfirmationEmail =  async (options) =>
     // content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
     // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     // content += "</div>"
-    
 
-    const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
-
-    await sendMail(options.email, 'Appointment Confirmation' , content, null);
+    await sendMail(options.email, 'Payment Link - Museum Dental Suites' , content, null);
    
 }
 
@@ -182,18 +159,22 @@ const sendRefundNotificationEmail =  async (options) =>
 {
 
     var content = '';
-    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%; max-width:500px ; font-size: 16px; line-height: 30px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
-    content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p> We have processed your appointment cancelation with our Clinic : (Ref# : <strong> ${options.bookingRef}</strong>) </p>`;
-    content += `<p>  <strong> Your deposit has been refunded, please allow 4 working days to see it in your statement. </strong> </p>`;
+    content += `<p>Dear <span style="font-weight:600;margin-bottom:20px"> <i>${options.fullname}</i></span> ,</p>`;
+    content += `<p>We would like to inform you that your payment (£${options.amount}) with the <b>Museum Dental Suites</b> has been refunded. </p>`;
+    content += `<p>  <strong> Please allow 4 working days to see it in your statement. </strong> </p>`;
+
+    content += `<div style="padding-top:10px;line-height: 15px;">`;
+    content += `<p style="font-weight:400">Kind Regards,</p>`;
+    content += `<p style="font-weight:400">Museum Dental Suites</p>`;
+    content += `<p style="font-weight:400;margin-top:20px;color:#777;font-size:12px">70 Great Russell St, Holborn, London WC1B 3BN, United Kingdom</p>`;
+    content += `<p style="font-weight:400;color:#777;font-size:12px">0207 183 0886</p>`;
+    content += `<p style="font-weight:400;color:#777;font-size:12px">info@museumdentalsuites.co.uk</p>`;
 
 
-    content += `<div style="padding-top:10px">`;
-    content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dr Sia Dentistry</p>`;
+    
     content += `</div>`;
-  
   
     content += '</div>'
 
@@ -213,8 +194,9 @@ const sendRefundNotificationEmail =  async (options) =>
     // content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
     // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     // content += "</div>"
-    
-    await sendMail(options.email, 'Refund Deposit Notification' , content, null);
+
+    await sendMail(options.email, 'Refund Payment Notification - Museum Dental Suites' , content, null);
+
 }
 
 
@@ -222,7 +204,7 @@ const sendRefundNotificationEmail =  async (options) =>
 
 
 module.exports = {
-    sendConfirmationEmail : sendConfirmationEmail,
+    sendPaymentLinkEmail : sendPaymentLinkEmail,
     sendRegFormEmail: sendRegFormEmail,
     sendRefundNotificationEmail: sendRefundNotificationEmail,
     sendAdminNotificationEmail: sendAdminNotificationEmail

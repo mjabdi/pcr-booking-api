@@ -58,6 +58,17 @@ const MuseumPaymentSchema = new mongoose.Schema({
         required: false
     },
 
+    emailSent: {
+        type: Boolean,
+        required: false
+    },
+
+    textSent: {
+        type: Boolean,
+        required: false
+    }
+
+
 });
 
 module.exports = {

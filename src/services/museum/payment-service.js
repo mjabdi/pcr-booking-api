@@ -6,7 +6,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const { MuseumPayment } = require("../../models/museum/MuseumPayment");
 
 const {
-  sendConfirmationEmail,
+  sendPaymentLinkEmail,
   sendRefundNotificationEmail,
   sendAdminNotificationEmail,
 } = require("./email-service");
@@ -19,6 +19,42 @@ const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   // config.MuseumStripeLiveKey
   config.MuseumStripeLiveKey
 );
+
+
+router.post("/sendpaymentlinkemail", async function (req, res, next) {
+  try {
+    const museumPaymentId = ObjectId(req.body.museumPaymentId)
+    const email = req.body.email
+
+    const museumPayment = await MuseumPayment.findOne({ _id: museumPaymentId });
+
+    if (!museumPayment) {
+      res.status(400).send({ status: "FAILED", result: "Payment_Not_Found" });
+      return;
+    }
+
+    museumPayment.email = email
+
+    /// here we should send the email to the user
+
+    await sendPaymentLinkEmail(museumPayment)
+
+    museumPayment.emailSent = true
+
+    ///
+
+    await museumPayment.save()
+
+    res.status(200).send({ status: "OK" });
+
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+
 
 router.post("/dopayment", async function (req, res, next) {
   try {
