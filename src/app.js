@@ -290,10 +290,10 @@ app.get("/museumdentalpayment/admin/*", function (req, res) {
 });
 
 app.use(
-  "/museumdentalpayment/payment/pay",
+  "/museumdentalpayment/pay",
   express.static(path.join(__dirname, "..", "public_museumdentalpayment_ui"))
 );
-app.get("/museumdentalpayment/payment/pay/*", function (req, res) {
+app.get("/museumdentalpayment/pay/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_museumdentalpayment_ui", "index.html"));
 });
 
