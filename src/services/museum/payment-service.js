@@ -5,13 +5,15 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const { MuseumPayment } = require("../../models/museum/MuseumPayment");
 
+
 const {
   sendPaymentLinkEmail,
   sendRefundNotificationEmail,
-  sendAdminNotificationEmail,
+  sendThankEmail,
 } = require("./email-service");
 
-const config = require("config")
+const config = require("config");
+const { sendPaymentLinkTextMessage, sendThankTextMessage, sendRefundTextMessage } = require("./twilio-service");
 
 const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   config.MuseumStripeTestKey
@@ -19,6 +21,38 @@ const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   // config.MuseumStripeLiveKey
   config.MuseumStripeLiveKey
 );
+
+router.post("/sendpaymentlinktext", async function (req, res, next) {
+  try {
+    const museumPaymentId = ObjectId(req.body.museumPaymentId)
+    const phone = req.body.phone
+
+    const museumPayment = await MuseumPayment.findOne({ _id: museumPaymentId });
+
+    if (!museumPayment) {
+      res.status(400).send({ status: "FAILED", result: "Payment_Not_Found" });
+      return;
+    }
+
+    museumPayment.phone = phone
+
+    /// here we should send the text to the user
+    await sendPaymentLinkTextMessage(museumPayment)
+    museumPayment.textSent = true
+    ///
+
+    await museumPayment.save()
+
+    res.status(200).send({ status: "OK" });
+
+  }
+
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
 
 
 router.post("/sendpaymentlinkemail", async function (req, res, next) {
@@ -87,6 +121,21 @@ router.post("/dopayment", async function (req, res, next) {
       museumPayment.paymentInfo = JSON.stringify(payment)
       museumPayment.paymentTimeStamp = new Date()
       await museumPayment.save()
+      try{
+        if (museumPayment.emailSent)
+        {
+          await sendThankEmail(museumPayment)
+        }
+        if (museumPayment.textSent)
+        {
+          await sendThankTextMessage(museumPayment)
+        }
+     
+      }catch(err)
+      {
+
+      }
+
       res.status(200).send({ status: "OK", payment: payment });
     }
     else {
@@ -133,7 +182,14 @@ router.post("/refundpayment", async function (req, res, next) {
 
       await museumPayment.save();
       try {
-        await sendRefundNotificationEmail(museumPayment);
+        if (museumPayment.emailSent)
+        {
+          await sendRefundNotificationEmail(museumPayment)
+        }
+        if (museumPayment.textSent)
+        {
+          await sendRefundTextMessage(museumPayment)
+        }
       } catch (err) {
         console.log(err);
       }
@@ -398,6 +454,8 @@ router.get("/gettodaylinksent", async function (req, res, next) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 })
+
+
 
 
 
