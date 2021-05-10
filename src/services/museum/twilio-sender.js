@@ -12,13 +12,21 @@ const sendTextMessage = (to, text) =>
         client.messages 
         .create({  
            from: config.MuseumTwilioNumber,
-           to: to ,
+           to: NormalizePhone(to) ,
            body: text
          }) 
         .then(message => resolve(message.sid))
         .catch(err => reject(err))
         .done();
     });
+}
+
+function NormalizePhone(phone) {
+
+    if (phone && phone.length <= 10)
+    {
+        return `+44${phone}`
+    }
 }
 
 module.exports = {
