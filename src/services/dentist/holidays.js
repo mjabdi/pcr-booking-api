@@ -164,6 +164,12 @@ const isHoliday = (date) =>
         return true
     }
 
+    if (date >= '2021-07-19' && date <= '2021-07-30' )
+    {
+        return true
+    }
+
+
     return (holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd')) ||  dateformat(date,'yyyy-mm-dd') < todayStr);
 }
 
