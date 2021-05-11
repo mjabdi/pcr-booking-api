@@ -157,7 +157,7 @@ const isHoliday = (date) =>
 {
     const todayStr = dateformat(new Date(),'yyyy-mm-dd');
 
-    if (todayStr <= '2021-06-14')
+    if (date <= '2021-06-14')
     {
         return true
     }
