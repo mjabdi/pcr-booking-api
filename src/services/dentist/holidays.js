@@ -16,6 +16,7 @@ const getHolidays = () =>
 }
 
 const TIME_SLOTS_NORMAL = [
+    new TimeSlot('08:00 AM', true),   
     new TimeSlot('08:30 AM', true),   
     new TimeSlot('09:00 AM', true),
     new TimeSlot('09:30 AM', true),
@@ -34,6 +35,8 @@ const TIME_SLOTS_NORMAL = [
     new TimeSlot('04:00 PM', true),
     new TimeSlot('04:30 PM', true),
     new TimeSlot('05:00 PM', true),
+    new TimeSlot('05:30 PM', true),
+
 ];
 
 const isTeusday = (date) =>
@@ -153,6 +156,12 @@ const isWeekend = (date) =>
 const isHoliday = (date) =>
 {
     const todayStr = dateformat(new Date(),'yyyy-mm-dd');
+
+    if (todayStr <= '2021-06-14')
+    {
+        return true
+    }
+
     return (holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd')) ||  dateformat(date,'yyyy-mm-dd') < todayStr);
 }
 
