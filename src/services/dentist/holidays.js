@@ -36,6 +36,8 @@ const TIME_SLOTS_NORMAL = [
     new TimeSlot('04:30 PM', true),
     new TimeSlot('05:00 PM', true),
     new TimeSlot('05:30 PM', true),
+    new TimeSlot('06:00 PM', true),
+    new TimeSlot('06:30 PM', true),
 
 ];
 
