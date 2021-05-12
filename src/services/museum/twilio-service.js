@@ -5,7 +5,7 @@ const sendPaymentLinkTextMessage = async (options) =>
 {
     let message = `Hi ${options.fullname},\r\n\nWe would like to kindly ask you to follow the link below to complete the payment for the Museum Dental Suites :\r\n\n`
     message += `https://londonmedicalclinic.co.uk/museumdentalpayment/pay/${options._id}`
-    message += `\r\nYour appointment is being held for you for an hour, please ensure that the deposit payment is made to secure the slot.`
+    message += `\r\nYour appointment is being held for you for four hours, please ensure that the deposit payment is made to secure the slot.`
     message += "\r\n\nKind Regards,\r\nMuseum Dental Suites\r\n02071830886"
     await sendTextMessage(options.phone, message) 
 }
