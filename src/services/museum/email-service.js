@@ -17,6 +17,9 @@ const sendPaymentLinkEmail =  async (options) =>
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Pay Online Now </a></p>`;
 
+    content += `<p> * Your appointment is being held for you for an hour, please ensure that the deposit payment is made to secure the slot.</p>`
+
+
     content += `<div style="padding-top:10px;line-height: 15px;">`;
     content += `<p style="font-weight:400">Kind Regards,</p>`;
     content += `<p style="font-weight:400">Museum Dental Suites</p>`;
