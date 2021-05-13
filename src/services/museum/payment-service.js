@@ -294,6 +294,20 @@ router.get("/getpaidpayments", async function (req, res, next) {
   }
 })
 
+router.get("/getnotpaidpayments", async function (req, res, next) {
+  try {
+    // const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $eq: null }, $or: [ {emailSent: true }, {textSent: true}]}).sort({ timeStamp: -1 }).exec()
+    const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $eq: null }}).sort({ timeStamp: -1 }).exec()
+
+    res.status(200).send({ status: "OK", result: payments });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+
 router.get("/getrefundpayments", async function (req, res, next) {
   try {
     const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $ne: null }, refund: { $ne: null } }).sort({ timeStamp: -1 }).exec()
