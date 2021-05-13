@@ -60,6 +60,13 @@ const OVBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    traceFolder: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+
+
     referrer: {
         type: String,
         required: false
