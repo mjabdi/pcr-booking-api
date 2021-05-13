@@ -100,7 +100,7 @@ const getDefaultTimeSlots = (date) =>
     const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
 
-    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05' || someDateStr === '2021-05-03' )
+    if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05' || someDateStr === '2021-05-03' || someDateStr === '2021-05-31')
     {
         results = TIME_SLOTS_WEEKEND;
     }
