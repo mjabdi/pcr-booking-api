@@ -1,7 +1,7 @@
 
 const { EmailTemplate } = require('../../models/optimalvision/EmailTemplate');
 
-const { sendEmailTemplate } = require('./email-service');
+const { sendEmailTemplate, GetBodyEmailTemplate } = require('./email-service');
 const dateformat = require("dateformat")
 
 
@@ -25,6 +25,40 @@ const CheckAndSendEmailForCalendarAppointmentBooked = async (booking, patient) =
     }
 }
 
+const GetPreviewEmail = async (templateID, booking, patient) => {
+    try {
+        const res = await EmailTemplate.findOne({templateID: templateID})
+        if (!res)
+            return {}
+        let parameters = []
+        try{
+            parameters = JSON.parse(res.parameters)
+        }catch(_err){}
+        parameters = loadParameterValues(parameters, booking, patient)
+        return GetBodyEmailTemplate(res.html, res.subject, parameters)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const SendManualEmail = async (templateID, sendTo, booking, patient) => {
+    try {
+        const res = await EmailTemplate.findOne({templateID: templateID})
+        if (!res)
+            return {}
+        let parameters = []
+        try{
+            parameters = JSON.parse(res.parameters)
+        }catch(_err){}
+        parameters = loadParameterValues(parameters, booking, patient)
+        await sendEmailTemplate(res.html, res.subject, sendTo, parameters)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+
 function loadParameterValues (parameters, booking, patient) {
     let result = []
     parameters.forEach(element => {
@@ -33,7 +67,7 @@ function loadParameterValues (parameters, booking, patient) {
             if (patient)
             {
                 value = patient.name
-            }else{
+            }else if (booking){
                 value = booking.fullname.substr(0, booking.fullname.indexOf(" "))
             }
             result.push({...element, value: value})
@@ -42,7 +76,7 @@ function loadParameterValues (parameters, booking, patient) {
             if (patient)
             {
                 value = patient.surname
-            }else{
+            }else if (booking){
                 value = booking.fullname.substr(booking.fullname.indexOf(" "))
             }
             result.push({...element, value: value})
@@ -52,7 +86,7 @@ function loadParameterValues (parameters, booking, patient) {
             if (patient)
             {
                 value = `${patient.name} ${patient.surname}`
-            }else{
+            }else if (booking){
                 value = booking.fullname
             }
             result.push({...element, value: value})
@@ -60,7 +94,11 @@ function loadParameterValues (parameters, booking, patient) {
             let value = dateformat(new Date(), 'dd-mm-yyyy')
             result.push({...element, value: value})
         }else if (element.builtinValue === "Appointment DateTime"){
-            let value = `${dateformat(booking.bookingDate, 'dd-mm-yyyy')}, ${booking.bookingTime}`
+            let value = ''
+            if (booking)
+            {
+                value = `${dateformat(booking.bookingDate, 'dd-mm-yyyy')}, ${booking.bookingTime}`
+            }
             result.push({...element, value: value})
         }    
     });
@@ -70,4 +108,6 @@ function loadParameterValues (parameters, booking, patient) {
 
 module.exports = {
     CheckAndSendEmailForCalendarAppointmentBooked: CheckAndSendEmailForCalendarAppointmentBooked,
+    GetPreviewEmail : GetPreviewEmail,
+    SendManualEmail : SendManualEmail
 };

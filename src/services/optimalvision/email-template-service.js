@@ -3,7 +3,52 @@ const router = express.Router();
 const {EmailTemplate} = require('../../models/optimalvision/EmailTemplate');
 const dateformat = require('dateformat');
 const mongoose = require('mongoose');
+const { GetPreviewEmail, SendManualEmail } = require('./email-template-manager');
 const ObjectId = mongoose.Types.ObjectId;
+const { OVBooking } = require('../../models/optimalvision/OVBooking');
+const { Patient } = require('../../models/optimalvision/Patient');
+
+router.post('/getemailpreview', async function(req, res, next) {
+
+    const {templateId, bookingId, patientId} = req.body
+
+    try{
+        const booking = await OVBooking.findOne({_id: ObjectId(bookingId)})
+        const patient = await Patient.findOne({patientID: patientId})
+
+        const preview = await GetPreviewEmail(templateId,booking,patient)
+
+        res.status(200).send({status: 'OK', result: preview});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/sendmanualemail', async function(req, res, next) {
+
+    const {templateId, sendTo, bookingId, patientId} = req.body
+
+    try{
+        const booking = await OVBooking.findOne({_id: ObjectId(bookingId)})
+        const patient = await Patient.findOne({patientID: patientId})
+
+        await SendManualEmail(templateId, sendTo, booking, patient)
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+
 
 router.post('/registernewtemplate', async function(req, res, next) {
 

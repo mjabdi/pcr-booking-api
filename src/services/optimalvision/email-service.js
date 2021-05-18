@@ -26,6 +26,17 @@ const sendEmailTemplate = async (emailTemplate, subject, sendTo,  parameters) =>
     await sendMail(sendTo, newSubject , content, null);
 }
 
+const GetBodyEmailTemplate = async (emailTemplate, subject, parameters) => {
+    let content = emailTemplate
+    let newSubject = subject
+    parameters.forEach(item => {
+        content = replaceAll(content, item.keyword, item.value || item.defaultValue || '')  
+        newSubject = replaceAll(subject, item.keyword,  item.value || item.defaultValue || '')      
+    });
+    return {newSubject, content}
+}
+
+
 const sendConfirmationEmail =  async (options) =>
 {
     const file = fs.readFileSync(path.resolve(__dirname, "./templates/email-template1.html"));
@@ -72,5 +83,6 @@ module.exports = {
     sendConfirmationEmail : sendConfirmationEmail,
     sendScheduledEmail: sendScheduledEmail,
     sendNotificationEmail: sendNotificationEmail,
-    sendEmailTemplate: sendEmailTemplate
+    sendEmailTemplate: sendEmailTemplate,
+    GetBodyEmailTemplate: GetBodyEmailTemplate
 };
