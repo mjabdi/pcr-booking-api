@@ -12,6 +12,11 @@ const EmailTemplateSchema = new mongoose.Schema({
         required: true
     }, 
 
+    subject: {
+        type: String,
+        required: true
+    },
+
     html: {
         type: String,
         required: true
@@ -25,7 +30,12 @@ const EmailTemplateSchema = new mongoose.Schema({
     parameters: {
         type: String,
         required: false
-    }
+    },
+
+    sendWhenBookedCalendar:{
+        type: Boolean,
+        required: false
+    },
 
 });
 

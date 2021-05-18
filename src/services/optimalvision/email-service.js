@@ -6,14 +6,34 @@ const path = require("path");
 
 const { FormatDateFromString } = require('../DateFormatter');
 
+const replaceAll = (mainString, _keyword , replaceWith) => {
+    let result = mainString
+    for (var i = 0 ; i < 3 ; i++)
+    {
+        result = result.replace(_keyword, replaceWith)
+    }
+    return result
+}
+
+
+const sendEmailTemplate = async (emailTemplate, subject, sendTo,  parameters) => {
+    let content = emailTemplate
+    let newSubject = subject
+    parameters.forEach(item => {
+        content = replaceAll(content, item.keyword, item.value || item.defaultValue || '')  
+        newSubject = replaceAll(subject, item.keyword,  item.value || item.defaultValue || '')      
+    });
+    await sendMail(sendTo, newSubject , content, null);
+}
 
 const sendConfirmationEmail =  async (options) =>
 {
     const file = fs.readFileSync(path.resolve(__dirname, "./templates/email-template1.html"));
     const content = file.toString().replace('$NAME$', options.fullname)
     await sendMail(options.email, 'Appointment Confirmation - Optimal Vision', content, null);
-   
 }
+
+
 
 const sendScheduledEmail =  async (options) =>
 {
@@ -51,5 +71,6 @@ const sendNotificationEmail =  async (options) =>
 module.exports = {
     sendConfirmationEmail : sendConfirmationEmail,
     sendScheduledEmail: sendScheduledEmail,
-    sendNotificationEmail: sendNotificationEmail
+    sendNotificationEmail: sendNotificationEmail,
+    sendEmailTemplate: sendEmailTemplate
 };

@@ -154,6 +154,12 @@ function validatetemplate (template){
         throw new Error('templateID field not present');
     }
 
+    if (!template.subject)
+    {
+        throw new Error('subject field not present');
+    }
+
+
     if (!template.html)
     {
         throw new Error('html field not present');

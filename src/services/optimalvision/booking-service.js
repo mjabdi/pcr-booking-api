@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { OVBooking } = require('../../models/optimalvision/OVBooking');
+const { Patient } = require('../../models/optimalvision/Patient');
+
 const dateformat = require('dateformat');
 const { sendScheduledEmail, sendConfirmationEmail, sendNotificationEmail } = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { getDefaultTimeSlots, getHolidays } = require('./holidays');
+const {CheckAndSendEmailForCalendarAppointmentBooked} = require('./email-template-manager')
 
 
 router.post('/bookappointment', async function (req, res, next) {
@@ -37,9 +40,11 @@ router.post('/bookappointment', async function (req, res, next) {
             }
         )
 
-        await booking.save()
+         await booking.save()
 
-        // await sendConfirmationEmail(booking)
+         const patient = await Patient.findOne({patientID: patientID})   
+
+         await CheckAndSendEmailForCalendarAppointmentBooked(booking, patient)
 
         res.status(200).send({ status: "OK", booking: booking });
     }
