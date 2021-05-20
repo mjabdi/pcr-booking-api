@@ -528,7 +528,7 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
     try{
 
-        const oldBooking = await OVBooking.findOne({_id : req.body.bookingId});
+        // const oldBooking = await OVBooking.findOne({_id : req.body.bookingId});
 
         await OVBooking.updateOne({_id : req.body.bookingId}, {...req.body});
 
