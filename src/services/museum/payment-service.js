@@ -307,6 +307,35 @@ router.get("/getnotpaidpayments", async function (req, res, next) {
   }
 })
 
+router.get("/getlatepayments", async function (req, res, next) {
+  try {
+    const payments = await MuseumPayment.find({ deleted: { $ne: true }, paymentInfo: { $eq: null }, $or: [ {emailSent: true }, {textSent: true}]}).sort({ timeStamp: -1 }).exec()
+
+    const now = new Date()
+
+    const result = [];
+
+    for (var i = 0; i < payments.length ; i++)
+    {
+        const payment = payments[i]._doc;
+
+        const delay = parseInt((now - payment.timeStamp) / (3600*1000));
+
+        if (delay >= 4)
+        {
+            result.push({...payment, delay: delay});
+        }
+    }
+
+    res.status(200).send({ status: "OK", result: result });
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+})
+
+
 
 router.get("/getrefundpayments", async function (req, res, next) {
   try {
