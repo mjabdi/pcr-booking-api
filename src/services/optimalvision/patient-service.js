@@ -3,7 +3,22 @@ const router = express.Router();
 const {Patient} = require('../../models/optimalvision/Patient');
 const dateformat = require('dateformat');
 const mongoose = require('mongoose');
+const { increasePatientID, getNewPatientID } = require('./patient-id-generator');
 const ObjectId = mongoose.Types.ObjectId;
+
+
+router.get('/getnewpatientid', async function(req, res, next) {
+
+    try{
+         const result = await getNewPatientID()
+         res.status(200).send({status: "OK", result: result});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        console.log(err)
+    }
+});
 
 
 router.post('/registernewpatient', async function(req, res, next) {
@@ -46,6 +61,7 @@ router.post('/registernewpatient', async function(req, res, next) {
         );
 
         await newPatient.save();
+        await increasePatientID();
         
         res.status(200).send({status: 'OK', patient: newPatient});
 
@@ -179,6 +195,20 @@ router.get('/getpatientbypatientid', async function(req, res, next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
+
+router.get('/getpatientbyemail', async function(req, res, next) {
+
+    try{
+         const {email} = req.query
+         const result = await Patient.findOne({email : email, deleted: {$ne: true}});
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 
 router.get('/getallpatients', async function(req, res, next) {

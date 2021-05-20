@@ -37,6 +37,11 @@ const EmailTemplateSchema = new mongoose.Schema({
         required: false
     },
 
+    clinic: {
+        type: String,
+        required: false
+    },
+
 });
 
 module.exports = {

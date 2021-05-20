@@ -26,6 +26,11 @@ const SMSTemplateSchema = new mongoose.Schema({
         type: Boolean,
         required: false
     },
+    clinic: {
+        type: String,
+        required: false
+    },
+
 
 });
 

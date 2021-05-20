@@ -10,6 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const { getDefaultTimeSlots, getHolidays } = require('./holidays');
 const {CheckAndSendEmailForCalendarAppointmentBooked} = require('./email-template-manager');
 const { CheckAndSendSMSForCalendarAppointmentBooked } = require('./sms-template-manager');
+const smsTemplateManager = require('./sms-template-manager');
 
 
 router.post('/bookappointment', async function (req, res, next) {

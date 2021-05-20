@@ -10,7 +10,7 @@ const CheckAndSendEmailForCalendarAppointmentBooked = async (booking, patient) =
         const res = await EmailTemplate.find({ sendWhenBookedCalendar: true })
         if (res && res.length > 0) {
             for (var i = 0; i < res.length; i++) {
-                if (booking.email && booking.email.length > 3) {
+                if (booking.email && booking.email.length > 3 && (res[i].clinic === 'All Clinics' || res[i].clinic === booking.clinic)) {
                     let parameters = []
                     try{
                         parameters = JSON.parse(res[i].parameters)
@@ -66,18 +66,18 @@ function loadParameterValues (parameters, booking, patient) {
             let value = ''
             if (patient)
             {
-                value = patient.name
+                value = patient.name ? patient.name.toUpperCase() : ''
             }else if (booking){
-                value = booking.fullname.substr(0, booking.fullname.indexOf(" "))
+                value = booking.fullname.substr(0, booking.fullname.indexOf(" ")).toUpperCase()
             }
             result.push({...element, value: value})
         }else if (element.builtinValue === "Patient Surname"){
             let value = ''
             if (patient)
             {
-                value = patient.surname
+                value =  patient.surname ? patient.surname.toUpperCase() : ''
             }else if (booking){
-                value = booking.fullname.substr(booking.fullname.indexOf(" "))
+                value = booking.fullname.substr(booking.fullname.indexOf(" ")).toUpperCase()
             }
             result.push({...element, value: value})
 
@@ -85,19 +85,19 @@ function loadParameterValues (parameters, booking, patient) {
             let value = ''
             if (patient)
             {
-                value = `${patient.name} ${patient.surname}`
+                value = `${patient.name} ${patient.surname}`.toUpperCase()
             }else if (booking){
                 value = booking.fullname
             }
             result.push({...element, value: value})
         }else if (element.builtinValue === "Today Date"){
-            let value = dateformat(new Date(), 'dd-mm-yyyy')
+            let value = dateformat(new Date(), 'dddd, mmmm dS, yyyy')
             result.push({...element, value: value})
         }else if (element.builtinValue === "Appointment DateTime"){
             let value = ''
             if (booking)
             {
-                value = `${dateformat(booking.bookingDate, 'dd-mm-yyyy')}, ${booking.bookingTime}`
+                value = `${dateformat(booking.bookingDate, 'dddd, mmmm dS, yyyy')}, ${booking.bookingTime}`
             }
             result.push({...element, value: value})
         }    

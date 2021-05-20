@@ -10,7 +10,7 @@ const CheckAndSendSMSForCalendarAppointmentBooked = async (booking, patient) => 
         const res = await SMSTemplate.find({ sendWhenBookedCalendar: true })
         if (res && res.length > 0) {
             for (var i = 0; i < res.length; i++) {
-                if (booking.phone && booking.phone.length > 3) {
+                if (booking.phone && booking.phone.length > 3 && (res[i].clinic === 'All Clinics' || res[i].clinic === booking.clinic)) {
                     let parameters = []
                     try{
                         parameters = JSON.parse(res[i].parameters)
