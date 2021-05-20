@@ -8,7 +8,8 @@ const { sendScheduledEmail, sendConfirmationEmail, sendNotificationEmail } = req
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { getDefaultTimeSlots, getHolidays } = require('./holidays');
-const {CheckAndSendEmailForCalendarAppointmentBooked} = require('./email-template-manager')
+const {CheckAndSendEmailForCalendarAppointmentBooked} = require('./email-template-manager');
+const { CheckAndSendSMSForCalendarAppointmentBooked } = require('./sms-template-manager');
 
 
 router.post('/bookappointment', async function (req, res, next) {
@@ -45,6 +46,7 @@ router.post('/bookappointment', async function (req, res, next) {
          const patient = await Patient.findOne({patientID: patientID})   
 
          await CheckAndSendEmailForCalendarAppointmentBooked(booking, patient)
+         await CheckAndSendSMSForCalendarAppointmentBooked(booking, patient)
 
         res.status(200).send({ status: "OK", booking: booking });
     }
