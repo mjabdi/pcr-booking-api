@@ -26,6 +26,9 @@ function NormalizePhone(phone) {
     if (phone && phone.length <= 10)
     {
         return `+44${phone}`
+    }else
+    {
+        return phone
     }
 }
 

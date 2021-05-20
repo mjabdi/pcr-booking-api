@@ -35,6 +35,7 @@ const OptimalVisionBookService =  require('./../services/optimalvision/booking-s
 const OptimalVisionUserService =  require('./../services/optimalvision/user-service')
 const OptimalVisionPatientService =  require('../services/optimalvision/patient-service');
 const OptimalVisionEmailTemplateService =  require('../services/optimalvision/email-template-service');
+const OptimalVisionSMSTemplateService =  require('../services/optimalvision/sms-template-service');
 
 
 const dentistTimeService =  require('./../services/dentist/time-service');
@@ -105,6 +106,7 @@ router.use('/optimalvision/book', OptimalVisionBookService)
 router.use('/optimalvision/user', OptimalVisionUserService)
 router.use('/optimalvision/patient', OptimalVisionPatientService)
 router.use('/optimalvision/emailtemplate', OptimalVisionEmailTemplateService)
+router.use('/optimalvision/smstemplate', OptimalVisionSMSTemplateService)
 
 
 /// Dentist ---------
