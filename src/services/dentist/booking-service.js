@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const {DentistBooking} = require('../../models/dentist/DentistBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendManualConfirmationEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
+const { sendManualConfirmationSMS } = require('./sms-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -423,7 +424,12 @@ router.post('/addnewbooking', async function(req, res, next) {
         await booking.save()
         if (email && email.length > 3)
         {
-            await sendConfirmationEmail(booking);
+            await sendManualConfirmationEmail(booking);
+        }
+
+        if (phone && phone.length > 3)
+        {
+            await sendManualConfirmationSMS(booking);
         }
       
 
@@ -480,8 +486,8 @@ router.post('/bookappointment', async function(req, res, next) {
             const alaram = new Notification(
                 {
                     timeStamp: new Date(),
-                    type: 'InvalidBooking-Gynae',
-                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (Gynae)`
+                    type: 'InvalidBooking-DrSia',
+                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (DrSia)`
                 }
             );
             await alaram.save();

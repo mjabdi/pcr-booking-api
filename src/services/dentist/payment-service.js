@@ -121,43 +121,43 @@ router.post("/refundpayment", async function (req, res, next) {
   }
 });
 
-// router.post("/manualrefundpayment", async function (req, res, next) {
-//   try {
-//     const bookingId = req.body.bookingId;
-//     const booking = await GynaeBooking.findOne({ _id: bookingId });
+router.post("/manualrefundpayment", async function (req, res, next) {
+  try {
+    const bookingId = req.body.bookingId;
+    const booking = await DentistBooking.findOne({ _id: bookingId });
 
-//     if (!booking) {
-//       res.status(200).send({ status: "FAILED", result: "Booking Not Found" });
-//       return;
-//     }
-//     if (booking.status !== "booked") {
-//       res
-//         .status(200)
-//         .send({ status: "FAILED", result: "Invalid Booking Status" });
-//       return;
-//     }
+    if (!booking) {
+      res.status(200).send({ status: "FAILED", result: "Booking Not Found" });
+      return;
+    }
+    if (booking.status !== "booked") {
+      res
+        .status(200)
+        .send({ status: "FAILED", result: "Invalid Booking Status" });
+      return;
+    }
 
-//     if (booking.paymentInfo) {
-//       res.status(200).send({ status: "FAILED", result: "Booking Paid Online" });
-//       return;
-//     }
+    if (booking.paymentInfo) {
+      res.status(200).send({ status: "FAILED", result: "Booking Paid Online" });
+      return;
+    }
 
-//     booking.deposit = 0;
-//     booking.refund = "manual refund";
-//     await booking.save();
+    booking.deposit = 0;
+    booking.refund = "manual refund";
+    await booking.save();
 
-//     try {
-//       await sendRefundNotificationEmail(booking);
-//     } catch (err) {
-//       console.log(err);
-//     }
+    try {
+      await sendRefundNotificationEmail(booking);
+    } catch (err) {
+      console.log(err);
+    }
 
-//     res.status(200).send({ status: "OK" });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send({ status: "FAILED", error: err.message });
-//   }
-// });
+    res.status(200).send({ status: "OK" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
 
 const validateBookAppointment = (body) => {
   // console.log(body);
