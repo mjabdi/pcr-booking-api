@@ -107,6 +107,16 @@ const DentistBookingSchema = new mongoose.Schema({
     formData: {
         type: String,
         required: false
+    },
+
+    reminderSent: {
+        type: Boolean,
+        default: false
+    },
+
+    keepThisRecord: {
+        type: Boolean,
+        default: false
     }
 
 

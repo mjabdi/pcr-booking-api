@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {DentistBooking} = require('../../models/dentist/DentistBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail, sendManualConfirmationEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendManualConfirmationEmail, sendPaymentReminderEmail, sendAdminNotificationEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
-const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
-const { sendManualConfirmationSMS } = require('./sms-service');
+const { sendManualConfirmationSMS, sendPaymentReminderSMS } = require('./sms-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -381,7 +380,7 @@ router.get('/getbookingsbyref', async function(req, res, next) {
 router.get('/getbookingbyid', async function(req, res, next) {
 
     try{
-        req.query.id = ObjectId(req.query.id);
+         req.query.id = ObjectId(req.query.id);
          const result = await DentistBooking.findOne({_id : req.query.id});
          res.status(200).send(result);
     }
@@ -417,11 +416,13 @@ router.post('/addnewbooking', async function(req, res, next) {
                 ...payload,
                 bookingRef: ref,
                 bookingTimeNormalized : NormalizeTime(payload.bookingTime),
-                timeStamp: new Date()
+                timeStamp: new Date(),
+                referrer: "ADMIN"
             }
         );
 
         await booking.save()
+
         if (email && email.length > 3)
         {
             await sendManualConfirmationEmail(booking);
@@ -432,7 +433,6 @@ router.post('/addnewbooking', async function(req, res, next) {
             await sendManualConfirmationSMS(booking);
         }
       
-
         // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
 
         res.status(200).send({status: 'OK', person: req.body});
@@ -499,7 +499,7 @@ router.post('/bookappointment', async function(req, res, next) {
         
         await sendConfirmationEmail(booking);
 
-        // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
+        sendAdminNotificationEmail(booking)
 
         res.status(200).send({status: 'OK', person: req.body});
 
@@ -810,6 +810,77 @@ function checkBookingTime(booking)
 
     return true;
 }
+
+router.post('/checkandsendpaymentreminders', async function(req, res, next) {
+    try{
+        const now = new Date()
+        const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000)
+       
+        const booking = await DentistBooking.findOne({deleted: {$ne: true},
+                                     reminderSent: {$ne: true}, 
+                                     paymentInfo: {$eq: null},
+                                     deposit: {$eq: 0},
+                                     timeStamp: {$lte : threeHoursAgo}
+                                    }).sort({timeStamp:1})
+
+        if (booking){
+
+            let reminderSent = false
+            
+            if (booking.email && booking.email.length > 3)
+            {
+                await sendPaymentReminderEmail(booking);
+                reminderSent = true
+            }
+    
+            if (booking.phone && booking.phone.length > 3)
+            {
+                await sendPaymentReminderSMS(booking);
+                reminderSent = true
+            }
+
+            if (!reminderSent)
+            {
+                booking.keepThisRecord = true
+            }
+    
+            booking.reminderSent = true
+            await booking.save()
+        }                            
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        console.log(err)
+    }
+});
+
+router.post('/checkanddeleteexpiredbookings', async function(req, res, next) {
+    try{
+        const now = new Date()
+        const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000)
+       
+        await DentistBooking.updateMany({deleted: {$ne: true},
+                                     reminderSent: {$eq: true}, 
+                                     paymentInfo: {$eq: null},
+                                     deposit: {$eq: 0},
+                                     timeStamp: {$lte : fourHoursAgo},
+                                     keepThisRecord: {$ne : true}
+                                    }, {deleted: true})
+
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        console.log(err)
+
+    }
+});
+
+
 
 
 

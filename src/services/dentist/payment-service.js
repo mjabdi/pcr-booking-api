@@ -6,9 +6,11 @@ const {
   sendConfirmationEmail,
   sendRefundNotificationEmail,
   sendAdminNotificationEmail,
+  sendPaymentThanksEmail
 } = require("./email-service");
 
-const config = require("config")
+const config = require("config");
+const { sendPaymentThanksSMS } = require("./sms-service");
 
 const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   config.StripeTestKey
@@ -41,25 +43,45 @@ router.post("/dopayment", async function (req, res, next) {
       confirm: true,
     });
 
-    // console.log(payment)
-
-    const booking = new DentistBooking({
-      ...personInfo,
-      paymentInfo: JSON.stringify(payment),
-      deposit: DEPOSIT,
-      timeStamp: new Date(),
-    });
-
-    await booking.save();
-
-    await sendConfirmationEmail(booking);
-    await sendAdminNotificationEmail(booking)
-
-    if (payment) {
-      res.status(200).send({ status: "OK", person: personInfo });
-    } else {
+    if (!payment || payment.status !== "succeeded")
+    {
       res.status(500).send({ status: "FAILED" });
+      return
     }
+
+    let booking = await DentistBooking.findOne({_id: personInfo._id})
+
+    if (!booking)
+    {
+      booking = new DentistBooking({
+        ...personInfo,
+        paymentInfo: JSON.stringify(payment),
+        deposit: DEPOSIT,
+        timeStamp: new Date(),
+      });
+  
+      await booking.save();
+      await sendConfirmationEmail(booking);
+      await sendAdminNotificationEmail(booking)
+    }else{
+      booking.paymentInfo = JSON.stringify(payment)
+      booking.deposit = DEPOSIT
+      await booking.save()
+
+      if (booking.email && booking.email.length > 3)
+      {
+        await sendPaymentThanksEmail(booking)
+      }
+      if (booking.phone && booking.phone.length > 3)
+      {
+        await sendPaymentThanksSMS(booking)
+      }
+
+    } 
+
+
+    res.status(200).send({ status: "OK", person: personInfo });
+
   } catch (err) {
     console.log(err);
     res.status(500).send({ status: "FAILED", error: err.message });

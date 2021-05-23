@@ -27,7 +27,7 @@ const faq = [
 
 const sendAdminNotificationEmail = async (booking) => {
     try {
-      const subject = `Admin Notification : New Booking`;
+      const subject = `Admin Notification : New Booking (Dr. SIA)`;
       const message = `You have a new booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
   
       let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
@@ -55,8 +55,12 @@ const sendAdminNotificationEmail = async (booking) => {
       content += `<p style="font-size:14px;margin-top:50px">* This message is automatically created by the system, please don't reply to this email.</p>`;
   
       content += "</div>";
-  
-     // await sendMail(config.DentistNotificationEmail, subject, content, null);
+
+      if (process.env.NODE_ENV === "production")
+      {
+         await sendMail(config.DentistNotificationEmail, subject, content, null);
+        //  await sendMail("matt@dubseo.co.uk", subject, content, null);
+      }
   
     } catch (err) {
       console.log(err);
@@ -223,6 +227,8 @@ const sendRefundNotificationEmail =  async (options) =>
 const sendManualConfirmationEmail =  async (options) =>
 {
 
+    options.paymentLink = `https://londonmedicalclinic.co.uk/drsia/pay/${options._id}`
+
     var content = '';
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<p>Dear ${options.fullname.toUpperCase()},</p>`;
@@ -233,7 +239,7 @@ const sendManualConfirmationEmail =  async (options) =>
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
     const targetPay = options.paymentLink || '#'
-    const butonStylePay = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #e802e5 5%, #d100ce 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:17px;font-weight:bold;padding:10px 50px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+    const butonStylePay = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #e802e5 5%, #d100ce 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:17px;font-weight:bold;padding:10px 50px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;margin-bottom:20px`
 
 
     content += '<ul>';
@@ -284,11 +290,152 @@ const sendManualConfirmationEmail =  async (options) =>
     // content += "</div>"
     
 
-    const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
+    // const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
     await sendMail(options.email, 'Appointment Confirmation' , content, null);
    
 }
+
+const sendPaymentReminderEmail =  async (options) =>
+{
+    options.paymentLink = `https://londonmedicalclinic.co.uk/drsia/pay/${options._id}`
+
+
+    var content = '';
+
+    const target = `https://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}`;
+    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+
+    const targetPay = options.paymentLink || '#'
+    const butonStylePay = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #e802e5 5%, #d100ce 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:17px;font-weight:bold;padding:10px 50px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;margin-bottom:20px`
+
+
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<p>Dear ${options.fullname.toUpperCase()},</p>`;
+    content += `<p>We would like to remind you that your deposit (£95) has not been received yet.</p>`;
+
+    content += `<p style="font-weight:700;">Please pay the £95 deposit within the next 60 minutes to secure your appointment by following the link below : </p>`;
+    content += `<p> <a href="${targetPay}" style="${butonStylePay}" target="_blank"> PAY £95 DEPOSIT NOW </a></p>`;
+
+
+    content += '<ul>';
+    content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
+    content += `<li> Full Name : ${options.fullname} </li>`;
+    content += `<li> Telephone : ${options.phone} </li>`;
+    content += `<li> Package : ${options.service} </li>`;
+    content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+    content += `<li> Deposit : £${options.deposit}  </li>`;
+
+    content += `</ul>`;
+
+    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment.</p>`;
+
+
+
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
+    
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `</div>`;
+  
+  
+    content += '</div>'
+
+    // content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    // // content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
+    // content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment.</p>'
+    // content += `<br/>`
+    // content += `<i>117a Harley Street </i> <br/>`
+    // content += `<i>London </i> <br/>`
+    // content += `<i>W1G 6AT </i><br/>`
+    // content += '<br/>'
+    // content += "T - 0207 499 1991 <br/>"
+    // content += "F - 0207 486 2615 <br/>"
+    // content += '</div>'
+
+    // content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    // content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
+    // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
+    // content += "</div>"
+    
+
+    // const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
+
+    await sendMail(options.email, 'Late Payment Reminder' , content, null);
+   
+}
+
+const sendPaymentThanksEmail =  async (options) =>
+{
+    options.paymentLink = `https://londonmedicalclinic.co.uk/drsia/pay/${options._id}`
+
+
+    var content = '';
+
+    const target = `https://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}`;
+    const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+
+    const targetPay = options.paymentLink || '#'
+    const butonStylePay = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #e802e5 5%, #d100ce 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:17px;font-weight:bold;padding:10px 50px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;margin-bottom:20px`
+
+
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<p>Dear ${options.fullname.toUpperCase()},</p>`;
+    content += `<p>Thank you for your payment (£95). We look forward to meeting you at the clinic.</p>`;
+
+
+    content += '<ul>';
+    content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
+    content += `<li> Full Name : ${options.fullname} </li>`;
+    content += `<li> Telephone : ${options.phone} </li>`;
+    content += `<li> Package : ${options.service} </li>`;
+    content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+    content += `<li> Deposit : £${options.deposit}  </li>`;
+
+    content += `</ul>`;
+
+    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment.</p>`;
+
+
+
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
+    
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `</div>`;
+  
+  
+    content += '</div>'
+
+    // content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    // // content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
+    // content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment.</p>'
+    // content += `<br/>`
+    // content += `<i>117a Harley Street </i> <br/>`
+    // content += `<i>London </i> <br/>`
+    // content += `<i>W1G 6AT </i><br/>`
+    // content += '<br/>'
+    // content += "T - 0207 499 1991 <br/>"
+    // content += "F - 0207 486 2615 <br/>"
+    // content += '</div>'
+
+    // content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    // content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
+    // content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
+    // content += "</div>"
+    
+
+    // const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
+
+    await sendMail(options.email, 'Thank You for Your Payment' , content, null);
+   
+}
+
+
 
 
 
@@ -297,5 +444,7 @@ module.exports = {
     sendRegFormEmail: sendRegFormEmail,
     sendRefundNotificationEmail: sendRefundNotificationEmail,
     sendAdminNotificationEmail: sendAdminNotificationEmail,
-    sendManualConfirmationEmail: sendManualConfirmationEmail
+    sendManualConfirmationEmail: sendManualConfirmationEmail,
+    sendPaymentReminderEmail: sendPaymentReminderEmail,
+    sendPaymentThanksEmail: sendPaymentThanksEmail
 };
