@@ -821,7 +821,7 @@ router.post('/checkandsendpaymentreminders', async function(req, res, next) {
                                      paymentInfo: {$eq: null},
                                      deposit: {$eq: 0},
                                      timeStamp: {$lte : threeHoursAgo},
-                                     timeStamp: {$gt : ISODate("2021-05-23T01:01:46Z"),
+                                     timeStamp: {$gt : new Date("2021-05-23T01:01:46Z"),
                                     }
                                     }).sort({timeStamp:1})
 
