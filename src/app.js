@@ -265,6 +265,15 @@ app.get("/drsia/book/*", function (req, res) {
 });
 
 app.use(
+  "/drsia/pay",
+  express.static(path.join(__dirname, "..", "public_dentist"))
+);
+app.get("/drsia/pay/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_dentist", "index.html"));
+});
+
+
+app.use(
   "/drsia/admin",
   express.static(path.join(__dirname, "..", "public_dentist_admin"))
 );
