@@ -363,7 +363,7 @@ const sendPaymentReminderEmail =  async (options) =>
 
     // const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
 
-    await sendMail(options.email, 'Late Payment Reminder' , content, null);
+    await sendMail(options.email, 'Payment Reminder' , content, null);
    
 }
 

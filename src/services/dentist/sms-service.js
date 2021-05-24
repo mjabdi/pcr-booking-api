@@ -18,7 +18,7 @@ const sendManualConfirmationSMS = async (options) => {
     text +=`\r\nPlease note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking:`
     text += `\r\nhttps://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}\r\n`
     text += `\r\nKind Regards,`
-    text += `\r\nDental Clinic`
+    text += `\r\nDr. SIA`
     text += `\r\n02071831906`
 
     await sendTextMessage(options.phone, text)
@@ -37,7 +37,7 @@ const sendPaymentReminderSMS = async (options) => {
     text +=`\r\nPlease note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking:`
     text += `\r\nhttps://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}\r\n`
     text += `\r\nKind Regards,`
-    text += `\r\nDental Clinic`
+    text += `\r\nDr. SIA`
     text += `\r\n02071831906`
 
     await sendTextMessage(options.phone, text)
@@ -53,7 +53,7 @@ const sendPaymentThanksSMS = async (options) => {
     text +=`\r\nPlease note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice.\r\n Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking:`
     text += `\r\nhttps://londonmedicalclinic.co.uk/drsia/user/edit/dentist/${options._id}\r\n`
     text += `\r\nKind Regards,`
-    text += `\r\nDental Clinic`
+    text += `\r\nDr. SIA`
     text += `\r\n02071831906`
 
     await sendTextMessage(options.phone, text)

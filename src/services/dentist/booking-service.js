@@ -816,14 +816,17 @@ router.post('/checkandsendpaymentreminders', async function(req, res, next) {
         const now = new Date()
         const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000)
        
-        const booking = await DentistBooking.findOne({deleted: {$ne: true},
-                                     reminderSent: {$ne: true}, 
-                                     paymentInfo: {$eq: null},
-                                     deposit: {$eq: 0},
-                                     timeStamp: {$lte : threeHoursAgo},
-                                     timeStamp: {$gt : new Date("2021-05-23T01:01:46Z"),
+        const booking = await DentistBooking.findOne({
+                                     $and: [
+                                        {deleted: {$ne: true}},
+                                        {reminderSent: {$ne: true}}, 
+                                        {paymentInfo: {$eq: null}},
+                                        {deposit: {$eq: 0}},
+                                        {timeStamp: {$lte : threeHoursAgo}},
+                                        {timeStamp: {$gt : new Date("2021-05-23T01:01:46Z")}}
+                                     ]   
                                     }
-                                    }).sort({timeStamp:1})
+                                    ).sort({timeStamp:1})
 
         if (booking){
 
