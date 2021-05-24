@@ -270,6 +270,20 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
    }
 });
 
+router.get('/getonlinedepositbookings', async function(req, res, next) {
+
+    try{
+         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await DentistBooking.find( {deleted : {$ne : true }, deposit : {$gt: 0}, paymentInfo: {$ne: null}} ).sort({timeStamp: -1 ,bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
