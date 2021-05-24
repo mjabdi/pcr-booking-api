@@ -101,7 +101,7 @@ const sendConfirmationEmail =  async (options) =>
 
     content += `</ul>`;
 
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 working hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
 
 
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
@@ -261,7 +261,7 @@ const sendManualConfirmationEmail =  async (options) =>
         content += `<p> <a href="${targetPay}" style="${butonStylePay}" target="_blank"> PAY £95 DEPOSIT NOW </a></p>`;
     }
 
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 working hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
     
     content += `<div style="padding-top:10px">`;
@@ -332,7 +332,7 @@ const sendPaymentReminderEmail =  async (options) =>
 
 
 
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 working hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
     
     content += `<div style="padding-top:10px">`;
@@ -400,7 +400,7 @@ const sendPaymentThanksEmail =  async (options) =>
 
 
 
-    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
+    content += `<p> Please note that your deposit is refundable if you cancel your appointment, providing us with at least 48 working hours' notice. Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking: </p>`;
     content += `<p> <a href="${target}" style="${butonStyle}" target="_blank"> Cancel or Modify Appointment </a></p>`;
     
     content += `<div style="padding-top:10px">`;
