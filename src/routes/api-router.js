@@ -48,6 +48,8 @@ const dentistPaymentService =  require('./../services/dentist/payment-service');
 const museumUserService =  require('./../services/museum/user-service')
 const museumPaymentService =  require('./../services/museum/payment-service')
 
+const medexPaymentService =  require('./../services/medex/payment/payment-service')
+
 
 /* GET Apis listing. */
 // router.get('/', function(req, res, next) {
@@ -96,6 +98,7 @@ router.use('/derma/book', dermaBookService);
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)
 router.use('/medex/invoice', InvoiceService)
+router.use('/medex/payment', medexPaymentService)
 
 /// Admin
 router.use('/admin/book', adminBookService)

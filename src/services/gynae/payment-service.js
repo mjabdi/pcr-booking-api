@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { Client, Environment } = require("square");
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const {
   sendConfirmationEmail,
   sendRefundNotificationEmail,
 } = require("./email-service");
+
+const { Client, Environment } = require("square");
 
 const SANDBOX = process.env.NODE_ENV !== "production";
 

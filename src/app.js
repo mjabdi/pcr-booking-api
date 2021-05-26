@@ -306,6 +306,15 @@ app.get("/museumdentalpayment/pay/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_museumdentalpayment_ui", "index.html"));
 });
 
+app.use(
+  "/medicalexpressclinic/pay",
+  express.static(path.join(__dirname, "..", "public_medex_payment_ui"))
+);
+app.get("/medicalexpressclinic/pay/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_medex_payment_ui", "index.html"));
+});
+
+
 
 
 
