@@ -159,6 +159,11 @@ router.post('/setdatetime', async function (req, res, next) {
 //     }
 // });
 
+function isSunday(_date)
+{
+    return _date.getDay() === 0
+}
+
 function getDays() {
     try {
 
@@ -167,7 +172,7 @@ function getDays() {
         const AvailableDays = []
         const now = new Date()
         let todayAvailable = true
-        if (now.getHours() >= 18) {
+        if (now.getHours() >= 18 || isSunday(now)) {
             todayAvailable = false
         }
 
@@ -177,21 +182,28 @@ function getDays() {
         else if (now.getHours() >= 12) firstTimeIndex = 2;
         else if (now.getHours() >= 10) firstTimeIndex = 1;
 
-        AvailableDays.push({ date: dateformat(now, 'yyyy-mm-dd'), dayLabel: "Today", available: todayAvailable })
-
-        const tomorrow = new Date(now.getTime() + 1 * DAY_MILISECONDS)
-        AvailableDays.push({ date: dateformat(tomorrow, 'yyyy-mm-dd'), dayLabel: "Tomorrow", available: true })
-
-        if (!todayAvailable) {
-            let _date = new Date(tomorrow.getTime() + 1 * DAY_MILISECONDS)
-            AvailableDays.push({ date: dateformat(_date, 'yyyy-mm-dd'), dayLabel: dateformat(_date, 'dddd, mmmm dS'), available: true })
+        if (todayAvailable)
+        {
+            AvailableDays.push({ date: dateformat(now, 'yyyy-mm-dd'), dayLabel: "Today", available: todayAvailable })
         }
 
-        // for (var i = 1 ; i <= 2 ; i++)
-        // {
-        //     let _date = new Date(tomorrow.getTime() + i * DAY_MILISECONDS )
-        //     AvailableDays.push({date : dateformat(_date,'yyyy-mm-dd'), dayLabel: dateformat(_date,'dddd, mmmm dS') ,  available: true})
-        // }
+        let tomorrowAvailable = true
+        const tomorrow = new Date(now.getTime() + 1 * DAY_MILISECONDS)
+        tomorrowAvailable = !isSunday(tomorrow)
+        if (tomorrowAvailable)
+        {
+            AvailableDays.push({ date: dateformat(tomorrow, 'yyyy-mm-dd'), dayLabel: "Tomorrow", available: true })
+        }
+
+        let i = 1
+        do {
+            let _date = new Date(tomorrow.getTime() + i * DAY_MILISECONDS)
+            if (!isSunday(_date) && AvailableDays.indexOf(e => e.getDay() === _date.getDay()) < 0)
+            {
+                AvailableDays.push({ date: dateformat(_date, 'yyyy-mm-dd'), dayLabel: dateformat(_date, 'dddd, mmmm dS'), available: true })
+            }            
+            i++
+        } while (AvailableDays.length < 2);
 
 
         return ({ status: "OK", days: AvailableDays, defaultTimes: defaultTimes, firstTimeIndex: firstTimeIndex });
