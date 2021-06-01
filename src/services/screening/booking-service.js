@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {GPBooking} = require('../../models/gp/GPBooking');
+const {ScreeningBooking} = require('../../models/screening/ScreeningBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendPatientNotificationEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
@@ -16,7 +16,7 @@ router.post('/sendregformemail' , async function (req,res,next) {
 
     try{
         const {id} = req.query;
-        const booking =  await GPBooking.findOne({_id: id});
+        const booking =  await ScreeningBooking.findOne({_id: id});
         sendRegFormEmail(booking)
         res.status(200).send({status : "OK"});
     }
@@ -32,7 +32,7 @@ router.post('/submitformdata' , async function (req,res,next) {
 
     try{
         const {bookingId, formData} = req.body;
-        await GPBooking.updateOne({_id: bookingId} , {formData: JSON.stringify(formData)});
+        await ScreeningBooking.updateOne({_id: bookingId} , {formData: JSON.stringify(formData)});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -49,7 +49,7 @@ router.post('/paybooking' , async function (req,res,next) {
         const paidBy = req.query.paymentmethod;
         const corporate = req.query.corporate;
         const price = parseFloat(req.query.price)
-        await GPBooking.updateOne({_id: bookingId} , {paid: true, OTCCharges:price, paidBy: paidBy, corporate: corporate ? corporate : ''});
+        await ScreeningBooking.updateOne({_id: bookingId} , {paid: true, OTCCharges:price, paidBy: paidBy, corporate: corporate ? corporate : ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -62,7 +62,7 @@ router.post('/unpaybooking' , async function (req,res,next) {
 
     try{
         const bookingId = ObjectId(req.query.id);
-        await GPBooking.updateOne({_id: bookingId} , {paid: false, OTCCharges:0, paidBy: '', corporate: ''});
+        await ScreeningBooking.updateOne({_id: bookingId} , {paid: false, OTCCharges:0, paidBy: '', corporate: ''});
         res.status(200).send({status : "OK"});
     }
     catch(err)
@@ -74,7 +74,7 @@ router.post('/unpaybooking' , async function (req,res,next) {
 
 router.get('/getshouldrefundscount', async function(req, res, next) {
     try{
-        const count = await GPBooking.countDocuments({deleted : {$eq: true}, deposit: {$gt : 0} })
+        const count = await ScreeningBooking.countDocuments({deleted : {$eq: true}, deposit: {$gt : 0} })
         res.status(200).send({status : "OK", count: count });
     }
     catch(err)
@@ -94,7 +94,7 @@ router.get('/getbookingscountbydatestr', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await GPBooking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }, status: 'booked'}).exec();
+         const result = await ScreeningBooking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }, status: 'booked'}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -107,7 +107,7 @@ router.get('/getbookingscountbydatestr', async function(req, res, next) {
 router.get('/getallbookingscountall', async function(req, res, next) {
 
     try{
-         const result = await GPBooking.countDocuments({deleted : {$ne : true }}).exec();
+         const result = await ScreeningBooking.countDocuments({deleted : {$ne : true }}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -126,7 +126,7 @@ router.get('/getallbookingscountbydatestr', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await GPBooking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }}).exec();
+         const result = await ScreeningBooking.countDocuments({bookingDate: dateStr , deleted : {$ne : true }}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -145,7 +145,7 @@ router.get('/getbookingsstatsbydatestr', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-          const result = await GPBooking.aggregate([
+          const result = await ScreeningBooking.aggregate([
             {
                 $match: {
                   bookingDate: dateStr,
@@ -181,7 +181,7 @@ router.get('/getbookingscountbydatestrandtime', async function(req, res, next) {
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await GPBooking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).exec();
+         const result = await ScreeningBooking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -201,7 +201,7 @@ router.get('/getallbookingscountbydatestrandtime', async function(req, res, next
             res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
             return;
          }
-         const result = await GPBooking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).exec();
+         const result = await ScreeningBooking.countDocuments({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).exec();
          res.status(200).send({status: "OK", count : result});
     }
     catch(err)
@@ -221,7 +221,7 @@ router.get('/getbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:1}).exec();
+        const result = await ScreeningBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }, status: 'booked'}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -241,7 +241,7 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
            res.status(400).send({status:'FAILED' , error: 'datestr query param not present!' });
            return;
         }
-        const result = await GPBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:1}).exec();
+        const result = await ScreeningBooking.find({bookingDate: dateStr , bookingTime: timeStr, deleted : {$ne : true }}).sort({timeStamp:1}).exec();
         res.status(200).send({status: "OK", bookings : result});
    }
    catch(err)
@@ -251,11 +251,25 @@ router.get('/getallbookingsbydatestrandtime', async function(req, res, next) {
    }
 });
 
+router.get('/getpendingbookings', async function(req, res, next) {
+
+    try{
+        //  const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await ScreeningBooking.find( {deleted : {$ne : true }, confirmed: {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.get('/getallbookings', async function(req, res, next) {
 
     try{
          const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await GPBooking.find( {deleted : {$ne : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         const result = await ScreeningBooking.find( {deleted : {$ne : true }, confirmed: true} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -268,7 +282,7 @@ router.get('/getdeletedbookings', async function(req, res, next) {
 
     try{
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await GPBooking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         const result = await ScreeningBooking.find( {deleted : {$eq : true }} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -283,7 +297,7 @@ router.get('/gettodaybookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
 
-         const result = await GPBooking.find({bookingDate : today, deleted : {$ne : true }}).sort({bookingTimeNormalized: 1}).exec();
+         const result = await ScreeningBooking.find({bookingDate : today, deleted : {$ne : true }, confirmed: true}).sort({bookingTimeNormalized: 1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -297,7 +311,7 @@ router.get('/getoldbookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await GPBooking.find({bookingDate : {$lt : today}, deleted : {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         const result = await ScreeningBooking.find({bookingDate : {$lt : today}, deleted : {$ne : true }, confirmed: true}).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -311,7 +325,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
     try{
         const today = dateformat(new Date(), 'yyyy-mm-dd');
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await GPBooking.find({bookingDate : {$gt : today}, deleted : {$ne : true }}).sort({bookingDate: 1, bookingTimeNormalized: 1}).limit(limit).exec();
+         const result = await ScreeningBooking.find({bookingDate : {$gt : today}, deleted : {$ne : true }, confirmed: true}).sort({bookingDate: 1, bookingTimeNormalized: 1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -323,7 +337,7 @@ router.get('/getfuturebookings', async function(req, res, next) {
 router.get('/getrecentbookings', async function(req, res, next) {
 
     try{
-         const result = await GPBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(10).exec();
+         const result = await ScreeningBooking.find({deleted : {$ne : true },confirmed: true}).sort({timeStamp: -1}).limit(10).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -336,7 +350,7 @@ router.get('/getrecentbookingsall', async function(req, res, next) {
 
     try{
         const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await GPBooking.find({deleted : {$ne : true }}).sort({timeStamp: -1}).limit(limit).exec();
+         const result = await ScreeningBooking.find({deleted : {$ne : true },confirmed: true}).sort({timeStamp: -1}).limit(limit).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -349,7 +363,7 @@ router.get('/getrecentbookingsall', async function(req, res, next) {
 router.get('/getbookingsbyref', async function(req, res, next) {
 
     try{
-         const result = await GPBooking.find({bookingRef : req.query.ref});
+         const result = await ScreeningBooking.find({bookingRef : req.query.ref});
          res.status(200).send(result);
     }
     catch(err)
@@ -362,7 +376,7 @@ router.get('/getbookingbyid', async function(req, res, next) {
 
     try{
         req.query.id = ObjectId(req.query.id);
-         const result = await GPBooking.findOne({_id : req.query.id});
+         const result = await ScreeningBooking.findOne({_id : req.query.id});
          res.status(200).send(result);
     }
     catch(err)
@@ -388,12 +402,13 @@ router.post('/addnewbooking', async function(req, res, next) {
         const payload =  {fullname, bookingDate, bookingTime, phone, email, notes}
 
 
-        const booking = new GPBooking(
+        const booking = new ScreeningBooking(
             {
                 ...payload,
                 bookingRef: ref,
                 bookingTimeNormalized : NormalizeTime(payload.bookingTime),
-                timeStamp: new Date()
+                timeStamp: new Date(),
+                confirmed: true
             }
         );
 
@@ -434,7 +449,7 @@ router.post('/bookappointment', async function(req, res, next) {
 
     try{
 
-        const found = await GPBooking.findOne({email : req.body.email,
+        const found = await ScreeningBooking.findOne({email : req.body.email,
                                          bookingDate: req.body.bookingDate,
                                          deleted: {$ne: true}                                      
                                         });
@@ -446,7 +461,7 @@ router.post('/bookappointment', async function(req, res, next) {
             return;
         }
 
-        const booking = new GPBooking(
+        const booking = new ScreeningBooking(
             {
                 ...req.body,
                 timeStamp: new Date()
@@ -458,8 +473,8 @@ router.post('/bookappointment', async function(req, res, next) {
             const alaram = new Notification(
                 {
                     timeStamp: new Date(),
-                    type: 'InvalidBooking-GP',
-                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (GP)`
+                    type: 'InvalidBooking-HS',
+                    text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (HS)`
                 }
             );
             await alaram.save();
@@ -469,9 +484,9 @@ router.post('/bookappointment', async function(req, res, next) {
 
         await booking.save();
         
-        await sendConfirmationEmail(booking);
+        await sendPatientNotificationEmail(booking);
 
-        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GP_BOOKED,booking)
+        await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_HEALTHSCREENING_BOOKED,booking)
 
         res.status(200).send({status: 'OK', person: req.body});
 
@@ -482,6 +497,40 @@ router.post('/bookappointment', async function(req, res, next) {
         return;
     }
 });
+
+router.post('/confirmbookappointment', async function(req, res, next) {
+
+    try
+    {
+        req.body.bookingId = ObjectId(req.body.bookingId);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        // const oldBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+
+        await ScreeningBooking.updateOne({_id : req.body.bookingId}, {confirmed: true});
+
+        const newBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+
+        await sendConfirmationEmail(newBooking);
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
 
 router.post('/updatebookappointment', async function(req, res, next) {
 
@@ -499,13 +548,13 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
     try{
 
-        const oldBooking = await GPBooking.findOne({_id : req.body.bookingId});
+        // const oldBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
 
-        await GPBooking.updateOne({_id : req.body.bookingId}, {...req.body.person});
+        await ScreeningBooking.updateOne({_id : req.body.bookingId}, {...req.body.person});
 
-        const newBooking = await GPBooking.findOne({_id : req.body.bookingId});
+        // const newBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
 
-        await sendConfirmationEmail(newBooking);
+        // await sendConfirmationEmail(newBooking);
 
         res.status(200).send({status: 'OK'});
 
@@ -533,11 +582,11 @@ router.post('/updatebookappointmenttime', async function(req, res, next) {
 
     try{
 
-        await GPBooking.updateOne({_id : req.body.bookingId}, {bookingDate : req.body.bookingDate, bookingTime : req.body.bookingTime, bookingTimeNormalized: NormalizeTime(req.body.bookingTime)});
+        await ScreeningBooking.updateOne({_id : req.body.bookingId}, {bookingDate : req.body.bookingDate, bookingTime : req.body.bookingTime, bookingTimeNormalized: NormalizeTime(req.body.bookingTime)});
 
-        const booking = await GPBooking.findOne({_id : req.body.bookingId});
+        // const booking = await ScreeningBooking.findOne({_id : req.body.bookingId});
 
-        await sendConfirmationEmail(booking);
+        // await sendConfirmationEmail(booking);
 
         res.status(200).send({status: 'OK'});
 
@@ -564,7 +613,7 @@ router.post('/changebacktobookingmade', async function(req, res, next) {
 
     try{
 
-        await GPBooking.updateOne({_id : req.query.id}, {status : 'booked'});
+        await ScreeningBooking.updateOne({_id : req.query.id}, {status : 'booked'});
 
         res.status(200).send({status: 'OK'});
 
@@ -592,7 +641,7 @@ router.post('/changetopatientattended', async function(req, res, next) {
 
     try{
 
-        await GPBooking.updateOne({_id : req.query.id}, {status : 'patient_attended'});
+        await ScreeningBooking.updateOne({_id : req.query.id}, {status : 'patient_attended'});
 
         res.status(200).send({status: 'OK'});
 
@@ -622,7 +671,7 @@ router.post('/deletebookappointment', async function(req, res, next) {
 
     try{
 
-        await GPBooking.updateOne({_id : req.query.id}, {deleted : true});
+        await ScreeningBooking.updateOne({_id : req.query.id}, {deleted : true});
 
         res.status(200).send({status: 'OK'});
 
@@ -649,7 +698,7 @@ router.post('/undeletebookappointment', async function(req, res, next) {
 
     try{
 
-        await GPBooking.updateOne({_id : req.query.id}, {deleted : false});
+        await ScreeningBooking.updateOne({_id : req.query.id}, {deleted : false});
 
         res.status(200).send({status: 'OK'});
 
@@ -695,6 +744,12 @@ router.post('/undeletebookappointment', async function(req, res, next) {
     {
         throw new Error('bookingRef field not present');
     }
+
+    if (!body.service) 
+    {
+        throw new Error('service field not present');
+    }
+
 
 
     body.bookingTimeNormalized = NormalizeTime(body.bookingTime);

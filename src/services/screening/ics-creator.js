@@ -18,7 +18,7 @@ const createICS = async (date, time, name, email) => {
             start: [year, month, day, hour, minute],
             duration: { hours: 0, minutes: 15 },
             title: 'Medical Express Clinic',
-            description: 'Appointment for Private GP Visit.',
+            description: 'Appointment for Health Screening.',
             location: 'Suite E, 117a Harley St, Marylebone, London W1G 6AT',
             url: 'https://www.medicalexpressclinic.co.uk/',
             geo: { lat: 51.521740, lon: -0.148420},

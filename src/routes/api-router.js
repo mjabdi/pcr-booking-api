@@ -23,6 +23,9 @@ const bloodBookService =  require('./../services/blood/booking-service');
 const dermaTimeService =  require('./../services/derma/time-service');
 const dermaBookService =  require('./../services/derma/booking-service');
 
+const screeningTimeService =  require('./../services/screening/time-service');
+const screeningBookService =  require('./../services/screening/booking-service');
+
 
 const adminBookService =  require('./../services/admin/booking-service');
 
@@ -85,13 +88,18 @@ router.use('/gp/book', gpBookService);
 router.use('/std/time', stdTimeService);
 router.use('/std/book', stdBookService);
 
-/// STD ---------
+/// Blood ---------
 router.use('/blood/time', bloodTimeService);
 router.use('/blood/book', bloodBookService);
 
 /// Derma ---------
 router.use('/derma/time', dermaTimeService);
 router.use('/derma/book', dermaBookService);
+
+/// Health Screening ---------
+router.use('/screening/time', screeningTimeService);
+router.use('/screening/book', screeningBookService);
+
 
 
 
@@ -121,6 +129,8 @@ router.use('/dentist/payment', dentistPaymentService);
 /// Museum Dental ---------
 router.use('/museumdental/user', museumUserService);
 router.use('/museumdental/payment', museumPaymentService);
+
+
 
 
 module.exports = router;
