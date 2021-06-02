@@ -10,6 +10,8 @@ const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
 
+const {sendHealthScreeningConfirmationTextMessage} = require('../medex/payment/twilio-service')
+
 const DEFAULT_LIMIT = 25
 
 router.post('/sendregformemail' , async function (req,res,next) {
@@ -417,6 +419,11 @@ router.post('/addnewbooking', async function(req, res, next) {
         {
             await sendConfirmationEmail(booking);
         }
+
+        if (phone && phone.length > 3)
+        {
+            await sendHealthScreeningConfirmationTextMessage(booking)
+        }
       
 
         // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
@@ -502,7 +509,7 @@ router.post('/confirmbookappointment', async function(req, res, next) {
 
     try
     {
-        req.body.bookingId = ObjectId(req.body.bookingId);
+        req.query.bookingId = ObjectId(req.query.bookingId);
 
     }catch(err)
     {
@@ -515,11 +522,13 @@ router.post('/confirmbookappointment', async function(req, res, next) {
 
         // const oldBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
 
-        await ScreeningBooking.updateOne({_id : req.body.bookingId}, {confirmed: true});
+        await ScreeningBooking.updateOne({_id : req.query.bookingId}, {confirmed: true});
 
-        const newBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+        const newBooking = await ScreeningBooking.findOne({_id : req.query.bookingId});
 
         await sendConfirmationEmail(newBooking);
+        await sendHealthScreeningConfirmationTextMessage(newBooking)
+
 
         res.status(200).send({status: 'OK'});
 
