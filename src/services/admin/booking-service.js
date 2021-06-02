@@ -4,6 +4,8 @@ const { GPBooking } = require("../../models/gp/GPBooking");
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const { STDBooking } = require("../../models/std/STDBooking");
 const { BloodBooking } = require("../../models/blood/BloodBooking");
+const { ScreeningBooking } = require("../../models/screening/ScreeningBooking");
+
 
 const { Booking } = require("../../models/Booking");
 
@@ -166,7 +168,10 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
-
+    const screeningCount = await ScreeningBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
 
     const result = [
       {clinic: "pcr", count: pcrCount},
@@ -174,7 +179,9 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       {clinic: "gp", count: gpCount},
       {clinic: "std", count: stdCount},
       {clinic: "blood", count: bloodCount},
-      {clinic: "derma", count: dermaCount}
+      {clinic: "derma", count: dermaCount},
+      {clinic: "screening", count: screeningCount},
+
 
     ]
 
@@ -297,6 +304,13 @@ router.get(
         deleted: { $ne: true },
       }).exec();
 
+      const screeningCount = await ScreeningBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+
+
 
   
       const result = [
@@ -305,7 +319,8 @@ router.get(
         {clinic: "gp", count: gpCount},
         {clinic: "std", count: stdCount},
         {clinic: "blood", count: bloodCount},
-        {clinic: "derma", count: bloodCount}
+        {clinic: "derma", count: dermaCount},
+        {clinic: "screening", count: screeningCount}
 
 
       ]
@@ -467,6 +482,27 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -574,6 +610,23 @@ router.get("/getallbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
 
@@ -690,6 +743,23 @@ router.post("/searchallbookings", async function (req, res, next) {
 
             {
               $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
             },
           ],
         },
@@ -824,6 +894,23 @@ router.get("/getdeletedbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $eq: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -932,6 +1019,23 @@ router.get("/gettodaybookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, { bookingDate: today }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -1054,6 +1158,26 @@ router.get("/getoldbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $lt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -1177,6 +1301,26 @@ router.get("/getfuturebookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $gt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -1295,6 +1439,23 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -1402,6 +1563,23 @@ router.get("/getbookingsbyref", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ bookingRef: ref }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -1519,6 +1697,25 @@ router.get("/getbookingbyid", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { timeStamp: 1 },
       },
