@@ -27,7 +27,16 @@ const sendRefundTextMessage = async (options) =>
     await sendTextMessage(options.phone, message) 
 }
 
-const sendHealthScreeningConfirmationTextMessage = async (options) =>
+const sendHealthScreeningConfirmationTextMessage = async (options) => {
+    if (!options.timeChanged){
+        return sendHealthScreeningConfirmationTextMessageNormal(options)
+    }else
+    {
+        return sendHealthScreeningConfirmationTextMessageTimeChanged(options)
+    }
+} 
+
+const sendHealthScreeningConfirmationTextMessageNormal = async (options) =>
 {
     let message = `Dear ${options.fullname.toUpperCase()},\r\n\nYour appointment for Health Screening at the Medical Express Clinic is confirmed by the clinic. We look forward to welcoming you.\r\n\n`
     message += `Your booking number is "${options.bookingRef}", please have this number handy when you attend the clinic for your appointment.`
@@ -47,6 +56,28 @@ const sendHealthScreeningConfirmationTextMessage = async (options) =>
     message += "\r\n\nKind Regards,\r\nMedical Express Clinic\r\n02074991991"
     await sendTextMessage(options.phone, message) 
 }
+
+const sendHealthScreeningConfirmationTextMessageTimeChanged = async (options) =>
+{
+    let message = `Dear ${options.fullname.toUpperCase()},\r\n\nYour appointment for Health Screening at the Medical Express Clinic is confirmed by the clinic. We have had to adjust your appointment time, so please carefully review your appointment details and feel free to get in touch if this time isn't convenient, we will rearrange the screening to suit your schedule. If your amended time is suitable, then we look forward to welcoming you at the clinic.\r\n\n`
+    message += `Your booking number is "${options.bookingRef}", please have this number handy when you attend the clinic for your appointment.`
+    message += `\r\n\r\nBelow is your booking information :`
+    message += `\r\n- Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}`
+    message += `\r\n- Full Name : ${options.fullname}`
+    message += `\r\n- Package : ${options.service}`
+    if (options.notes && options.notes.length > 1)
+    {
+        message += `\r\n- Notes : ${options.notes}`
+    }
+    message += `\r\n\r\nAlso, please complete patient registration form online before attending the clinic by following this link :`
+    message += `\r\nhttps://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/screening/${options._id}`
+    
+
+
+    message += "\r\n\nKind Regards,\r\nMedical Express Clinic\r\n02074991991"
+    await sendTextMessage(options.phone, message) 
+}
+
 
 
 

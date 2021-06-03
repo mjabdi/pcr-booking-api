@@ -210,6 +210,11 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         required: false,
     },
 
+    covidVaccine: {
+        type: String,
+        required: false
+    }
+
 }));
 
 
