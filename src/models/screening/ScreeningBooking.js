@@ -112,7 +112,13 @@ const ScreeningBookingSchema = new mongoose.Schema({
     formData: {
         type: String,
         required: false
-    }
+    },
+
+    timeChanged: {
+        type: Boolean,
+        default: false
+    },
+
 
 });
 

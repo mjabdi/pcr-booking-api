@@ -30,8 +30,7 @@ const sendPatientNotificationEmail =  async (options) =>
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
     content += `<p>Dear ${options.fullname},</p>`;
 
-    content += `<p>Thank you for booking your appointment for Health Screening at the Medical Express Clinic. Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment.</p>`;
-    content += `<p>The <b>Date and Time</b> you have selected is <b>not guaranteed</b>, and might need to be re-arranged. We will review your request and arrange the neccessary actions. We will get back to you soon (via email or sms/phone call) to confirm the appointment.</p>`
+    content += `<p>Thank you for requesting an appointment, due to the comprehensive nature of the medical, we need to arrange some of the services prior to confirmation. As such, the Date and Time you have selected is not yet confirmed, however we will make arrangements as close to your requested dates and times as possible, the vast majority of patients are seen at their selected time or with an hours flexibility. We will get back to you very soon via email or telephone to finalise your booking.</p>`;
    
     content += `<p>Below is your request details : </p>`;
     content += '<ul>';

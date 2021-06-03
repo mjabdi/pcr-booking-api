@@ -557,11 +557,17 @@ router.post('/updatebookappointment', async function(req, res, next) {
 
     try{
 
-        // const oldBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+        const oldBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
 
         await ScreeningBooking.updateOne({_id : req.body.bookingId}, {...req.body.person});
 
-        // const newBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+        const newBooking = await ScreeningBooking.findOne({_id : req.body.bookingId});
+
+        if (oldBooking.bookingDate !== newBooking.bookingDate || 
+            oldBooking.bookingTime !== newBooking.bookingTime)
+            {
+                await ScreeningBooking.updateOne({_id : req.body.bookingId}, {timeChanged: true});
+            }
 
         // await sendConfirmationEmail(newBooking);
 
