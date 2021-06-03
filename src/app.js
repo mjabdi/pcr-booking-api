@@ -136,6 +136,15 @@ app.get("/medicalexpressclinic/user/form/gp/*", function (req, res) {
 });
 
 app.use(
+  "/medicalexpressclinic/user/form/screening/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/form/screening/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+
+app.use(
   "/medicalexpressclinic/user/edit/pcr/",
   express.static(path.join(__dirname, "..", "public_admin"))
 );
@@ -197,6 +206,15 @@ app.use(
 app.get("/medicalexpressclinic/book/derma/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_derma", "index.html"));
 });
+
+app.use(
+  "/medicalexpressclinic/book/screening",
+  express.static(path.join(__dirname, "..", "public_screening"))
+);
+app.get("/medicalexpressclinic/book/screening/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_screening", "index.html"));
+});
+
 
 
 app.use(
@@ -313,10 +331,6 @@ app.use(
 app.get("/medicalexpressclinic/pay/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_medex_payment_ui", "index.html"));
 });
-
-
-
-
 
 
 
