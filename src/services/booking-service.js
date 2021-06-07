@@ -986,6 +986,21 @@ router.get('/getteststimereportlast7', async function(req, res, next) {
     }
 });
 
+router.get('/getteststimereportlast30', async function(req, res, next) {
+
+    try{
+         const result = await GlobalParams.findOne({name:"testTimeReportLast30"})
+         console.log(result)
+         res.status(200).send({status:'OK' , result: JSON.parse(result.value)});
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 const validateBookAppointment = (body) => {
 
     if (!body.forename)
