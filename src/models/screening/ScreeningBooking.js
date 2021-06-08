@@ -17,6 +17,11 @@ const ScreeningBookingSchema = new mongoose.Schema({
         required: true
     },   
 
+    birthDate: {
+        type: String,
+        required: false
+    },
+
     phone: {
         type: String,
         required: true
