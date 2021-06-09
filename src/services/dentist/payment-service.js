@@ -168,11 +168,11 @@ router.post("/manualrefundpayment", async function (req, res, next) {
     booking.refund = "manual refund";
     await booking.save();
 
-    try {
-      await sendRefundNotificationEmail(booking);
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   await sendRefundNotificationEmail(booking);
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
     res.status(200).send({ status: "OK" });
   } catch (err) {

@@ -407,7 +407,7 @@ router.get('/getbookingbyid', async function(req, res, next) {
 router.post('/addnewbooking', async function(req, res, next) {
     try{
         const ref = await getNewRef()
-        let {fullname, bookingDate, bookingTime, phone, email, service, notes, deposit} = req.body
+        let {fullname, bookingDate, bookingTime, phone, email, service, notes, deposit, depositNotRequired} = req.body
 
         
         if (!service || service.length < 1) {
@@ -422,7 +422,7 @@ router.post('/addnewbooking', async function(req, res, next) {
             phone = "-";
           }
 
-        const payload =  {fullname, bookingDate, bookingTime, phone, email, service, notes, deposit}
+        const payload =  {fullname, bookingDate, bookingTime, phone, email, service, notes, deposit, depositNotRequired}
 
 
         const booking = new DentistBooking(
@@ -836,6 +836,7 @@ router.post('/checkandsendpaymentreminders', async function(req, res, next) {
                                         {reminderSent: {$ne: true}}, 
                                         {paymentInfo: {$eq: null}},
                                         {deposit: {$eq: 0}},
+                                        {depositNotRequired : {$ne : true}},
                                         {timeStamp: {$lte : threeHoursAgo}},
                                         {timeStamp: {$gt : new Date("2021-05-23T01:01:46Z")}}
                                      ]   

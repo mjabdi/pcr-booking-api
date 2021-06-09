@@ -117,7 +117,12 @@ const DentistBookingSchema = new mongoose.Schema({
     keepThisRecord: {
         type: Boolean,
         default: false
-    }
+    },
+
+    depositNotRequired: {
+        type: Boolean,
+        default: false
+    },
 
 
 });
