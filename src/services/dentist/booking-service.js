@@ -852,12 +852,15 @@ router.post('/checkandsendpaymentreminders', async function(req, res, next) {
                 await sendPaymentReminderEmail(booking);
                 reminderSent = true
             }
-    
-            if (booking.phone && booking.phone.length > 3)
-            {
-                await sendPaymentReminderSMS(booking);
-                reminderSent = true
-            }
+
+            
+            try{
+                    if (booking.phone && booking.phone.length > 3)
+                    {
+                        await sendPaymentReminderSMS(booking);
+                        reminderSent = true
+                    }
+             }catch(err) {}
 
             if (!reminderSent)
             {
