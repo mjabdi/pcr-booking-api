@@ -92,9 +92,8 @@ const mailTo2 = "m.jafarabdi@gmail.com";
     
 
 
-//    await sendMail(mailTo, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
-   const res = await sendMail(mailTo2, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
-   console.log(res)
+   await sendMail(mailTo, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
+   await sendMail(mailTo2, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
    
 
 
