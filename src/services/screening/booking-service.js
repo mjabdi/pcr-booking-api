@@ -257,7 +257,7 @@ router.get('/getpendingbookings', async function(req, res, next) {
 
     try{
         //  const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
-         const result = await ScreeningBooking.find( {deleted : {$ne : true }, confirmed: {$ne : true }}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
+         const result = await ScreeningBooking.find( {deleted : {$ne : true }, confirmed: {$ne : true }, tbcFolder: {$ne:true}}).sort({bookingDate: -1, bookingTimeNormalized: -1}).exec();
          res.status(200).send(result);
     }
     catch(err)
@@ -292,6 +292,20 @@ router.get('/getdeletedbookings', async function(req, res, next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
+
+router.get('/gettbcfolderbookings', async function(req, res, next) {
+
+    try{
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+         const result = await ScreeningBooking.find( {tbcFolder : {$eq : true }, confirmed: {$ne : true}} ).sort({bookingDate: -1, bookingTimeNormalized: -1}).limit(limit).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 
 router.get('/gettodaybookings', async function(req, res, next) {
@@ -724,6 +738,62 @@ router.post('/undeletebookappointment', async function(req, res, next) {
         return;
     }
 });
+
+
+router.post('/movetbcfolder', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await ScreeningBooking.updateOne({_id : req.query.id}, {tbcFolder : true});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
+router.post('/undomovetbcfolder', async function(req, res, next) {
+
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await ScreeningBooking.updateOne({_id : req.query.id}, {tbcFolder : false});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+});
+
 
 
  const validateBookAppointment = (body) => {
