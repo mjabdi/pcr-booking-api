@@ -1,29 +1,93 @@
 
 const express = require('express');
 const router = express.Router();
-const {Invoice} = require('./../../models/medex/Invoice')
-const {BloodCode} = require('./../../models/medex/BloodCode')
-const {MedexCode} = require('./../../models/medex/MedexCode')
+const { Invoice } = require('./../../models/medex/Invoice')
+const { BloodCode } = require('./../../models/medex/BloodCode')
+const { MedexCode } = require('./../../models/medex/MedexCode')
 
 
 const uuid = require('uuid-random')
 const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
-const { LastMonthInstance } = require('twilio/lib/rest/api/v2010/account/usage/record/lastMonth');
 
-router.post('/createinvoice', async function(req, res, next) {
-    
-    try
-    {
-        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes} = req.body
+router.post('/searchallinvoices', async function (req, res, next) {
 
-        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes}
+    try {
 
-        if (!validateInvoice(payload))
-        {
-            res.status(400).send({status:'FAILED', error: 'INVALID-DATA'}) 
-            return   
+        const { search } = req.body;
+
+        console.log(search)
+
+        search.from = new Date(search.from)
+        search.until = new Date(search.until)
+
+        search.from.setHours(0, 0, 0, 0)
+        search.until.setHours(23, 59, 59, 99)
+
+        const clinics = [
+            {table: "bookings", clinic: "pcr"},
+            {table: "gynaebookings", clinic: "gynae"},
+            {table: "gpbookings", clinic: "gp"},
+            {table: "stdbookings", clinic: "std"},
+            {table: "bloodbookings", clinic: "blood"},
+            {table: "screeningbookings", clinic: "screening"},
+            {table: "dermabookings", clinic: "derma"}
+        ]
+
+        let invoicesArray = []
+        for (var i = 0; i < clinics.length; i++) {
+            const res = await Invoice.aggregate([
+                {
+                    "$lookup": {
+                        "from": clinics[i].table,
+                        "localField": "bookingId",
+                        "foreignField": "_id",
+                        "as": "booking"
+                    }
+                },
+                { "$unwind": "$booking" },
+                {
+                    "$match": {
+                        "$and": [
+                            { "timeStamp": { $gte: search.from } },
+                            { "timeStamp": { $lte: search.until } },
+                        ]
+                    }
+                },
+                {
+                    $addFields: { clinic: clinics[i].clinic },
+                },
+            
+            ]);
+
+            invoicesArray = [...invoicesArray, ...res]
+        }
+
+        const invoices = [...invoicesArray].sort((a, b) => a.timeStamp - b.timeStamp)
+
+        let result = invoices || []
+
+        res.status(200).send({ status: 'OK', count: result.length, result: result })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', count: 0, result: [], error: err })
+
+    }
+
+});
+
+
+router.post('/createinvoice', async function (req, res, next) {
+
+    try {
+        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes } = req.body
+
+        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes }
+
+        if (!validateInvoice(payload)) {
+            res.status(400).send({ status: 'FAILED', error: 'INVALID-DATA' })
+            return
         }
 
         const invoiceNumber = await generateNewInvoiceNumber()
@@ -39,231 +103,211 @@ router.post('/createinvoice', async function(req, res, next) {
         await invoice.save()
 
 
-        res.status(200).send({status: 'OK', invoice: invoice }) 
+        res.status(200).send({ status: 'OK', invoice: invoice })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
-router.post('/updateinvoice', async function(req, res, next) {
-    try
-    {
-        const {invoiceNumber} = req.query
-        let {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes} = req.body
+router.post('/updateinvoice', async function (req, res, next) {
+    try {
+        const { invoiceNumber } = req.query
+        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes } = req.body
 
-        const payload = {name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes}
+        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes }
 
-        if (!validateInvoice(payload))
-        {
-            res.status(400).send({status:'FAILED', error: 'INVALID-DATA'}) 
-            return   
+        if (!validateInvoice(payload)) {
+            res.status(400).send({ status: 'FAILED', error: 'INVALID-DATA' })
+            return
         }
 
-        const invoice = await Invoice.findOne({invoiceNumber: invoiceNumber})
+        const invoice = await Invoice.findOne({ invoiceNumber: invoiceNumber })
 
         if (!invoice) {
-            res.status(400).send({status:'FAILED', error: 'INVALID-INVOICE-NUMBER'}) 
-            return   
+            res.status(400).send({ status: 'FAILED', error: 'INVALID-INVOICE-NUMBER' })
+            return
         }
 
-        await Invoice.updateOne({invoiceNumber: invoiceNumber}, payload)
+        await Invoice.updateOne({ invoiceNumber: invoiceNumber }, payload)
 
-        res.status(200).send({status: 'OK'}) 
+        res.status(200).send({ status: 'OK' })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
-router.post('/deleteinvoice', async function(req, res, next) {
-    try
-    {
-        let {invoiceNumber} = req.query
-        const invoice = await Invoice.findOne({invoiceNumber: invoiceNumber})
+router.post('/deleteinvoice', async function (req, res, next) {
+    try {
+        let { invoiceNumber } = req.query
+        const invoice = await Invoice.findOne({ invoiceNumber: invoiceNumber })
 
         if (!invoice) {
-            res.status(400).send({status:'FAILED', error: 'INVALID-INVOICE-NUMBER'}) 
-            return   
+            res.status(400).send({ status: 'FAILED', error: 'INVALID-INVOICE-NUMBER' })
+            return
         }
 
-        await Invoice.deleteOne({invoiceNumber: invoiceNumber})
+        await Invoice.deleteOne({ invoiceNumber: invoiceNumber })
 
-        res.status(200).send({status: 'OK'}) 
+        res.status(200).send({ status: 'OK' })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
 
 
-router.get('/getinvoicebybookingid', async function(req, res, next) {
+router.get('/getinvoicebybookingid', async function (req, res, next) {
 
-    try
-    {
+    try {
         const bookingId = new mongoose.Types.ObjectId(req.query.bookingId)
 
-        const invoice = await Invoice.findOne({bookingId: bookingId})
+        const invoice = await Invoice.findOne({ bookingId: bookingId })
 
-        res.status(200).send({status:'OK', invoice: invoice})
+        res.status(200).send({ status: 'OK', invoice: invoice })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
-router.get('/getinvoicebyinvoicenumber', async function(req, res, next) {
+router.get('/getinvoicebyinvoicenumber', async function (req, res, next) {
 
-    try
-    {
-        const {invoiceNumber} = req.query
+    try {
+        const { invoiceNumber } = req.query
 
-        const invoice = await Invoice.findOne({invoiceNumber: invoiceNumber})
+        const invoice = await Invoice.findOne({ invoiceNumber: invoiceNumber })
 
-        res.status(200).send({status:'OK', invoice: invoice})
+        res.status(200).send({ status: 'OK', invoice: invoice })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
 
-router.get('/getallcodes', async function(req, res, next) {
-    try
-    {
+router.get('/getallcodes', async function (req, res, next) {
+    try {
 
         const result = await MedexCode.aggregate([
             {
-              $unionWith: {
-                coll: "bloodcodes",
-                pipeline: [
-                  {
-                    $addFields: { section: "blood" },
-                  },
-                ],
-              },
+                $unionWith: {
+                    coll: "bloodcodes",
+                    pipeline: [
+                        {
+                            $addFields: { section: "blood" },
+                        },
+                    ],
+                },
             },
             {
-              $sort: { code: 1 },
+                $sort: { code: 1 },
             },
-          ]).exec();
-      
+        ]).exec();
 
-        res.status(200).send({status:'OK', result: result})
+
+        res.status(200).send({ status: 'OK', result: result })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 
 })
 
-router.get('/getallbloodcodes', async function(req, res, next) {
-    try
-    {
+router.get('/getallbloodcodes', async function (req, res, next) {
+    try {
 
-        const result = await BloodCode.find({hidden: {$ne: true}}).sort({code:1}).exec()
-      
+        const result = await BloodCode.find({ hidden: { $ne: true } }).sort({ code: 1 }).exec()
 
-        res.status(200).send({status:'OK', result: result})
+
+        res.status(200).send({ status: 'OK', result: result })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 
 })
 
-router.get('/getallbloodcodesadmin', async function(req, res, next) {
-    try
-    {
+router.get('/getallbloodcodesadmin', async function (req, res, next) {
+    try {
 
-        const result = await BloodCode.find().sort({code:1}).exec()
-      
+        const result = await BloodCode.find().sort({ code: 1 }).exec()
 
-        res.status(200).send({status:'OK', result: result})
+
+        res.status(200).send({ status: 'OK', result: result })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 
 })
 
 
 
-router.post('/getcodedetails', async function(req, res, next) {
-    try
-    {
-        const {code} = req.body
+router.post('/getcodedetails', async function (req, res, next) {
+    try {
+        const { code } = req.body
 
         const result = await MedexCode.aggregate([
             {
-              $match: {
-                   code: code 
-              }
+                $match: {
+                    code: code
+                }
             },
             {
-              $unionWith: {
-                coll: "bloodcodes",
-                pipeline: [
-                  {
-                    $match: {
-                        code: code 
-                   }
-                       },
-      
-                  {
-                    $addFields: { section: "blood" },
-                  },
-                ],
-              },
-            },
-            {
-              $sort: { index: 1 },
-            },
-          ]).exec();
-      
+                $unionWith: {
+                    coll: "bloodcodes",
+                    pipeline: [
+                        {
+                            $match: {
+                                code: code
+                            }
+                        },
 
-        res.status(200).send({status:'OK', result: result})
+                        {
+                            $addFields: { section: "blood" },
+                        },
+                    ],
+                },
+            },
+            {
+                $sort: { index: 1 },
+            },
+        ]).exec();
+
+
+        res.status(200).send({ status: 'OK', result: result })
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err)
-        res.status(500).send({status:'FAILED', error: err.message})
+        res.status(500).send({ status: 'FAILED', error: err.message })
     }
 })
 
-function validateInvoice(payload){
+function validateInvoice(payload) {
     return true
 }
 
-async function generateNewInvoiceNumber()
-{
-    let lastInvoiceNumber = await GlobalParams.findOne({name:'lastInvoiceNumber'});
-    if (!lastInvoiceNumber)
-    {
+async function generateNewInvoiceNumber() {
+    let lastInvoiceNumber = await GlobalParams.findOne({ name: 'lastInvoiceNumber' });
+    if (!lastInvoiceNumber) {
         lastInvoiceNumber = new GlobalParams(
             {
                 name: "lastInvoiceNumber",
                 lastExtRef: 1
             })
-         await lastInvoiceNumber.save()
-         return 1   
+        await lastInvoiceNumber.save()
+        return 1
     }
 
     lastInvoiceNumber.lastExtRef += 1
