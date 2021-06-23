@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
 
-router.post('/searchallinvoices', async function (req, res, next) {
+router.post('/searchallinvoicesbydate', async function (req, res, next) {
 
     try {
 
@@ -72,10 +72,73 @@ router.post('/searchallinvoices', async function (req, res, next) {
     } catch (err) {
         console.log(err)
         res.status(500).send({ status: 'FAILED', count: 0, result: [], error: err })
-
     }
 
 });
+
+
+router.post('/searchallinvoicesbyname', async function (req, res, next) {
+
+    try {
+
+        const { search } = req.body;
+
+        console.log(search)
+        
+        const regexp = new RegExp(search.name,"i")
+        const regexp2 = new RegExp(search.name.replace(" ","  "),"i")
+
+        const clinics = [
+            {table: "bookings", clinic: "pcr"},
+            {table: "gynaebookings", clinic: "gynae"},
+            {table: "gpbookings", clinic: "gp"},
+            {table: "stdbookings", clinic: "std"},
+            {table: "bloodbookings", clinic: "blood"},
+            {table: "screeningbookings", clinic: "screening"},
+            {table: "dermabookings", clinic: "derma"}
+        ]
+
+        let invoicesArray = []
+        for (var i = 0; i < clinics.length; i++) {
+            const res = await Invoice.aggregate([
+                {
+                    "$lookup": {
+                        "from": clinics[i].table,
+                        "localField": "bookingId",
+                        "foreignField": "_id",
+                        "as": "booking"
+                    }
+                },
+                { "$unwind": "$booking" },
+                {
+                    "$match": {
+                        "$or": [
+                            {name: {$regex: regexp }},
+                            {name: {$regex: regexp2 }},
+                        ]
+                    }
+                },
+                {
+                    $addFields: { clinic: clinics[i].clinic },
+                },
+            
+            ]);
+
+            invoicesArray = [...invoicesArray, ...res]
+        }
+
+        const invoices = [...invoicesArray].sort((a, b) => a.timeStamp - b.timeStamp)
+
+        let result = invoices || []
+
+        res.status(200).send({ status: 'OK', count: result.length, result: result })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', count: 0, result: [], error: err })
+    }
+
+});
+
 
 
 router.post('/createinvoice', async function (req, res, next) {
