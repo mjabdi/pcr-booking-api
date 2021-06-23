@@ -186,12 +186,12 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     content += `<p> Please find attached result of your blood test with Medical Express Clinic.</p>`;
     content += `<p>You can also download your results report by clicking the link here : </p>`;
     var reportLink = '#';
-    if (options.bookingId)
+    if (options._id)
     {
-        reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/download/pdf/downloadpdflabreport?id=${options.bookingId}`;
+        reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/download/pdf/downloadpdflabreport?id=${options._id}`;
     }
 
-    if (options.bookingId)
+    if (options._id)
     {
         content += `<p> <a href="${reportLink}" target="_blank"> Download Blood Report </a> </p>`;
     }
