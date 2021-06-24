@@ -204,6 +204,11 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     }
 
 
+    content += `<div style="margin:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
+    content += `<p>Need help with your result?</p>`
+    content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`
+    content += `</div>`
+
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
     content += `<p style="font-weight:600">Medical Express Clinic</p>`;
