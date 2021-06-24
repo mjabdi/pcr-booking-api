@@ -199,14 +199,14 @@ const sendBloodResultEmail =  async (options, email, notes) =>
 
     if (notes)
     {
-        content += `<p style="font-weight:700;margin-top:10px; color:#555"> Doctor Notes: </p>`;
-        content += `<div style="padding:10px;border:1px solid #eee;text-align: left">`;
+        content += `<p style="font-weight:700;margin-top:20px; color:#333"> Doctor Notes: </p>`;
+        content += `<div style="margin-top:-10px; padding:5px;border:1px solid #ddd;text-align: left">`;
         content += `<p style="font-weight:700;font-size:16px"> ${notes} </p>`;
         content += `</div>`
     }
 
 
-    content += `<div style="margin:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
+    content += `<div style="margin-top:20px;margin-bottom:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
     content += `<p>Need help with your result?</p>`
     content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`
     content += `</div>`
