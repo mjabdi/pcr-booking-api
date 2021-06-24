@@ -199,8 +199,10 @@ const sendBloodResultEmail =  async (options, email, notes) =>
 
     if (notes)
     {
-        content += `<p style="font-weight:700"> * Doctor Notes: </p>`;
-        content += `<p style="font-weight:700;font-size:18px"> ${notes} </p>`;
+        content += `<p style="font-weight:700"> Doctor Notes: </p>`;
+        content += `<div style="margin:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
+        content += `<p style="font-weight:700;font-size:16px"> ${notes} </p>`;
+        content += `</div>`
     }
 
 
