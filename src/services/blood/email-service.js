@@ -184,7 +184,7 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<p>Dear ${options.name},</p>`;
     content += `<p> Please find attached result of your blood test with Medical Express Clinic.</p>`;
-    content += `<p>You can also download your results report by clicking the link here : </p>`;
+    content += `<p>You can also download your results report by clicking the link below : </p>`;
     var reportLink = '#';
     if (options._id)
     {
