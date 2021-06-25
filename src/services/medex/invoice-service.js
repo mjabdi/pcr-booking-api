@@ -82,8 +82,6 @@ router.post('/searchallinvoicesbyname', async function (req, res, next) {
     try {
 
         const { search } = req.body;
-
-        console.log(search)
         
         const regexp = new RegExp(search.name,"i")
         const regexp2 = new RegExp(search.name.replace(" ","  "),"i")
