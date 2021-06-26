@@ -36,11 +36,14 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
         ]
 
         let invoicesArray = []
-        for (var i = 0; i < clinics.length; i++) {
+
+        let filteredClinics = search.clinic === 'all' ? [...clinics] : clinics.filter(e => e.clinic === search.clinic)
+
+        for (var i = 0; i < filteredClinics.length; i++) {
             const res = await Invoice.aggregate([
                 {
                     "$lookup": {
-                        "from": clinics[i].table,
+                        "from": filteredClinics[i].table,
                         "localField": "bookingId",
                         "foreignField": "_id",
                         "as": "booking"
@@ -56,7 +59,7 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
                     }
                 },
                 {
-                    $addFields: { clinic: clinics[i].clinic },
+                    $addFields: { clinic: filteredClinics[i].clinic },
                 },
             
             ]);
