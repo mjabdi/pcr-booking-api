@@ -111,7 +111,7 @@ const mailTo = "phe.lcrc@nhs.net";
             worksheet.getRow(5 + index).height = 30
 
             worksheet.getRow(5 + index).getCell(1).value = dateformat(date,'dd/mm/yyyy')
-            worksheet.getRow(5 + index).getCell(2).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+            worksheet.getRow(5 + index).getCell(1).font = { name: 'Calibri', family: 4, size: 12, bold: false };
 
             worksheet.getRow(5 + index).getCell(2).value = booking.R.forenameCapital
             worksheet.getRow(5 + index).getCell(2).font = { name: 'Calibri', family: 4, size: 12, bold: false };

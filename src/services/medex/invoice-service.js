@@ -17,8 +17,6 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
 
         const { search } = req.body;
 
-        console.log(search)
-
         search.from = new Date(search.from)
         search.until = new Date(search.until)
 
@@ -38,6 +36,15 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
         let invoicesArray = []
 
         let filteredClinics = search.clinic === 'all' ? [...clinics] : clinics.filter(e => e.clinic === search.clinic)
+        const condition =  !search.corporate ? [
+            { "timeStamp": { $gte: search.from } },
+            { "timeStamp": { $lte: search.until } }
+        ] : 
+        [
+            { "timeStamp": { $gte: search.from } },
+            { "timeStamp": { $lte: search.until } },                            
+            { "booking.corporate": search.corporate }  
+        ]
 
         for (var i = 0; i < filteredClinics.length; i++) {
             const res = await Invoice.aggregate([
@@ -52,10 +59,7 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
                 { "$unwind": "$booking" },
                 {
                     "$match": {
-                        "$and": [
-                            { "timeStamp": { $gte: search.from } },
-                            { "timeStamp": { $lte: search.until } },
-                        ]
+                        "$and": condition
                     }
                 },
                 {
