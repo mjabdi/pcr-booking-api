@@ -11,6 +11,46 @@ const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
 
+
+router.get('/getcorporates', async function (req, res, next) {
+    try{
+        let corporates = await GlobalParams.findOne({ name: 'corporates' });
+        const result = corporates ? corporates.value : ''
+        res.status(200).send({ status: 'OK', result: result})
+
+    }catch(err)
+    {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+})
+
+router.post('/updatecorporates', async function (req, res, next) {
+    try{
+        const {corporates} = req.body
+        let prevCorporates = await GlobalParams.findOne({ name: 'corporates' });
+        if (!prevCorporates) {
+            prevCorporates = new GlobalParams(
+                {
+                    name: "corporates",
+                    lastExtRef : 1,
+                    value: corporates
+                })
+        }else
+        {
+            prevCorporates.value = corporates
+        }
+
+        await prevCorporates.save()
+        res.status(200).send({ status: 'OK'})
+
+    }catch(err)
+    {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+})
+
 router.post('/searchallinvoicesbydate', async function (req, res, next) {
 
     try {
