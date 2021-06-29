@@ -10,6 +10,93 @@ const uuid = require('uuid-random')
 const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
+const dateformat = require("dateformat")
+
+router.post('/calculateinvoicereports', async function (req, res, next) {
+    try{
+        let result = []
+        let invoicesArray = []
+
+        let resultMap = new Map()
+
+        const clinics = [
+            {table: "bookings", clinic: "pcr"},
+            {table: "gynaebookings", clinic: "gynae"},
+            {table: "gpbookings", clinic: "gp"},
+            {table: "stdbookings", clinic: "std"},
+            {table: "bloodbookings", clinic: "blood"},
+            {table: "screeningbookings", clinic: "screening"},
+            {table: "dermabookings", clinic: "derma"}
+        ]
+
+        for (var i = 0; i < clinics.length; i++) {
+            const res = await Invoice.aggregate([
+                {
+                    "$lookup": {
+                        "from": clinics[i].table,
+                        "localField": "bookingId",
+                        "foreignField": "_id",
+                        "as": "booking"
+                    }
+                },
+                { "$unwind": "$booking" },
+                {
+                    $addFields: { clinic: clinics[i].clinic },
+                },
+            
+            ]);
+
+            invoicesArray = [...invoicesArray, ...res]
+        }
+
+        for (var index = 0 ; index < invoicesArray.length ; index++)
+        {
+            const dateStr = dateformat(invoicesArray[index].timeStamp, 'mmmm-yyyy');
+            const fee =  invoicesArray[index].grandTotal;
+            const clinic = invoicesArray[index].clinic;
+
+            resultMap[dateStr] = {
+                total : (resultMap[dateStr] ? resultMap[dateStr].total || 0 : 0) + fee,
+                pcr : (resultMap[dateStr] ? resultMap[dateStr].pcr || 0 : 0) + (clinic === "pcr" ? fee : 0),
+                gynae : (resultMap[dateStr] ? resultMap[dateStr].gynae || 0 : 0) + (clinic === "gynae" ? fee : 0),
+                gp : (resultMap[dateStr] ? resultMap[dateStr].gp || 0 : 0) + (clinic === "gp" ? fee : 0),
+                std : (resultMap[dateStr] ? resultMap[dateStr].std || 0 : 0) + (clinic === "std" ? fee : 0),
+                blood : (resultMap[dateStr] ? resultMap[dateStr].blood || 0 : 0) + (clinic === "blood" ? fee : 0),
+                screening : (resultMap[dateStr] ? resultMap[dateStr].screening || 0 : 0) + (clinic === "screening" ? fee : 0),
+                derma : (resultMap[dateStr] ? resultMap[dateStr].derma || 0 : 0) + (clinic === "derma" ? fee : 0),
+            }
+
+            resultMap.set(dateStr, resultMap[dateStr])
+        }
+
+        for (let key of resultMap.keys()) {
+            result.push({month: key, data: resultMap[key]})
+          }
+
+        result = JSON.stringify(result)
+
+        let invoiceReports = await GlobalParams.findOne({ name: 'invoiceReports' });
+        if (!invoiceReports) {
+            invoiceReports = new GlobalParams(
+                {
+                    name: "invoiceReports",
+                    lastExtRef : 1,
+                    value: result
+                })
+        }else
+        {
+            invoiceReports.value = result
+        }
+
+        await invoiceReports.save()
+
+        res.status(200).send({ status: 'OK', result: result})
+    }catch(err)
+    {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+})
 
 
 router.get('/getcorporates', async function (req, res, next) {
@@ -423,6 +510,13 @@ async function generateNewInvoiceNumber() {
     return `MX21${lastInvoiceNumber.lastExtRef}`
 }
 
+function mapToObj(strMap) {
+    let obj = Object.create(null);
+    for (let [k,v] of strMap) {
+      obj[k] = v;
+    }
+    return obj;
+  }
 
 
 module.exports = router
