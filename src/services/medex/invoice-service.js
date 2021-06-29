@@ -12,6 +12,19 @@ const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
 const dateformat = require("dateformat")
 
+router.get('/getinvoicereports', async function (req, res, next) {
+    try{
+
+        const invoiceReports = await GlobalParams.findOne({ name: 'invoiceReports' });
+        res.status(200).send({ status: 'OK', result: invoiceReports.value })
+
+    }catch(err)
+    {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+})
+
 router.post('/calculateinvoicereports', async function (req, res, next) {
     try{
         let result = []
