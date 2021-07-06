@@ -36,6 +36,9 @@ const TIME_SLOTS_FRIDAY = [
     new TimeSlot('11:30 AM', true),
     new TimeSlot('12:00 PM', true),
     new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('02:00 PM', true),
 ];
 
 
