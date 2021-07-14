@@ -201,6 +201,7 @@ router.post('/sendbloodreportemail' , async function (req,res,next) {
         
 
         bloodreport.emailSent = true
+        bloodreport.emailSentTimeStamp = new Date()
         bloodreport.notes = notes
         bloodreport.email = email
         
@@ -831,7 +832,7 @@ router.post('/changetopatientattended', async function(req, res, next) {
 
     try{
 
-        await BloodBooking.updateOne({_id : req.query.id}, {status : 'patient_attended'});
+        await BloodBooking.updateOne({_id : req.query.id}, {status : 'patient_attended', samplingTimeStamp: new Date()});
 
         res.status(200).send({status: 'OK'});
 

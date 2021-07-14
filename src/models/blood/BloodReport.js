@@ -83,6 +83,12 @@ const BloodReport = mongoose.model('bloodreport', new mongoose.Schema({
         default: false
     },
 
+    emailSentTimeStamp: {
+        type: Date,
+        required: false
+    },
+
+
     notes: {
         type: String,
         required: false

@@ -127,7 +127,12 @@ const BloodBookingSchema = new mongoose.Schema({
     doctorConsultation: {
         type: Boolean,
         default: false
-    }
+    },
+
+    samplingTimeStamp: {
+        type: Date,
+        required : false
+    },
 
 });
 
