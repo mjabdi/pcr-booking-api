@@ -22,7 +22,7 @@ const mailTo2 = "m.jafarabdi@gmail.com";
 
     await mongodb();
 
-    const bookings = await Link.aggregate([
+    const _bookings = await Link.aggregate([
       
         {"$lookup": {
             "from": "bookings",
@@ -41,6 +41,9 @@ const mailTo2 = "m.jafarabdi@gmail.com";
 
     // console.log(dateStr)
     // console.log(bookings)
+
+    bookings = _bookings.filter((row) => row.birthDate === row.R.birthDate)
+    
 
     if (!bookings || bookings.length === 0)
     {
@@ -92,7 +95,7 @@ const mailTo2 = "m.jafarabdi@gmail.com";
     
 
 
-   await sendMail(mailTo, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
+  // await sendMail(mailTo, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
    await sendMail(mailTo2, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
    
 
