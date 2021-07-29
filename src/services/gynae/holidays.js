@@ -5,7 +5,10 @@ const holidays = [
         new Date(2020,11,25,0,0,0,0),
         new Date(2020,11,26,0,0,0,0),
         new Date(2021,0,1,0,0,0,0),
-        new Date(2021,1,12,0,0,0,0)
+        new Date(2021,1,12,0,0,0,0),
+        new Date(2021,9,23,0,0,0,0),
+        new Date(2021,9,24,0,0,0,0)
+
 ];
 
 const getHolidays = () =>
