@@ -75,12 +75,13 @@ const sendConfirmationEmail =  async (options) =>
     }
     
     content += `<li> Estimated Price : ${options.estimatedPrice} </li>`;
+    content += `<li style="color:#f00000;font-weight:600"> If you are attending for a blood test on a self request basis (not referred by our doctor, as part of a package or a health screen) a blood draw fee of £50 is payable in addition to the fee for your test. </li>`
+
 
 
     content += `</ul>`;
 
 
-    content += `<p style="color:#f00000;font-weight:600"> If you are attending for a blood test on a self request basis (not referred by our doctor, as part of a package or a health screen) a blood draw fee of £50 is payable in addition to the fee for your test. </p>`
 
 
     content += `<p>Follow this link if you need to modify your booking details, rearrange your appointment or cancel your booking : </p>`;
