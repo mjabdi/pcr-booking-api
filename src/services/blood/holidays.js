@@ -86,6 +86,47 @@ const TIME_SLOTS_WEEKEND_30MIN = [
 ];
 
 
+const TIME_SLOTS_NORMAL_LIMITED = [
+    // new TimeSlot('09:00 AM', true),
+    // new TimeSlot('09:15 AM', true),
+    // new TimeSlot('09:30 AM', true),
+    new TimeSlot('09:45 AM', true),
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:15 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:15 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('11:45 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:15 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('12:45 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:15 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('01:45 PM', true),
+    new TimeSlot('02:00 PM', false),
+    new TimeSlot('02:15 PM', false),
+    new TimeSlot('02:30 PM', false),
+    new TimeSlot('02:45 PM', false),
+    new TimeSlot('03:00 PM', false),
+    new TimeSlot('03:15 PM', false),
+    new TimeSlot('03:30 PM', false),
+    new TimeSlot('03:45 PM', false),
+    new TimeSlot('04:00 PM', false),
+    new TimeSlot('04:15 PM', false),
+    new TimeSlot('04:30 PM', true),
+    new TimeSlot('04:45 PM', true),
+    new TimeSlot('05:00 PM', true),
+    new TimeSlot('05:15 PM', true),
+    new TimeSlot('05:30 PM', true),
+    // new TimeSlot('05:45 PM', true)
+];
+
+
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -130,6 +171,13 @@ const getDefaultTimeSlots = (date) =>
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
     const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
+
+    const is20August = (dateStr === '2021-08-20');
+    if (is20August)
+    {
+        results = TIME_SLOTS_NORMAL_LIMITED;
+    }
+
 
 
     for (var i=0; i < results.length; i++)
