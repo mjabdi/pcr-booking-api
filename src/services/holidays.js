@@ -74,6 +74,37 @@ const TIME_SLOTS_WEEKEND = [
     new TimeSlot('01:45 PM', true),
 ];
 
+
+const TIME_SLOTS_NORMAL_LIMITED = [
+    new TimeSlot('09:00 AM', true),
+    new TimeSlot('09:15 AM', true),
+    new TimeSlot('09:30 AM', true),
+    new TimeSlot('09:45 AM', true),
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:15 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:15 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('11:45 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:15 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('12:45 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:15 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('01:45 PM', true),
+    new TimeSlot('04:30 PM', true),
+    new TimeSlot('04:45 PM', true),
+    new TimeSlot('05:00 PM', true),
+    new TimeSlot('05:15 PM', true),
+    new TimeSlot('05:30 PM', true),
+    new TimeSlot('05:45 PM', true)
+];
+
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -99,6 +130,12 @@ const getDefaultTimeSlots = (date) =>
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
     const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
+
+    const is20August = (dateStr === '2021-08-20');
+    if (is20August)
+    {
+        results = TIME_SLOTS_NORMAL_LIMITED;
+    }
 
     if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05' || someDateStr === '2021-05-03' || someDateStr === '2021-05-31')
     {
