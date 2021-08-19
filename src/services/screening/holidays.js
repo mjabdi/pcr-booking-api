@@ -32,6 +32,23 @@ const TIME_SLOTS_NORMAL = [
     new TimeSlot('04:00 PM', true),
 ];
 
+const TIME_SLOTS_NORMAL_LIMITED = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('02:00 PM', false),
+    new TimeSlot('02:30 PM', false),
+    new TimeSlot('03:00 PM', false),
+    new TimeSlot('03:30 PM', false),
+    new TimeSlot('04:00 PM', false),
+];
+
+
 const TIME_SLOTS_WEEKEND = [
 ];
 
@@ -65,6 +82,12 @@ const getDefaultTimeSlots = (date) =>
     const is24Dec = (dateStr === '2020-12-24' || dateStr === '2020-12-31' );
     const is27Dec = (dateStr === '2020-12-27');
     const isToday = (dateStr === todayStr);
+
+    const is20August = (dateStr === '2021-08-20');
+    if (is20August)
+    {
+        results = TIME_SLOTS_NORMAL_LIMITED;
+    }
 
 
     for (var i=0; i < results.length; i++)
