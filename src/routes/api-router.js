@@ -25,6 +25,7 @@ const dermaBookService =  require('./../services/derma/booking-service');
 
 const screeningTimeService =  require('./../services/screening/time-service');
 const screeningBookService =  require('./../services/screening/booking-service');
+const screeningPaymentService =  require('./../services/screening/payment-service');
 
 
 const adminBookService =  require('./../services/admin/booking-service');
@@ -99,6 +100,8 @@ router.use('/derma/book', dermaBookService);
 /// Health Screening ---------
 router.use('/screening/time', screeningTimeService);
 router.use('/screening/book', screeningBookService);
+router.use('/screening/payment', screeningPaymentService);
+
 
 
 
