@@ -40,9 +40,11 @@ const mailTo2 = "m.jafarabdi@gmail.com";
     ]);
 
     // console.log(dateStr)
-    // console.log(bookings)
 
     bookings = _bookings.filter((row) => row.birthDate === row.R.birthDate)
+
+    // console.log(bookings)
+
     
 
     if (!bookings || bookings.length === 0)
