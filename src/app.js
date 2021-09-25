@@ -216,6 +216,15 @@ app.get("/medicalexpressclinic/book/screening/*", function (req, res) {
 });
 
 
+app.use(
+  "/medicalexpressclinic/book/all",
+  express.static(path.join(__dirname, "..", "public_medex_form"))
+);
+app.get("/medicalexpressclinic/book/all/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_medex_form", "index.html"));
+});
+
+
 
 app.use(
   "/medicalexpressclinic/admin",
