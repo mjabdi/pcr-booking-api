@@ -410,7 +410,7 @@ router.get('/getallcodes', async function (req, res, next) {
                     coll: "bloodcodes",
                     pipeline: [
                         {
-                            $addFields: { section: "blood" },
+                            $addFields: { section: "blood", isBloodTable: true },
                         },
                     ],
                 },
@@ -420,8 +420,9 @@ router.get('/getallcodes', async function (req, res, next) {
             },
         ]).exec();
 
-
         res.status(200).send({ status: 'OK', result: result })
+
+
     }
     catch (err) {
         console.log(err)
@@ -452,6 +453,32 @@ router.get('/getallbloodcodesadmin', async function (req, res, next) {
 
 
         res.status(200).send({ status: 'OK', result: result })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+
+})
+
+
+router.post('/updatecode', async function (req, res, next) {
+    try {
+        const { id, newCode } = req.body
+
+        
+
+        if (newCode.isBloodTable)
+        {
+            await BloodCode.updateOne({_id: id}, {description : newCode.description, price: newCode.price, hidden: (newCode.hidden ? true : false)})
+
+        }else
+        {
+            await MedexCode.updateOne({_id: id}, {description : newCode.description, price: newCode.price})
+        }
+
+
+        res.status(200).send({ status: 'OK'})
     }
     catch (err) {
         console.log(err)

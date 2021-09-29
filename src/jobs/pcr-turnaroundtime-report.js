@@ -95,8 +95,6 @@ const mailTo2 = "m.jafarabdi@gmail.com";
     html += '</table> </div>';
 
     
-
-
    await sendMail(mailTo, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
    await sendMail(mailTo2, `PCR TURNAROUND-TIME REPORT - ${dateStr}`, html, null)
    
