@@ -188,8 +188,8 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     var content = '';
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<p>Dear ${options.name},</p>`;
-    content += `<p> Please find attached result of your blood test with Medical Express Clinic.</p>`;
-    content += `<p>You can also download your results report by clicking the link below : </p>`;
+    content += `<p>Please find attached result of your diagnostic test conducted at Medical Express Clinic.</p>`;
+    content += `<p>You can also download your results report by clicking the link below :</p>`;
     var reportLink = '#';
     if (options._id)
     {
@@ -210,9 +210,10 @@ const sendBloodResultEmail =  async (options, email, notes) =>
         content += `</div>`
     }
 
+    content += `<p>We cannot interpret blood results of patients that have not undergone a full consultation with our doctor. If you need help to interpreting or understanding your test result you can book an appointment with our private doctor here: </p>`
 
     content += `<div style="margin-top:20px;margin-bottom:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
-    content += `<p>Need help with your result?</p>`
+    // content += `<p>Need help with your result?</p>`
     content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`
     content += `</div>`
 
@@ -221,6 +222,9 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     content += `<p style="font-weight:600">Medical Express Clinic</p>`;
     content += `</div>`;
   
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600;color:#000">PLEASE NOTE, THIS IS AN UNATTENDED EMAIL ADDRESS. IF YOU HAVE ANY FURTHER REQUESTS, PLEASE DIRECT THESE TO INFO@MEDICALEXPRESSCLINIC.CO.UK WE WILL NOT REPLY TO ANY EMAILS RECEIVED AT THIS ADDRESS.</p>`;
+    content += `</div>`;
   
     content += '</div>'
 
