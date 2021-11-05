@@ -121,6 +121,24 @@ const TIME_SLOTS_NORMAL_LIMITED = [
 ];
 
 
+
+const TIME_SLOTS_MIDDAY = [
+    // new TimeSlot('09:00 AM', true),
+    // new TimeSlot('09:15 AM', true),
+    // new TimeSlot('09:30 AM', true),
+    new TimeSlot('09:45 AM', true),
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:15 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:15 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('11:45 AM', true),
+    // new TimeSlot('05:45 PM', true)
+];
+
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -158,6 +176,12 @@ const getDefaultTimeSlots = (date) =>
     if (is20August)
     {
         results = TIME_SLOTS_NORMAL_LIMITED;
+    }
+
+    const is23Dec = (dateStr === '2021-12-23')
+    if (is23Dec)
+    {
+        results = TIME_SLOTS_MIDDAY;
     }
 
     for (var i=0; i < results.length; i++)

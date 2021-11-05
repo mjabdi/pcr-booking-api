@@ -120,6 +120,23 @@ const TIME_SLOTS_NORMAL_LIMITED = [
 ];
 
 
+const TIME_SLOTS_MIDDAY = [
+    new TimeSlot('09:00 AM', true),
+    new TimeSlot('09:15 AM', true),
+    new TimeSlot('09:30 AM', true),
+    new TimeSlot('09:45 AM', true),
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:15 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:15 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('11:45 AM', true),
+];
+
+
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -155,6 +172,12 @@ const getDefaultTimeSlots = (date) =>
     if (someDateStr === '2021-04-02' || someDateStr === '2021-04-05' || someDateStr === '2021-05-03' || someDateStr === '2021-05-31')
     {
         results = TIME_SLOTS_WEEKEND;
+    }
+
+    const is23Dec = (dateStr === '2021-12-23')
+    if (is23Dec)
+    {
+        results = TIME_SLOTS_MIDDAY;
     }
 
 

@@ -52,6 +52,11 @@ const TIME_SLOTS_NORMAL_LIMITED = [
 ];
 
 
+const TIME_SLOTS_MIDDAY = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('11:00 AM', true),
+];
+
 const getDefaultTimeSlots = (date) =>
 {
     // console.log(date);
@@ -87,6 +92,13 @@ const getDefaultTimeSlots = (date) =>
     if (is20August)
     {
         results = TIME_SLOTS_NORMAL_LIMITED;
+    }
+
+
+    const is23Dec = (dateStr === '2021-12-23')
+    if (is23Dec)
+    {
+        results = TIME_SLOTS_MIDDAY;
     }
 
 
