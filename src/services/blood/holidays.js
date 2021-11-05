@@ -197,7 +197,7 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL_LIMITED;
     }
 
-    const is23Dec = (dateStr === '2020-12-23')
+    const is23Dec = (dateStr === '2021-12-23')
     if (is23Dec)
     {
         results = TIME_SLOTS_MIDDAY;
