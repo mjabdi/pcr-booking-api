@@ -121,7 +121,7 @@ const getDefaultTimeSlots = (date) =>
         result = []
     }
 
-    if (someDate === '2021-11-19')
+    if (someDateStr === '2021-11-19')
     {
         results = TIME_SLOTS_19th;
     }
