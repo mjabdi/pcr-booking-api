@@ -77,9 +77,9 @@ router.post('/bookconsultation', async function (req, res, next) {
             }
         )
 
-        await booking.save()
+        // await booking.save()
 
-        await sendConfirmationEmail(booking)
+        // await sendConfirmationEmail(booking)
 
         res.status(200).send({ status: "OK", booking: booking, timeData: getDays() });
     }
@@ -102,8 +102,8 @@ router.post('/setdatetime', async function (req, res, next) {
             booking.bookingDate = bookingDate
             booking.bookingTime = bookingTime
             await booking.save()
-            await sendScheduledEmail(booking)
-            await sendNotificationEmail(booking)
+            // await sendScheduledEmail(booking)
+            // await sendNotificationEmail(booking)
 
             res.status(200).send({ status: "OK", booking: booking });
         } else {
