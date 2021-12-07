@@ -10,6 +10,8 @@ const holidays = [
         new Date(2021,11,24,0,0,0,0),
         new Date(2021,11,25,0,0,0,0),
         new Date(2021,11,26,0,0,0,0),
+        new Date(2022,0,1,0,0,0,0),
+
 
 
 ];
@@ -50,6 +52,14 @@ const TIME_SLOTS_NORMAL_LIMITED = [
     new TimeSlot('04:00 PM', false),
     new TimeSlot('05:00 PM', true),
 ];
+
+const TIME_SLOTS_10_14 = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('01:00 PM', true),
+];
+
 
 
 const TIME_SLOTS_MIDDAY = [
@@ -95,10 +105,10 @@ const getDefaultTimeSlots = (date) =>
     }
 
 
-    const is23Dec = (dateStr === '2021-12-23')
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' )
     if (is23Dec)
     {
-        results = TIME_SLOTS_MIDDAY;
+        results = TIME_SLOTS_10_14;
     }
 
 

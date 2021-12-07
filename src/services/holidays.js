@@ -10,6 +10,7 @@ const holidays = [
         new Date(2021,11,24,0,0,0,0),
         new Date(2021,11,25,0,0,0,0),
         new Date(2021,11,26,0,0,0,0),
+        new Date(2022,0,1,0,0,0,0),
 
 ];
 
@@ -119,6 +120,26 @@ const TIME_SLOTS_NORMAL_LIMITED = [
     new TimeSlot('05:45 PM', true)
 ];
 
+const TIME_SLOTS_10_14 = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:15 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('10:45 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:15 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('11:45 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:15 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('12:45 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:15 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('01:45 PM', true),
+];
+
+
 
 const TIME_SLOTS_MIDDAY = [
     new TimeSlot('09:00 AM', true),
@@ -174,11 +195,14 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_WEEKEND;
     }
 
-    const is23Dec = (dateStr === '2021-12-23')
+
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' )
     if (is23Dec)
     {
-        results = TIME_SLOTS_MIDDAY;
+        results = TIME_SLOTS_10_14;
     }
+
+
 
 
     for (var i=0; i < results.length; i++)

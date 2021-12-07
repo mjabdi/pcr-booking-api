@@ -11,8 +11,7 @@ const holidays = [
         new Date(2021,11,25,0,0,0,0),
         new Date(2021,11,26,0,0,0,0),
         new Date(2021,11,23,0,0,0,0),
-
-
+        new Date(2022,0,1,0,0,0,0),
 ];
 
 const getHolidays = () =>
