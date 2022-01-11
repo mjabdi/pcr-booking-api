@@ -28,6 +28,11 @@ const screeningBookService =  require('./../services/screening/booking-service')
 const screeningPaymentService =  require('./../services/screening/payment-service');
 
 
+const corporateTimeService =  require('./../services/corporate/time-service');
+const corporateBookService =  require('./../services/corporate/booking-service');
+
+
+
 const adminBookService =  require('./../services/admin/booking-service');
 
 
@@ -102,6 +107,10 @@ router.use('/screening/time', screeningTimeService);
 router.use('/screening/book', screeningBookService);
 router.use('/screening/payment', screeningPaymentService);
 
+
+/// Corporate ---------
+router.use('/corporate/time', corporateTimeService);
+router.use('/corporate/book', corporateBookService);
 
 
 

@@ -39,6 +39,7 @@ router.post('/calculateinvoicereports', async function (req, res, next) {
             {table: "stdbookings", clinic: "std"},
             {table: "bloodbookings", clinic: "blood"},
             {table: "screeningbookings", clinic: "screening"},
+            {table: "corporatebookings", clinic: "corporate"},
             {table: "dermabookings", clinic: "derma"}
         ]
 
@@ -76,6 +77,7 @@ router.post('/calculateinvoicereports', async function (req, res, next) {
                 std : (resultMap[dateStr] ? resultMap[dateStr].std || 0 : 0) + (clinic === "std" ? fee : 0),
                 blood : (resultMap[dateStr] ? resultMap[dateStr].blood || 0 : 0) + (clinic === "blood" ? fee : 0),
                 screening : (resultMap[dateStr] ? resultMap[dateStr].screening || 0 : 0) + (clinic === "screening" ? fee : 0),
+                corporate : (resultMap[dateStr] ? resultMap[dateStr].corporate || 0 : 0) + (clinic === "corporate" ? fee : 0),
                 derma : (resultMap[dateStr] ? resultMap[dateStr].derma || 0 : 0) + (clinic === "derma" ? fee : 0),
             }
 
@@ -170,6 +172,7 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
             {table: "stdbookings", clinic: "std"},
             {table: "bloodbookings", clinic: "blood"},
             {table: "screeningbookings", clinic: "screening"},
+            {table: "corporatebookings", clinic: "corporate"},
             {table: "dermabookings", clinic: "derma"}
         ]
 
@@ -240,6 +243,7 @@ router.post('/searchallinvoicesbyname', async function (req, res, next) {
             {table: "stdbookings", clinic: "std"},
             {table: "bloodbookings", clinic: "blood"},
             {table: "screeningbookings", clinic: "screening"},
+            {table: "corporatebookings", clinic: "corporate"},
             {table: "dermabookings", clinic: "derma"}
         ]
 

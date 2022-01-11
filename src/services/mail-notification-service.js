@@ -7,6 +7,7 @@ const NOTIFY_TYPE_GYNAE_CANCELED = 4;
 const NOTIFY_TYPE_BLOOD_BOOKED = 5;
 const NOTIFY_TYPE_DERMATOLOGY_BOOKED = 6;
 const NOTIFY_TYPE_HEALTHSCREENING_BOOKED = 7;
+const NOTIFY_TYPE_CORPORATE_BOOKED = 8;
 
 const MailTo =
   process.env.NODE_ENV === "production"
@@ -67,7 +68,9 @@ function createSubject(notifyType) {
         return "New Booking for DERMATOLOGY";
     case NOTIFY_TYPE_HEALTHSCREENING_BOOKED:
         return "New Booking for HEALTH SCREENING";
-  
+    case NOTIFY_TYPE_CORPORATE_BOOKED:
+        return "New Booking for CORPORATE";
+    
     default:
       return "";
   }
@@ -89,7 +92,10 @@ function createMessage(notifyType, booking) {
         return `You have a new booking for <strong>DERMATOLOGY</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
     case NOTIFY_TYPE_HEALTHSCREENING_BOOKED:
           return `You have a new booking for <strong>HEALTH SCREENING</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
-         
+    case NOTIFY_TYPE_CORPORATE_BOOKED:
+          return `You have a new booking for <strong>CORPORATE</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+  
+          
     default:
       return "";
   }
@@ -105,6 +111,7 @@ module.exports = {
     NOTIFY_TYPE_GYNAE_CANCELED,
     NOTIFY_TYPE_DERMATOLOGY_BOOKED,
     NOTIFY_TYPE_HEALTHSCREENING_BOOKED,
+    NOTIFY_TYPE_CORPORATE_BOOKED,
 
 
   },

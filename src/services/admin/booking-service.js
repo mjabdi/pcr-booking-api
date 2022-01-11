@@ -5,6 +5,7 @@ const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const { STDBooking } = require("../../models/std/STDBooking");
 const { BloodBooking } = require("../../models/blood/BloodBooking");
 const { ScreeningBooking } = require("../../models/screening/ScreeningBooking");
+const { CorporateBooking } = require("../../models/corporate/CorporateBooking");
 
 
 const { Booking } = require("../../models/Booking");
@@ -173,6 +174,12 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
+    const corporateCount = await CorporateBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
+
     const result = [
       {clinic: "pcr", count: pcrCount},
       {clinic: "gynae", count: gynaeCount},
@@ -181,6 +188,7 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       {clinic: "blood", count: bloodCount},
       {clinic: "derma", count: dermaCount},
       {clinic: "screening", count: screeningCount},
+      {clinic: "corporate", count: corporateCount},
 
 
     ]
@@ -310,6 +318,11 @@ router.get(
         deleted: { $ne: true },
       }).exec();
 
+      const corporateCount = await CorporateBooking.countDocuments({
+        bookingDate: dateStr,
+        deleted: { $ne: true },
+      }).exec();
+  
 
 
   
@@ -320,7 +333,9 @@ router.get(
         {clinic: "std", count: stdCount},
         {clinic: "blood", count: bloodCount},
         {clinic: "derma", count: dermaCount},
-        {clinic: "screening", count: screeningCount}
+        {clinic: "screening", count: screeningCount},
+        {clinic: "corporate", count: corporateCount},
+
 
 
       ]
@@ -503,6 +518,28 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
         },
       },
 
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
+
 
 
       {
@@ -626,6 +663,23 @@ router.get("/getallbookings", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
 
 
@@ -764,6 +818,25 @@ router.post("/searchallbookings", async function (req, res, next) {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
 
       {
@@ -911,6 +984,24 @@ router.get("/getdeletedbookings", async function (req, res, next) {
         },
       },
 
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $eq: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
+
 
 
       {
@@ -1035,6 +1126,24 @@ router.get("/gettodaybookings", async function (req, res, next) {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, { bookingDate: today }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
 
 
@@ -1177,6 +1286,27 @@ router.get("/getoldbookings", async function (req, res, next) {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $lt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
 
 
@@ -1321,6 +1451,27 @@ router.get("/getfuturebookings", async function (req, res, next) {
         },
       },
 
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $gt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
+
 
 
       {
@@ -1456,6 +1607,24 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
         },
       },
 
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
+
 
 
       {
@@ -1579,6 +1748,24 @@ router.get("/getbookingsbyref", async function (req, res, next) {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ bookingRef: ref }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
 
 
@@ -1715,6 +1902,26 @@ router.get("/getbookingbyid", async function (req, res, next) {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {_id: req.query.id},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { timeStamp: 1 },
