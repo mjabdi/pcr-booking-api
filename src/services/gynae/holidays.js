@@ -50,6 +50,17 @@ const TIME_SLOTS_FRIDAY = [
     new TimeSlot('02:00 PM', true),
 ];
 
+const TIME_SLOTS_FRIDAY_13 = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+];
+
+
 const TIME_SLOTS_19th = [
     new TimeSlot('02:00 PM', true),
     new TimeSlot('02:30 PM', true),
@@ -126,6 +137,11 @@ const getDefaultTimeSlots = (date) =>
     if (someDateStr === '2021-11-19')
     {
         results = TIME_SLOTS_19th;
+    }
+
+    if (someDateStr === '2022-01-21')
+    {
+        results = TIME_SLOTS_FRIDAY_13;
     }
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
