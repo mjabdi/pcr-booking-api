@@ -25,6 +25,11 @@ const BloodCodeSchema = new mongoose.Schema({
     hidden: {
         type: Boolean,
         required: false
+    },
+
+    newPrice: {
+        type: Number,
+        required: false,
     }
 
 })
