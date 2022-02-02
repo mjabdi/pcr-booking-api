@@ -79,6 +79,8 @@ const sendConfirmationEmail =  async (options) =>
 
     });
 
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
+
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;

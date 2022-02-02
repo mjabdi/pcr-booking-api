@@ -42,6 +42,8 @@ const sendPatientNotificationEmail =  async (options) =>
 
     content += `</ul>`;
 
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
+
   
 
     content += `<div style="padding-top:10px">`;
@@ -127,6 +129,8 @@ const sendConfirmationEmailNormal =  async (options) =>
 
     });
 
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
+
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
@@ -198,6 +202,9 @@ const sendConfirmationEmailTimeChanged =  async (options) =>
         content += `<p style="border-left: 4px solid #999; background: #fff; font-weight:400;color: #555;padding-left:10px;line-height:50px"> <span style="color:#555;font-size:24px"> A. </span>${element.answer} </p>`;
 
     });
+
+
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
 
 
     content += `<div style="padding-top:10px">`;

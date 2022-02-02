@@ -105,6 +105,8 @@ const sendConfirmationEmail =  async (options) =>
 
     });
 
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
+
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
@@ -210,12 +212,26 @@ const sendBloodResultEmail =  async (options, email, notes) =>
         content += `</div>`
     }
 
-    content += `<p>We cannot interpret blood results of patients that have not undergone a full consultation with our doctor. If you need help to interpreting or understanding your test result you can book an appointment with our private doctor here: </p>`
+
+    content += `<p>Interpreting your blood test results.</p>`
+    content += `<p>If you have attended on a self-request basis, you will have confirmed for us to simply send your medical report without comment or review from our doctor, however you may not be able to fully understand the contents of your blood test report. Please note, the following is not intended as medical advice, or to help in providing a diagnosis we <strong>strongly</strong> recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems. </p>`
+    content += `<p>The name of the test conducted can be found on the left column of your blood test report, with the qualitative result printed just to the right of the test name.</p>`
+    content += `<p>The reference range/normal values can be found in the far right hand column, on some of our reports, abnormal results will appear in bold and red. </p>`
+    content += `<p>Please see the following example reference report (ATTACHED)</p>`
+    content += `<p>Your lab report may also include the following terms: </p>`
+    content += `<ul>`
+    content += `<li> <strong>Negative</strong> which means the disease or substance being tested was not found</li>`
+    content += `<li> <strong>Positive</strong> which means the disease or substance was found</li>`
+    content += `<li> <strong>Inconclusive or uncertain,</strong> which means there wasn't enough information in the results to diagnose or rule out a disease. If you get an inconclusive result, you will probably get more tests.</li>`
+
+    content += `<p>If you require more detailed analysis of your blood test result, including possible treatment, further investigations please book an appointment to see our doctor here:</p>`
 
     content += `<div style="margin-top:20px;margin-bottom:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
-    // content += `<p>Need help with your result?</p>`
     content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`
     content += `</div>`
+
+
+    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
@@ -249,6 +265,10 @@ const sendBloodResultEmail =  async (options, email, notes) =>
         {
             path: path.join(config.PdfFolder, "attachments" ,options.filename),
             filename: options.filename
+        },
+        {
+            path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
+            filename: "Blood Test Interp Guide.pdf"
         }
     ]
     
