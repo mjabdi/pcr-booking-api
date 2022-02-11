@@ -127,7 +127,12 @@ const ScreeningBookingSchema = new mongoose.Schema({
     tbcFolder: {
         type: Boolean,
         default: false   
-    } 
+    } ,
+
+    price: {
+        type: String,
+        required: false
+    }
 
 
 });

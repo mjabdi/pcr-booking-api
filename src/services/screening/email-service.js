@@ -39,6 +39,11 @@ const sendPatientNotificationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+    if (options.price)
+    {
+        content += `<li> Price for Requested Services : £${options.price} </li>`;
+    }
+
 
     content += `</ul>`;
 
@@ -116,6 +121,11 @@ const sendConfirmationEmailNormal =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+    if (options.price)
+    {
+        content += `<li> Price for Requested Services : £${options.price} </li>`;
+    }
+
 
     content += `</ul>`;
 
@@ -190,6 +200,11 @@ const sendConfirmationEmailTimeChanged =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
+
+    if (options.price)
+    {
+        content += `<li> Price for Requested Services : £${options.price} </li>`;
+    }
 
     content += `</ul>`;
 
