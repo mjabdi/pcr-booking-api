@@ -6,6 +6,16 @@ const { BloodCode } = require('./../../models/medex/BloodCode')
 const { MedexCode } = require('./../../models/medex/MedexCode')
 
 
+const {BloodBooking} = require("./../../models/blood/BloodBooking")
+const {GPBooking} = require("./../../models/gp/GPBooking")
+const {GynaeBooking} = require("./../../models/gynae/GynaeBooking")
+const {ScreeningBooking} = require("./../../models/screening/ScreeningBooking")
+const {STDBooking} = require("./../../models/std/STDBooking")
+const {Booking} = require("./../../models/Booking")
+
+
+
+
 const uuid = require('uuid-random')
 const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
@@ -289,6 +299,48 @@ router.post('/searchallinvoicesbyname', async function (req, res, next) {
 });
 
 
+const findBooking = async (id) => {
+    let booking = null
+
+    booking = await Booking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    booking = await BloodBooking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    booking = await GPBooking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    booking = await GynaeBooking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    booking = await ScreeningBooking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    booking = await STDBooking.findOne({_id: id})
+    if (booking)
+    {
+        return booking
+    }
+
+    return null
+
+}
 
 router.post('/createinvoice', async function (req, res, next) {
 
@@ -315,6 +367,16 @@ router.post('/createinvoice', async function (req, res, next) {
         await invoice.save()
 
 
+        const booking = await findBooking(bookingId)
+        if (booking)
+        {
+            if (booking.status === "booked")
+            {
+                booking.status = "patient_attended"
+                await booking.save()
+            }
+        }
+    
         res.status(200).send({ status: 'OK', invoice: invoice })
     }
     catch (err) {
