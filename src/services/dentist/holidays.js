@@ -16,7 +16,7 @@ const getHolidays = () =>
 }
 
 const TIME_SLOTS_NORMAL = [
-    new TimeSlot('08:00 AM', true),   
+    // new TimeSlot('08:00 AM', true),   
     new TimeSlot('08:30 AM', true),   
     new TimeSlot('09:00 AM', true),
     new TimeSlot('09:30 AM', true),
@@ -37,7 +37,7 @@ const TIME_SLOTS_NORMAL = [
     new TimeSlot('05:00 PM', true),
     new TimeSlot('05:30 PM', true),
     new TimeSlot('06:00 PM', true),
-    new TimeSlot('06:30 PM', true),
+    // new TimeSlot('06:30 PM', true),
 
 ];
 
