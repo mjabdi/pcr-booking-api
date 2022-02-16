@@ -41,6 +41,12 @@ const TIME_SLOTS_NORMAL = [
 
 ];
 
+
+const isMonday = (date) =>
+{
+    return (date.getDay() === 1) /// Monday
+}
+
 const isTeusday = (date) =>
 {
     return (date.getDay() === 2) /// Tuesday
@@ -50,6 +56,12 @@ const isWednesday = (date) =>
 {
     return (date.getDay() === 3) /// Wednesday
 }
+
+const isThursday = (date) =>
+{
+    return (date.getDay() === 4) /// Thursday
+}
+
 
 const isFriday = (date) =>
 {
@@ -68,7 +80,7 @@ const getDefaultTimeSlots = (date) =>
     var results = [];
     var finalResults = [];
 
-    if (isTeusday(someDate) || isWednesday(someDate) || isFriday(someDate)) /// 
+    if (isTeusday(someDate) || isWednesday(someDate) || isFriday(someDate) || isMonday(someDate) || isThursday(someDate)) /// 
     {
         results = TIME_SLOTS_NORMAL;
     }
