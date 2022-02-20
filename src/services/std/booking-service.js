@@ -292,6 +292,30 @@ router.get('/gettodaybookings', async function(req, res, next) {
     }
 });
 
+router.get('/getlivebookings', async function(req, res, next) {
+
+    try{
+         const result = await STDBooking.find({bookingDate : {$gt : "2022-02-19"}, status: "patient_attended", deleted : {$ne : true }}).sort({bookingDate: 1}).exec();
+         res.status(200).send(result);
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.get('/getcompletedbookings', async function (req, res, next) {
+
+    try {
+        const limit = parseInt(req.query.limit) || DEFAULT_LIMIT
+        const result = await STDBooking.find({ status: "report_sent", deleted: { $ne: true }}).sort({ bookingDate: -1, bookingTimeNormalized: -1 }).limit(limit).exec();
+        res.status(200).send(result);
+    }
+    catch (err) {
+        res.status(500).send({ status: 'FAILED', error: err.message });
+    }
+});
+
 router.get('/getoldbookings', async function(req, res, next) {
 
     try{
@@ -586,6 +610,35 @@ router.post('/changebacktobookingmade', async function(req, res, next) {
     }
 
 });
+
+router.post('/changetocompleted', async function(req, res, next) {
+   
+    try
+    {
+        req.query.id = ObjectId(req.query.id);
+
+    }catch(err)
+    {
+        console.error(err);
+        res.status(400).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+    try{
+
+        await STDBooking.updateOne({_id : req.query.id}, {status : 'report_sent'});
+
+        res.status(200).send({status: 'OK'});
+
+    }catch(err)
+    {
+        console.log(err);
+        res.status(500).send({status:'FAILED' , error: err.message });
+        return;
+    }
+
+});
+
 
 router.post('/changetopatientattended', async function(req, res, next) {
    
