@@ -256,8 +256,11 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     content += "F - 0207 486 2615 <br/>"
     content += '</div>'
 
+
     content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    content += `<p style="font-weight:600;">DISCLAIMER - If you have attended on a self-request basis, please consult with your physician, or other qualified healthcare provider regarding any questions you may have in respect of your blood test report. If you have undergone a consultation with a doctor at Medical Express Clinic, please feel free to request a review appointment to discuss your results.  </p>`
     content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
+      
     content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     content += "</div>"
 
