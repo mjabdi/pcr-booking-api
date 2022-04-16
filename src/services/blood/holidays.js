@@ -14,6 +14,7 @@ const holidays = [
 
         new Date(2022,0,1,0,0,0,0),
         new Date(2022,0,3,0,0,0,0),
+        new Date(2022,3,18,0,0,0,0),
 
 ];
 
