@@ -66,6 +66,95 @@ const sendAdminNotificationEmail = async (booking) => {
       console.log(err);
     }
   };
+
+
+
+  const sendAdminNotificationEmailUpdate = async (booking) => {
+    try {
+      const subject = `Admin Notification : Change Booking (Dr. SIA)`;
+      const message = `You have a change in the booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+  
+      let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
+      const butonStylePortal = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+  
+      let content = "";
+  
+      content += '<div style="font-size:16px;">';
+  
+      content += `<p>${message}</p>`;
+
+      content += `<p>Below is the updated booking information : </p>`;
+      content += '<ul>';
+      content += `<li> Appointment Time : ${FormatDateFromString(booking.bookingDate)} at ${booking.bookingTime} </li>`;
+      content += `<li> Full Name : ${booking.fullname} </li>`;
+      content += `<li> Telephone : ${booking.phone} </li>`;
+      content += `<li> Package : ${booking.service} </li>`;
+      content += `<li> Notes : ${booking.notes ? booking.notes : '-'} </li>`;
+      content += `<li> Deposit : £${booking.deposit}  </li>`;
+  
+  
+      content += `<p>You can see more details via the Admin Console by following the link below: </p>`;
+      content += `<p> <a href="${targetPortal}" style="${butonStylePortal}" target="_blank"> Enter Admin Console </a></p>`;
+  
+      content += `<p style="font-size:14px;margin-top:50px">* This message is automatically created by the system, please don't reply to this email.</p>`;
+  
+      content += "</div>";
+
+      if (process.env.NODE_ENV === "production")
+      {
+         await sendMail(config.DentistNotificationEmail, subject, content, null);
+        //  await sendMail("matt@dubseo.co.uk", subject, content, null);
+      }
+  
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
+  const sendAdminNotificationEmailCancel = async (booking) => {
+    try {
+      const subject = `Admin Notification : Cancel Booking (Dr. SIA)`;
+      const message = `You have a cancellation booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+  
+      let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
+      const butonStylePortal = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #0d9ba8 5%, #00909d 100%);background-color:#0c4e59;border-radius:6px;border:1px solid #fff5fc;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
+  
+      let content = "";
+  
+      content += '<div style="font-size:16px;">';
+  
+      content += `<p>${message}</p>`;
+
+      content += `<p>Below is the booking information which is cancelled : </p>`;
+      content += '<ul>';
+      content += `<li> Appointment Time : ${FormatDateFromString(booking.bookingDate)} at ${booking.bookingTime} </li>`;
+      content += `<li> Full Name : ${booking.fullname} </li>`;
+      content += `<li> Telephone : ${booking.phone} </li>`;
+      content += `<li> Package : ${booking.service} </li>`;
+      content += `<li> Notes : ${booking.notes ? booking.notes : '-'} </li>`;
+      content += `<li> Deposit : £${booking.deposit}  </li>`;
+  
+  
+      content += `<p>You can see more details via the Admin Console by following the link below: </p>`;
+      content += `<p> <a href="${targetPortal}" style="${butonStylePortal}" target="_blank"> Enter Admin Console </a></p>`;
+  
+      content += `<p style="font-size:14px;margin-top:50px">* This message is automatically created by the system, please don't reply to this email.</p>`;
+  
+      content += "</div>";
+
+      if (process.env.NODE_ENV === "production")
+      {
+         await sendMail(config.DentistNotificationEmail, subject, content, null);
+        //  await sendMail("matt@dubseo.co.uk", subject, content, null);
+      }
+  
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   
 
 
@@ -450,5 +539,7 @@ module.exports = {
     sendAdminNotificationEmail: sendAdminNotificationEmail,
     sendManualConfirmationEmail: sendManualConfirmationEmail,
     sendPaymentReminderEmail: sendPaymentReminderEmail,
-    sendPaymentThanksEmail: sendPaymentThanksEmail
+    sendPaymentThanksEmail: sendPaymentThanksEmail,
+    sendAdminNotificationEmailUpdate: sendAdminNotificationEmailUpdate,
+    sendAdminNotificationEmailCancel: sendAdminNotificationEmailCancel
 };

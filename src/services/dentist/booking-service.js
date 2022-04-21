@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {DentistBooking} = require('../../models/dentist/DentistBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail, sendManualConfirmationEmail, sendPaymentReminderEmail, sendAdminNotificationEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendManualConfirmationEmail, sendPaymentReminderEmail, sendAdminNotificationEmail, sendAdminNotificationEmailUpdate, sendAdminNotificationEmailCancel} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
@@ -552,6 +552,8 @@ router.post('/updatebookappointment', async function(req, res, next) {
             await sendConfirmationEmail(newBooking);
         }
 
+        await sendAdminNotificationEmailUpdate(newBooking)
+
         res.status(200).send({status: 'OK'});
 
     }catch(err)
@@ -672,7 +674,13 @@ router.post('/deletebookappointment', async function(req, res, next) {
 
         await DentistBooking.updateOne({_id : req.query.id}, {deleted : true});
 
-        // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_CANCELED)
+        const booking = await DentistBooking.findOne({_id : req.query.id})
+        if (booking)
+        {
+            await sendAdminNotificationEmailCancel(booking)
+        }
+
+          
 
         res.status(200).send({status: 'OK'});
 
