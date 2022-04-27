@@ -1,27 +1,25 @@
 {
   "files": {
-    "main.css": "./static/css/main.e0b3ea38.chunk.css",
-    "main.js": "./static/js/main.c1691178.chunk.js",
-    "main.js.map": "./static/js/main.c1691178.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.516770c3.js",
-    "runtime-main.js.map": "./static/js/runtime-main.516770c3.js.map",
-    "static/js/2.9efca893.chunk.js": "./static/js/2.9efca893.chunk.js",
-    "static/js/2.9efca893.chunk.js.map": "./static/js/2.9efca893.chunk.js.map",
+    "main.css": "./static/css/main.ae6321d6.chunk.css",
+    "main.js": "./static/js/main.757b7dd7.chunk.js",
+    "main.js.map": "./static/js/main.757b7dd7.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.3eb7cc76.js",
+    "runtime-main.js.map": "./static/js/runtime-main.3eb7cc76.js.map",
+    "static/js/2.dee0b68a.chunk.js": "./static/js/2.dee0b68a.chunk.js",
+    "static/js/2.dee0b68a.chunk.js.map": "./static/js/2.dee0b68a.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.3cb1c0c03cc4c81c6468f346d337703c.js": "./precache-manifest.3cb1c0c03cc4c81c6468f346d337703c.js",
-    "service-worker.js": "./service-worker.js",
-    "static/css/main.e0b3ea38.chunk.css.map": "./static/css/main.e0b3ea38.chunk.css.map",
-    "static/js/2.9efca893.chunk.js.LICENSE.txt": "./static/js/2.9efca893.chunk.js.LICENSE.txt",
-    "static/media/doctor.svg": "./static/media/doctor.4302688c.svg",
-    "static/media/features-split-image-01.png": "./static/media/features-split-image-01.d9cb99ce.png",
-    "static/media/features-split-image-02.png": "./static/media/features-split-image-02.3c569239.png",
-    "static/media/features-split-image-03.png": "./static/media/features-split-image-03.87e4d053.png",
-    "static/media/style.scss": "./static/media/illustration-section-02.63d0555d.svg"
+    "static/css/main.ae6321d6.chunk.css.map": "./static/css/main.ae6321d6.chunk.css.map",
+    "static/js/2.dee0b68a.chunk.js.LICENSE.txt": "./static/js/2.dee0b68a.chunk.js.LICENSE.txt",
+    "static/media/doctor.9132bb82.svg": "./static/media/doctor.9132bb82.svg",
+    "static/media/features-split-image-01.png": "./static/media/features-split-image-01.94b14c16.png",
+    "static/media/features-split-image-02.png": "./static/media/features-split-image-02.49942613.png",
+    "static/media/features-split-image-03.png": "./static/media/features-split-image-03.7bd67155.png",
+    "static/media/style.scss": "./static/media/illustration-section-02.f11c21a9.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.516770c3.js",
-    "static/js/2.9efca893.chunk.js",
-    "static/css/main.e0b3ea38.chunk.css",
-    "static/js/main.c1691178.chunk.js"
+    "static/js/runtime-main.3eb7cc76.js",
+    "static/js/2.dee0b68a.chunk.js",
+    "static/css/main.ae6321d6.chunk.css",
+    "static/js/main.757b7dd7.chunk.js"
   ]
 }
