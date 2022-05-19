@@ -16,6 +16,8 @@ const holidays = [
         new Date(2022,0,3,0,0,0,0),
         new Date(2022,3,17,0,0,0,0),
 
+        new Date(2022,5,3,0,0,0,0),
+
 
 
 
@@ -124,7 +126,7 @@ const getDefaultTimeSlots = (date) =>
     }
 
 
-    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === '2022-01-03' || dateStr === "2022-04-18" || dateStr === '2022-05-02' )
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === '2022-01-03' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-03')
     if (is23Dec)
     {
         results = TIME_SLOTS_10_14;
