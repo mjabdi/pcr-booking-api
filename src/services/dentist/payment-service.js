@@ -19,7 +19,7 @@ const stripe = require("stripe")(process.env.NODE_ENV !== "production" ?
   config.StripeLiveKey
 );
 
-const DEPOSIT = 95;
+const DEPOSIT = 50;
 
 router.post("/dopayment", async function (req, res, next) {
   try {
