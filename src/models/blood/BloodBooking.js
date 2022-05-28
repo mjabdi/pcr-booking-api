@@ -134,6 +134,12 @@ const BloodBookingSchema = new mongoose.Schema({
         required : false
     },
 
+    printStatus: {  // preparing - printing - printed
+        type: String,
+        required: false,
+    }
+
+
 });
 
 module.exports = {
