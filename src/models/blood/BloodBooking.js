@@ -137,6 +137,11 @@ const BloodBookingSchema = new mongoose.Schema({
     printStatus: {  // preparing - printing - printed
         type: String,
         required: false,
+    },
+
+    gender: {  // F/M
+        type: String,
+        required: false
     }
 
 

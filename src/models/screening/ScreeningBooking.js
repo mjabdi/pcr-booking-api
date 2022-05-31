@@ -132,6 +132,16 @@ const ScreeningBookingSchema = new mongoose.Schema({
     price: {
         type: String,
         required: false
+    },
+
+    printStatus: {  // preparing - printing - printed
+        type: String,
+        required: false,
+    },
+
+    gender: {  // F/M
+        type: String,
+        required: false
     }
 
 
