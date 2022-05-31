@@ -49,6 +49,22 @@ router.post('/sendregformemail' , async function (req,res,next) {
 });
 
 
+router.post('/sendforprint' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const booking =  await ScreeningBooking.findOne({_id: id});
+        booking.printStatus = "preparing"
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 router.post('/submitformdata' , async function (req,res,next) {
 
     try{
