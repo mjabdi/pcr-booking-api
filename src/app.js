@@ -7,6 +7,7 @@ const logger = require("morgan");
 const apiRouter = require("./routes/api-router");
 const downloadRouter = require("./routes/download-router");
 const mailRouter = require("./routes/mail-router");
+const callHookRouter = require("./routes/callhook-router");
 
 const apiSecurity = require("./middleware/api-security");
 // const checkReferrer = require('./middleware/check-referrer');
@@ -40,6 +41,8 @@ app.use("/api", apiSecurity(), apiRouter);
 // }
 
 app.use("/mail", mailRouter);
+
+app.use("/webhook", callHookRouter);
 
 app.use("/download", downloadRouter);
 // app.use('/api', apiRouter);
