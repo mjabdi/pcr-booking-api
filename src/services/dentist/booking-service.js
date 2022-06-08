@@ -17,6 +17,7 @@ router.post('/callended' , async function (req,res,next) {
 
     try{
         const body = req.body;
+        console.log(body)
         res.status(200).send({status : "OK", body: body});
     }
     catch(err)
