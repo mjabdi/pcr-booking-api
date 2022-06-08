@@ -16,9 +16,9 @@ const DEFAULT_LIMIT = 25
 router.post('/callended' , async function (req,res,next) {
 
     try{
-        const body = req.body;
+        // const body = req.body;
         console.log(req)
-        res.status(200).send({status : "OK", body: body});
+        res.status(200).send({status : "OK"});
     }
     catch(err)
     {
@@ -26,6 +26,20 @@ router.post('/callended' , async function (req,res,next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
+
+router.get('/callended' , async function (req,res,next) {
+
+    try{
+        console.log(req)
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 
 router.post('/sendregformemail' , async function (req,res,next) {
