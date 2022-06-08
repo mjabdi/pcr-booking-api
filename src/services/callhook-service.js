@@ -16,3 +16,5 @@ router.post('/callended', async function(req, res, next) {
         res.status(500).send({status:'FAILED' , error: err.message });
     }
 });
+
+module.exports = router;
