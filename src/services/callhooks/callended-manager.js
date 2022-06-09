@@ -1,0 +1,53 @@
+const config = require('config');
+const {sendTextMessage} = require("./twilio-sender")
+
+const RyanCarpetVOIPNo = "442080502312"
+const DrSiaVOIPNo = "442080502148"
+const MedexVOIPNo = "442080502312"
+const OVVOIPNo = "442080502312"
+
+
+const minCallDuration = 15
+
+const callended = async (body) => {
+
+    const {uuid, call_type, from_type, from, to_type, to, start, end, duration, answer_type, answered_by} = body
+
+    if (!uuid || call_type !== 'inbound' || from_type !== 'number' || !from || to_type !== 'number' || !to || !start || !end || !duration || answer_type !== 'number' || !answered_by)
+    {
+        return
+    }
+
+    //Ryan Carpet Cleaning
+
+    if (to === RyanCarpetVOIPNo && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Ryan Carpet Cleaning, Please do not hesitate to contact us on 02070434316 , should you have any further questions - ryancarpetcleaning.co.uk`
+
+        await sendTextMessage(from, messageText, config.RyanCarpetTwilioNumber)
+    }
+    else if (to === DrSiaVOIPNo && duration >= minCallDuration){
+        let messageText = ""
+
+        // await sendTextMessage(from, messageText, config.DrSIATwilioNumber)
+        return
+    }
+    else if (to === MedexVOIPNo && duration >= minCallDuration){
+        let messageText = ""
+
+        // await sendTextMessage(from, messageText, config.MedexTwilioNumber)
+        return
+    }
+    else if (to === OVVOIPNo && duration >= minCallDuration){
+        let messageText = ""
+
+        // await sendTextMessage(from, messageText, config.OptimalVisionTwilioNumber)
+        return
+    }
+
+
+
+}
+
+module.exports = {
+    callended: callended
+}
