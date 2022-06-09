@@ -29,22 +29,17 @@ const callended = async (body) => {
         let messageText = ""
 
         // await sendTextMessage(from, messageText, config.DrSIATwilioNumber)
-        return
     }
     else if (to === MedexVOIPNo && duration >= minCallDuration){
         let messageText = ""
 
         // await sendTextMessage(from, messageText, config.MedexTwilioNumber)
-        return
     }
     else if (to === OVVOIPNo && duration >= minCallDuration){
         let messageText = ""
 
         // await sendTextMessage(from, messageText, config.OptimalVisionTwilioNumber)
-        return
     }
-
-
 
 }
 
