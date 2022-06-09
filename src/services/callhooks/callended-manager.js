@@ -18,7 +18,7 @@ const callended = async (body) => {
         return
     }
 
-    if (!from.startsWith('+447'))
+    if (from.length !== 13 || !from.startsWith('+447'))
     {
         return
     }
