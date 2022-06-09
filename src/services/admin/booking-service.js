@@ -866,7 +866,7 @@ router.post("/searchallbookings", async function (req, res, next) {
       .limit(100)
       .exec();
 
-      console.log(result)
+      // console.log(result)
      
     res.status(200).send(result);
   } catch (err) {

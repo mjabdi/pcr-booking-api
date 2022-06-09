@@ -18,6 +18,11 @@ const callended = async (body) => {
         return
     }
 
+    if (!from.startsWith('+447'))
+    {
+        return
+    }
+
     //Ryan Carpet Cleaning
 
     if (to === RyanCarpetVOIPNo && duration >= minCallDuration){
