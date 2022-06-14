@@ -5,6 +5,9 @@ const RyanCarpetVOIPNo = "442080502312"
 const DrSiaVOIPNo = "442080502148"
 const MedexVOIPNo = "442080502312"
 const OVVOIPNo = "442080503276"
+const GynaeVOIPNo = "442080501707"
+const HealthScrVOIPNo = "442080502869"
+
 
 
 const minCallDuration = 15
@@ -45,6 +48,19 @@ const callended = async (body) => {
 
         await sendTextMessage(from, messageText, config.OptimalVisionTwilioNumber)
     }
+    else if (to === GynaeVOIPNo && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Gynae Clinic, Please do not hesitate to contact us on 02071830435 , should you have any further questions - www.gynae-clinic.co.uk`
+
+        await sendTextMessage(from, messageText, config.MedexTwilioNumber)
+    }
+    else if (to === HealthScrVOIPNo && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Health Screening, Please do not hesitate to contact us on 02071837056 , should you have any further questions - www.healthscreening.clinic`
+
+        await sendTextMessage(from, messageText, config.MedexTwilioNumber)
+    }
+
+
+    
 
 }
 
