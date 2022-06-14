@@ -49,12 +49,12 @@ const callended = async (body) => {
         await sendTextMessage(from, messageText, config.OptimalVisionTwilioNumber)
     }
     else if (to === GynaeVOIPNo && duration >= minCallDuration){
-        let messageText = `Thank you for your enquiry with Gynae Clinic, Please do not hesitate to contact us on 02071830435 , should you have any further questions - www.gynae-clinic.co.uk`
+        let messageText = `Thank you for your enquiry with Gynae Clinic, Please do not hesitate to contact us on 02071830435 , or send us an email at info@gynae-clinic.go.uk should you have any further questions - www.gynae-clinic.co.uk`
 
         await sendTextMessage(from, messageText, config.MedexTwilioNumber)
     }
     else if (to === HealthScrVOIPNo && duration >= minCallDuration){
-        let messageText = `Thank you for your enquiry with Health Screening, Please do not hesitate to contact us on 02071837056 , should you have any further questions - www.healthscreening.clinic`
+        let messageText = `Thank you for your enquiry with Health Screening, Please do not hesitate to contact us on 02071837056 , or send us an email at info@healthscreening.clinic should you have any further questions or difficulty getting through today - www.healthscreening.clinic`
 
         await sendTextMessage(from, messageText, config.MedexTwilioNumber)
     }
