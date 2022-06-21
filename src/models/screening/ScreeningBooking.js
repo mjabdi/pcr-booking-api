@@ -142,7 +142,12 @@ const ScreeningBookingSchema = new mongoose.Schema({
     gender: {  // F/M
         type: String,
         required: false
-    }
+    },
+
+    address: {
+        type: String,
+        required: false
+    },   
 
 
 });
