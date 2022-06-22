@@ -179,6 +179,13 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
+    const visaCount = await ScreeningBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+      service: { $regex : /^VISA MEDICAL/ }
+
+    }).exec();
+
 
     const result = [
       {clinic: "pcr", count: pcrCount},
@@ -187,8 +194,9 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       {clinic: "std", count: stdCount},
       {clinic: "blood", count: bloodCount},
       {clinic: "derma", count: dermaCount},
-      {clinic: "screening", count: screeningCount},
+      {clinic: "screening", count: (screeningCount - visaCount)},
       {clinic: "corporate", count: corporateCount},
+      {clinic: "visa", count: visaCount},
 
 
     ]
@@ -320,10 +328,18 @@ router.get(
 
       const corporateCount = await CorporateBooking.countDocuments({
         bookingDate: dateStr,
+        bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
   
 
+      const visaCount = await ScreeningBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+        service: { $regex : /^VISA MEDICAL/ }
+  
+      }).exec();
 
   
       const result = [
@@ -333,8 +349,9 @@ router.get(
         {clinic: "std", count: stdCount},
         {clinic: "blood", count: bloodCount},
         {clinic: "derma", count: dermaCount},
-        {clinic: "screening", count: screeningCount},
+        {clinic: "screening", count: (screeningCount - visaCount)},
         {clinic: "corporate", count: corporateCount},
+        {clinic: "visa", count: visaCount},
 
 
 
@@ -506,6 +523,7 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
                 $and: [
                   {bookingDate: dateStr},
                   {bookingTime: timeStr},
+                  {service: { $regex : /^(?!VISA MEDICAL)\w+/ }},
                   {deleted: { $ne: true }},
                 ],
               },
@@ -517,6 +535,28 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  {bookingDate: dateStr},
+                  {bookingTime: timeStr},
+                  {service: { $regex : /^VISA MEDICAL/ }},
+                  {deleted: { $ne: true }},
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "visa" },
+            },
+          ],
+        },
+      },
+
 
       {
         $unionWith: {
