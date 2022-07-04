@@ -27,7 +27,7 @@ const faq = [
 
 const sendAdminNotificationEmail = async (booking) => {
     try {
-      const subject = `Admin Notification : New Booking (Dr. SIA)`;
+      const subject = `Admin Notification : New Booking (Dr. SIA) - ${booking.fullname}`;
       const message = `You have a new booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
   
       let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
@@ -71,7 +71,7 @@ const sendAdminNotificationEmail = async (booking) => {
 
   const sendAdminNotificationEmailUpdate = async (booking) => {
     try {
-      const subject = `Admin Notification : Change Booking (Dr. SIA)`;
+      const subject = `Admin Notification : Change Booking (Dr. SIA) - ${booking.fullname}`;
       const message = `You have a change in the booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
   
       let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
@@ -115,7 +115,7 @@ const sendAdminNotificationEmail = async (booking) => {
 
   const sendAdminNotificationEmailCancel = async (booking) => {
     try {
-      const subject = `Admin Notification : Cancel Booking (Dr. SIA)`;
+      const subject = `Admin Notification : Cancel Booking (Dr. SIA) - ${booking.fullname}`;
       const message = `You have a cancellation booking with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
   
       let targetPortal = `https://londonmedicalclinic.co.uk/drsia/admin`;
