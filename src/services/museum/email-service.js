@@ -25,7 +25,9 @@ const sendPaymentLinkEmail =  async (options) =>
     content += `<p style="font-weight:400">Museum Dental Suites</p>`;
     content += `<p style="font-weight:400;margin-top:20px;color:#777;font-size:12px">70 Great Russell St, Holborn, London WC1B 3BN, United Kingdom</p>`;
     content += `<p style="font-weight:400;color:#777;font-size:12px">0207 183 0886</p>`;
-    content += `<p style="font-weight:400;color:#777;font-size:12px">info@museumdentalsuites.co.uk</p>`;
+    content += `<p style="font-weight:800;color:#333;font-size:12px">PLEASE NOTE THIS EMAIL IS UNATTENDED, FOR ANY ENQUIRIES EMAIL info@museumdentalsuites.co.uk</p>`;
+
+    
     
     content += `</div>`;
   
@@ -49,7 +51,7 @@ const sendRefundNotificationEmail =  async (options) =>
     content += `<p style="font-weight:400">Museum Dental Suites</p>`;
     content += `<p style="font-weight:400;margin-top:20px;color:#777;font-size:12px">70 Great Russell St, Holborn, London WC1B 3BN, United Kingdom</p>`;
     content += `<p style="font-weight:400;color:#777;font-size:12px">0207 183 0886</p>`;
-    content += `<p style="font-weight:400;color:#777;font-size:12px">info@museumdentalsuites.co.uk</p>`;
+    content += `<p style="font-weight:800;color:#333;font-size:12px">PLEASE NOTE THIS EMAIL IS UNATTENDED, FOR ANY ENQUIRIES EMAIL info@museumdentalsuites.co.uk</p>`;
     content += `</div>`;
   
     content += '</div>'
@@ -71,7 +73,7 @@ const sendThankEmail =  async (options) =>
     content += `<p style="font-weight:400">Museum Dental Suites</p>`;
     content += `<p style="font-weight:400;margin-top:20px;color:#777;font-size:12px">70 Great Russell St, Holborn, London WC1B 3BN, United Kingdom</p>`;
     content += `<p style="font-weight:400;color:#777;font-size:12px">0207 183 0886</p>`;
-    content += `<p style="font-weight:400;color:#777;font-size:12px">info@museumdentalsuites.co.uk</p>`;
+    content += `<p style="font-weight:800;color:#333;font-size:12px">PLEASE NOTE THIS EMAIL IS UNATTENDED, FOR ANY ENQUIRIES EMAIL info@museumdentalsuites.co.uk</p>`;
     content += `</div>`;
   
     content += '</div>'
