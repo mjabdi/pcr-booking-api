@@ -10,6 +10,7 @@ const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notificatio
 
 
 const { Client, Environment } = require("square");
+const { sendScreeningConfirmationTextMessage } = require("./sms-service");
 
 const SANDBOX = process.env.NODE_ENV !== "production";
 
@@ -109,6 +110,25 @@ router.post("/dopayment", async function (req, res, next) {
       await sendPatientNotificationEmail(booking);
 
       await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_HEALTHSCREENING_BOOKED,booking)
+
+      if (booking.smsPush && booking.phone && booking.phone.length > 3)
+      {
+          let _phone = booking.phone
+
+          if (_phone.startsWith("07") && _phone.length === 11)
+          {
+              _phone = `+447${_phone.substr(2,10)}`
+          }else if (_phone.startsWith("7") && _phone.length === 10)
+          {
+              _phone = `+447${_phone.substr(1,10)}`
+          }
+
+          if (_phone.length === 13 && _phone.startsWith('+447'))
+          {
+              await sendScreeningConfirmationTextMessage(booking, _phone)
+          }
+      }
+
 
       res.status(200).send({ status: "OK", person: personInfo });
     } else {

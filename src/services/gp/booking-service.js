@@ -9,6 +9,7 @@ const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
+const { sendGPConfirmationTextMessage } = require('./sms-service');
 
 const DEFAULT_LIMIT = 25
 
@@ -374,7 +375,7 @@ router.get('/getbookingbyid', async function(req, res, next) {
 router.post('/addnewbooking', async function(req, res, next) {
     try{
         const ref = await getNewRef()
-        let {fullname, bookingDate, bookingTime, phone, email, notes} = req.body
+        let {fullname, bookingDate, bookingTime, phone, email, notes, smsPush} = req.body
 
   
           if (!email || email.length < 1) {
@@ -385,7 +386,7 @@ router.post('/addnewbooking', async function(req, res, next) {
             phone = "-";
           }
 
-        const payload =  {fullname, bookingDate, bookingTime, phone, email, notes}
+        const payload =  {fullname, bookingDate, bookingTime, phone, email, notes, smsPush}
 
 
         const booking = new GPBooking(
@@ -403,6 +404,23 @@ router.post('/addnewbooking', async function(req, res, next) {
             await sendConfirmationEmail(booking);
         }
       
+        if (smsPush && phone && phone.length > 3)
+        {
+            let _phone = phone
+
+            if (_phone.startsWith("07") && _phone.length === 11)
+            {
+                _phone = `+447${_phone.substr(2,10)}`
+            }else if (_phone.startsWith("7") && _phone.length === 10)
+            {
+                _phone = `+447${_phone.substr(1,10)}`
+            }
+
+            if (_phone.length === 13 && _phone.startsWith('+447'))
+            {
+                await sendGPConfirmationTextMessage(booking, _phone)
+            }
+        }
 
         // await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
 
@@ -472,6 +490,25 @@ router.post('/bookappointment', async function(req, res, next) {
         await sendConfirmationEmail(booking);
 
         await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GP_BOOKED,booking)
+
+
+        if (booking.smsPush && booking.phone && booking.phone.length > 3)
+        {
+            let _phone = booking.phone
+
+            if (_phone.startsWith("07") && _phone.length === 11)
+            {
+                _phone = `+447${_phone.substr(2,10)}`
+            }else if (_phone.startsWith("7") && _phone.length === 10)
+            {
+                _phone = `+447${_phone.substr(1,10)}`
+            }
+
+            if (_phone.length === 13 && _phone.startsWith('+447'))
+            {
+                await sendGPConfirmationTextMessage(booking, _phone)
+            }
+        }
 
         res.status(200).send({status: 'OK', person: req.body});
 
