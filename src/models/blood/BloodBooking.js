@@ -142,7 +142,12 @@ const BloodBookingSchema = new mongoose.Schema({
     gender: {  // F/M
         type: String,
         required: false
-    }
+    },
+
+    smsPush: {
+        type: Boolean,
+        default: false
+    },
 
 
 });

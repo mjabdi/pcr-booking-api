@@ -107,7 +107,12 @@ const GynaeBookingSchema = new mongoose.Schema({
     formData: {
         type: String,
         required: false
-    }
+    },
+
+    smsPush: {
+        type: Boolean,
+        default: false
+    },
 
 
 });
