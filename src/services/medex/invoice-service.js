@@ -532,8 +532,6 @@ router.post('/updatecode', async function (req, res, next) {
     try {
         const { id, newCode } = req.body
 
-        
-
         if (newCode.isBloodTable)
         {
             await BloodCode.updateOne({_id: id}, {description : newCode.description, price: newCode.price, hidden: (newCode.hidden ? true : false)})
@@ -552,6 +550,37 @@ router.post('/updatecode', async function (req, res, next) {
     }
 
 })
+
+
+router.post('/addcode', async function (req, res, next) {
+    try {
+        const { code , description, price } = req.body
+
+        const count = await BloodCode.count()
+
+
+        const bloodCode = new BloodCode(
+            {
+                code: code,
+                description: description,
+                price: price,
+                newPrice: price,
+                index: count + 6
+            }
+        )
+
+        await bloodCode.save()
+
+
+        res.status(200).send({ status: 'OK'})
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).send({ status: 'FAILED', error: err.message })
+    }
+
+})
+
 
 
 
