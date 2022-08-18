@@ -8,6 +8,8 @@ const OVVOIPNo = "442080503276"
 const GynaeVOIPNo = "442080501707"
 const HealthScrVOIPNo = "442080502869"
 
+const WasteRemovalVOIPNo = "442080506364"
+
 
 
 const minCallDuration = 15
@@ -58,9 +60,10 @@ const callended = async (body) => {
 
         await sendTextMessage(from, messageText, config.MedexTwilioNumber)
     }
-
-
-    
+    else if (to === WasteRemovalVOIPNo && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Waste/Junk and Rubbish removal London , Please do not hesitate to contact us on 07907603848 , or send us a WhatsApp should you have any further questions.`
+        await sendTextMessage(from, messageText, "+447700174944")
+    }    
 
 }
 
