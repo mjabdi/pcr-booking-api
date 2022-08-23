@@ -66,7 +66,7 @@ const callended = async (body) => {
         await sendTextMessage(from, messageText, "+447700174944")
     }    
     else if (to === PaintWorksVOIPNO && duration >= minCallDuration){
-        let messageText = `Thank you for your enquiry with Paint Works London, Home of Painting and decorating, Please do not hesitate to contact us on  020 71833809, or send us an email at info@paintworkslondon.co.uk should you have any further questions  www.paintworkslondon.co.uk`
+        let messageText = `Thank you for your enquiry with Paint Works London, Home of Painting and decorating, Please do not hesitate to contact us on  020 71833809, WhatsApp 07703696456 or send us an email at info@paintworkslondon.co.uk should you have any further questions  www.paintworkslondon.co.uk`
         await sendTextMessage(from, messageText, "+447700158730")
     }    
 
