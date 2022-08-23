@@ -9,6 +9,7 @@ const GynaeVOIPNo = "442080501707"
 const HealthScrVOIPNo = "442080502869"
 
 const WasteRemovalVOIPNo = "442080506364"
+const PaintWorksVOIPNO = "442080501927"
 
 
 
@@ -63,6 +64,10 @@ const callended = async (body) => {
     else if (to === WasteRemovalVOIPNo && duration >= minCallDuration){
         let messageText = `Thank you for your enquiry with Waste/Junk and Rubbish removal London , Please do not hesitate to contact us on 07907603848 , or send us a WhatsApp should you have any further questions.`
         await sendTextMessage(from, messageText, "+447700174944")
+    }    
+    else if (to === PaintWorksVOIPNO && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Paint Works London, Home of Painting and decorating, Please do not hesitate to contact us on  020 71833809, or send us an email at info@paintworkslondon.co.uk should you have any further questions  www.paintworkslondon.co.uk`
+        await sendTextMessage(from, messageText, "+447700158730")
     }    
 
 }
