@@ -10,6 +10,7 @@ const HealthScrVOIPNo = "442080502869"
 
 const WasteRemovalVOIPNo = "442080506364"
 const PaintWorksVOIPNO = "442080501927"
+const DentalPracticeTurkey = "442080504356"
 
 
 
@@ -68,6 +69,10 @@ const callended = async (body) => {
     else if (to === PaintWorksVOIPNO && duration >= minCallDuration){
         let messageText = `Thank you for your enquiry with Paint Works London, Home of Painting and decorating, Please do not hesitate to contact us on  020 71833809, WhatsApp 07703696456 or send us an email at info@paintworkslondon.co.uk should you have any further questions  www.paintworkslondon.co.uk`
         await sendTextMessage(from, messageText, "+447700158730")
+    }    
+    else if (to === DentalPracticeTurkey && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Dental Practice Turkey, Home of Veneers, Implants and cosmetic dentistry, Please do not hesitate to contact us on  020 34758235, WhatsApp +905545814094 should you have any further questions.`
+        await sendTextMessage(from, messageText, "+447723487796")
     }    
 
 }
