@@ -12,6 +12,9 @@ const WasteRemovalVOIPNo = "442080506364"
 const PaintWorksVOIPNO = "442080501927"
 const DentalPracticeTurkey = "442080504356"
 
+const GlaziersVOIPNO = "442080504236"
+
+
 
 
 const minCallDuration = 15
@@ -73,6 +76,10 @@ const callended = async (body) => {
     else if (to === DentalPracticeTurkey && duration >= minCallDuration){
         let messageText = `Thank you for your enquiry with Dental Practice Turkey, Home of Veneers, Implants and cosmetic dentistry, Please do not hesitate to contact us on  020 34758235, WhatsApp +905545814094 should you have any further questions.`
         await sendTextMessage(from, messageText, "+447723487796")
+    }  
+    else if (to === GlaziersVOIPNO && duration >= minCallDuration){
+        let messageText = `Thank you for your enquiry with Glaziers, Home of Glazing, Window repairs and emergency boarding, Please do not hesitate to contact us on  07796433883, WhatsApp https://wa.me/+447796433883 should you have any further questions.`
+        await sendTextMessage(from, messageText, "+447723503065")
     }    
 
 }
