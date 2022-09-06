@@ -274,6 +274,8 @@ router.post('/searchallinvoicesbyname', async function (req, res, next) {
                         "$or": [
                             {name: {$regex: regexp }},
                             {name: {$regex: regexp2 }},
+                            {invoiceNumber: {$regex: regexp }},
+                            {invoiceNumber: {$regex: regexp2 }},
                         ]
                     }
                 },
