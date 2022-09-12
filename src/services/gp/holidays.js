@@ -126,7 +126,7 @@ const getDefaultTimeSlots = (date) =>
     }
 
 
-    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-02')
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19')
     if (is23Dec)
     {
         results = TIME_SLOTS_10_14;
