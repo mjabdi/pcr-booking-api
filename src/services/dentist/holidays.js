@@ -53,6 +53,18 @@ const TIME_SLOTS_NORMAL = [
 
 ];
 
+const TIME_SLOTS_EMERGENCY = [
+    // new TimeSlot('08:00 AM', true),   
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('02:00 PM', true),
+    new TimeSlot('02:30 PM', true),
+    new TimeSlot('03:00 PM', true),
+    new TimeSlot('03:30 PM', true),
+    new TimeSlot('04:00 PM', true),
+    new TimeSlot('04:30 PM', true),
+    new TimeSlot('05:00 PM', true),
+];
+
 
 const isMonday = (date) =>
 {
@@ -98,7 +110,14 @@ const getDefaultTimeSlots = (date) =>
     }
     else
     {
-        result = [];
+        if (someDateStr === "2022-09-25")
+        {
+            results = TIME_SLOTS_EMERGENCY;
+
+        }else
+        {
+            result = [];
+        }
     }
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
