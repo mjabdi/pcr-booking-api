@@ -110,7 +110,7 @@ const getDefaultTimeSlots = (date) =>
     }
     else
     {
-        if (someDateStr === "2022-09-25")
+        if (someDateStr === "2022-09-25" || someDateStr === "2022-10-02")
         {
             results = TIME_SLOTS_EMERGENCY;
 
