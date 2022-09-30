@@ -13,6 +13,7 @@ const apiSecurity = require("./middleware/api-security");
 // const checkReferrer = require('./middleware/check-referrer');
 const mongodb = require("./mongodb");
 const cors = require("cors");
+const nocache = require('nocache');
 
 // const Promise = require('bluebird')
 // const fs = Promise.promisifyAll(require('fs'));
@@ -25,6 +26,7 @@ const app = express();
 mongodb();
 
 app.use(cors({ origin: true }));
+app.use(nocache());
 
 app.use(logger(':date[clf] ":method :url"'));
 app.use(express.json());
