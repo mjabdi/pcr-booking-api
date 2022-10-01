@@ -319,7 +319,7 @@ app.use(
   express.static(path.join(__dirname, "..", "public_dentist"))
 );
 app.get("/drsia/book/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "..", "public_dentist", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "public_dentist", "index.htm"));
 });
 
 app.use(
