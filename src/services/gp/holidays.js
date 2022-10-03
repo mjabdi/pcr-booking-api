@@ -81,6 +81,18 @@ const TIME_SLOTS_10_14 = [
     new TimeSlot('01:00 PM', true),
 ];
 
+const TIME_SLOTS_10_14_30MIN = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+];
+
+
 
 
 const TIME_SLOTS_MIDDAY = [
@@ -131,7 +143,7 @@ const getDefaultTimeSlots = (date) =>
 
     if (is23Dec || isExceptionWeek)
     {
-        results = TIME_SLOTS_10_14;
+        results = TIME_SLOTS_10_14_30MIN;
     }
 
 
