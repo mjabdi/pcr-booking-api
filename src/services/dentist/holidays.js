@@ -126,6 +126,10 @@ const getDefaultTimeSlots = (date) =>
         {
             results = TIME_SLOTS_Limited_1;
         }
+        else if (someDateStr === "2022-10-15" || someDateStr === "2022-10-16")
+        {
+            results = TIME_SLOTS_NORMAL;
+        }
         else
         {
             result = [];
