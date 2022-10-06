@@ -65,6 +65,14 @@ const TIME_SLOTS_EMERGENCY = [
     new TimeSlot('05:00 PM', true),
 ];
 
+const TIME_SLOTS_Limited_1 = [
+    // new TimeSlot('08:00 AM', true),   
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('02:00 PM', true),
+];
+
+
 
 const isMonday = (date) =>
 {
@@ -114,7 +122,11 @@ const getDefaultTimeSlots = (date) =>
         {
             results = TIME_SLOTS_EMERGENCY;
 
-        }else
+        }else if (someDateStr === "2022-10-09")
+        {
+            results = TIME_SLOTS_Limited_1;
+        }
+        else
         {
             result = [];
         }
