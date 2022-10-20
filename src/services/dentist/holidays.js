@@ -73,6 +73,17 @@ const TIME_SLOTS_Limited_1 = [
 ];
 
 
+const TIME_SLOTS_Saturday_22 = [
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+];
+
+const TIME_SLOTS_Sunday_23 = [
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+];
+
+
 
 const isMonday = (date) =>
 {
@@ -129,6 +140,12 @@ const getDefaultTimeSlots = (date) =>
         else if (someDateStr === "2022-10-15" || someDateStr === "2022-10-16")
         {
             results = TIME_SLOTS_NORMAL;
+        }else if (someDateStr === "2022-10-22")
+        {
+            results = TIME_SLOTS_Saturday_22;
+        }else if (someDateStr === "2022-10-23")
+        {
+            results = TIME_SLOTS_Sunday_23;
         }
         else
         {

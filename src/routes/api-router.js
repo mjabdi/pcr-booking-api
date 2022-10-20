@@ -19,6 +19,8 @@ const stdBookService =  require('./../services/std/booking-service');
 
 const bloodTimeService =  require('./../services/blood/time-service');
 const bloodBookService =  require('./../services/blood/booking-service');
+const bloodPaymentService =  require('./../services/blood/payment-service');
+
 
 const dermaTimeService =  require('./../services/derma/time-service');
 const dermaBookService =  require('./../services/derma/booking-service');
@@ -97,6 +99,8 @@ router.use('/std/book', stdBookService);
 /// Blood ---------
 router.use('/blood/time', bloodTimeService);
 router.use('/blood/book', bloodBookService);
+router.use('/blood/payment', bloodPaymentService);
+
 
 /// Derma ---------
 router.use('/derma/time', dermaTimeService);
