@@ -1015,7 +1015,7 @@ router.post('/changedepositbooking' , async function (req,res,next) {
         console.log(err)
         res.status(500).send({status:'FAILED' , error: err.message });
     }
-});
+})
 
 
 async function refundPayment(bookingId){
