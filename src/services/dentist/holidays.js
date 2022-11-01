@@ -93,6 +93,12 @@ const TIME_SLOTS_Saturday_29_OCT = [
     new TimeSlot('01:30 PM', true),
 ];
 
+const TIME_SLOTS_Saturday_05_NOV = [
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+];
+
+
 
 
 const isMonday = (date) =>
@@ -159,6 +165,9 @@ const getDefaultTimeSlots = (date) =>
         }else if (someDateStr === "2022-10-29")
         {
             results = TIME_SLOTS_Saturday_29_OCT;
+        }else if (someDateStr === "2022-11-05")
+        {
+            results = TIME_SLOTS_Saturday_05_NOV;
         }
         else
         {
