@@ -1,18 +1,17 @@
 {
   "files": {
-    "main.js": "./static/js/main.1c3e4754.chunk.js",
-    "main.js.map": "./static/js/main.1c3e4754.chunk.js.map",
+    "main.js": "./static/js/main.70cf3d54.chunk.js",
+    "main.js.map": "./static/js/main.70cf3d54.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.381e1c6e.js",
     "runtime-main.js.map": "./static/js/runtime-main.381e1c6e.js.map",
-    "static/js/2.85ca241e.chunk.js": "./static/js/2.85ca241e.chunk.js",
-    "static/js/2.85ca241e.chunk.js.map": "./static/js/2.85ca241e.chunk.js.map",
+    "static/js/2.5deeae06.chunk.js": "./static/js/2.5deeae06.chunk.js",
+    "static/js/2.5deeae06.chunk.js.map": "./static/js/2.5deeae06.chunk.js.map",
     "index.html": "./index.html",
-    "static/js/2.85ca241e.chunk.js.LICENSE.txt": "./static/js/2.85ca241e.chunk.js.LICENSE.txt",
-    "static/media/optimal-vision-logo.ba03ccd6.png": "./static/media/optimal-vision-logo.ba03ccd6.png"
+    "static/js/2.5deeae06.chunk.js.LICENSE.txt": "./static/js/2.5deeae06.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.381e1c6e.js",
-    "static/js/2.85ca241e.chunk.js",
-    "static/js/main.1c3e4754.chunk.js"
+    "static/js/2.5deeae06.chunk.js",
+    "static/js/main.70cf3d54.chunk.js"
   ]
 }
