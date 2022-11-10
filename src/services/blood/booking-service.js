@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require("config")
 const router = express.Router();
 const {BloodBooking} = require('../../models/blood/BloodBooking');
 const dateformat = require('dateformat');
@@ -15,6 +16,8 @@ const { sendBloodConfirmationTextMessage } = require('./sms-service');
 
 const { Client, Environment } = require("square");
 const SANDBOX = process.env.NODE_ENV !== "production";
+
+const axios = require("axios")
 
 const LIVE_ACCESSTOKEN =
   "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt"; // live
@@ -1150,6 +1153,100 @@ function checkBookingTime(booking)
 }
 
 async function refundPayment(bookingId){
+    const booking = await BloodBooking.findOne({ _id: bookingId });
+
+
+    if (!booking || !booking.paymentInfo) {
+      return;
+    }
+
+    if (booking.refund) {
+      return;
+    }
+
+    const paymentInfo = JSON.parse(booking.paymentInfo);
+
+    if (paymentInfo.intent)
+    {
+        await refundPaymentPaypal(bookingId)
+
+    }else{
+        await refundPaymentSquare(bookingId)
+    }
+}
+
+async function refundPaymentPaypal(bookingId){
+
+    const booking = await BloodBooking.findOne({ _id: bookingId });
+
+    if (!booking || !booking.paymentInfo) {
+      return;
+    }
+
+    if (booking.refund) {
+      return;
+    }
+
+    const paymentInfo = JSON.parse(booking.paymentInfo);
+
+    const captureId = paymentInfo.purchase_units[0].payments.captures[0].id
+
+    const baseURL = "https://api-m.paypal.com"
+    
+    const tokenAPI = axios.create({
+        baseURL: baseURL,
+        headers: {
+            'Authorization': config.PaypalAuth,
+            'Content-Type': "application/x-www-form-urlencoded"
+        }
+    });
+
+    const res = await tokenAPI.post("/v1/oauth2/token", "grant_type=client_credentials")
+
+    const access_token = res.data.access_token
+
+
+    const refundAPI = axios.create({
+        baseURL: baseURL,
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': "application/json"
+        }
+    });
+
+    try{
+    const res2 = await refundAPI.post(`/v2/payments/captures/${captureId}/refund`, {})
+
+    if (res2.data.status === "COMPLETED"){
+          booking.deposit = 0;
+          booking.refund = "REFUND By PayPal";
+          await booking.save();
+    
+          try {
+            await sendRefundNotificationEmail(booking);
+          } catch (err) {
+            console.log(err);
+          }
+    }
+
+
+    }catch(err)
+    {
+        console.log(err)
+    }
+
+
+
+
+
+
+
+
+
+
+}
+
+async function refundPaymentSquare(bookingId){
     try {
         const booking = await BloodBooking.findOne({ _id: bookingId });
 
