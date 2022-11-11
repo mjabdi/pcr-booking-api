@@ -31,6 +31,7 @@ router.post('/signin', async function(req, res, next) {
             return     
         }
 
+
         const isMatch = await user.comparePassword(password)
         if (!isMatch)
         {

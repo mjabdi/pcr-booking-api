@@ -1271,6 +1271,10 @@ async function refundPaymentSquare(bookingId){
     
         if (result && result.refund && result.refund.id) {
           booking.deposit = 0;
+          result.refund.amountMoney.amount = parseInt(result.refund.amountMoney.amount.toString().replace("n", ""))
+          result.refund.processingFee = []
+
+          console.log(result.refund)
           booking.refund = JSON.stringify(result.refund);
           await booking.save();
     

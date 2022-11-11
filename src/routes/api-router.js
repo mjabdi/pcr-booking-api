@@ -19,7 +19,7 @@ const stdBookService =  require('./../services/std/booking-service');
 
 const bloodTimeService =  require('./../services/blood/time-service');
 const bloodBookService =  require('./../services/blood/booking-service');
-const bloodPaymentService =  require('./../services/blood/payment-service-paypal');
+const bloodPaymentService =  require('./../services/blood/payment-service-new');
 
 
 const dermaTimeService =  require('./../services/derma/time-service');
