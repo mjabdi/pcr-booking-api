@@ -9,7 +9,7 @@ const UserBookingService = require('./../services/user-booking-service')
 
 const gynaeTimeService =  require('./../services/gynae/time-service');
 const gynaeBookService =  require('./../services/gynae/booking-service');
-const gynaePaymentService =  require('./../services/gynae/payment-service');
+const gynaePaymentService =  require('./../services/gynae/payment-service-new');
 
 const gpTimeService =  require('./../services/gp/time-service');
 const gpBookService =  require('./../services/gp/booking-service');
