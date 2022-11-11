@@ -27,7 +27,7 @@ const dermaBookService =  require('./../services/derma/booking-service');
 
 const screeningTimeService =  require('./../services/screening/time-service');
 const screeningBookService =  require('./../services/screening/booking-service');
-const screeningPaymentService =  require('./../services/screening/payment-service');
+const screeningPaymentService =  require('./../services/screening/payment-service-new');
 
 
 const corporateTimeService =  require('./../services/corporate/time-service');
