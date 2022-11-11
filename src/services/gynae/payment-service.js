@@ -181,6 +181,7 @@ router.post("/refundpayment", async function (req, res, next) {
 
     if (result && result.refund && result.refund.id) {
       booking.deposit = 0;
+
       booking.refund = JSON.stringify(result.refund);
       await booking.save();
 
