@@ -146,7 +146,7 @@ router.post("/dopayment", async function (req, res, next) {
         totalMoney,
       } = payment;
 
-      const paymentInfo = JSON.stringify({
+      let paymentInfoJson = {
         id,
         createdAt,
         cardDetails,
@@ -155,9 +155,22 @@ router.post("/dopayment", async function (req, res, next) {
         receiptNumber,
         receiptUrl,
         totalMoney,
-      });
+      };
+
+      paymentInfoJson.cardDetails.card.expMonth = parseInt(
+        paymentInfoJson.cardDetails.card.expMonth.toString().replace("n", "")
+      );
+      paymentInfoJson.cardDetails.card.expYear = parseInt(
+        paymentInfoJson.cardDetails.card.expYear.toString().replace("n", "")
+      );
+      paymentInfoJson.totalMoney.amount = parseInt(
+        paymentInfoJson.totalMoney.amount.toString().replace("n", "")
+      );
+
+      const paymentInfo = JSON.stringify(paymentInfoJson);
 
       medexPayment.paymentInfo = paymentInfo
+
       medexPayment.paymentTimeStamp = new Date()
       await medexPayment.save()
       try{
@@ -220,6 +233,11 @@ router.post("/refundpayment", async function (req, res, next) {
     const { result } = await refundsApi.refundPayment(payload);
 
     if (result && result.refund && result.refund.id) {
+
+      result.refund.amountMoney.amount = parseInt(result.refund.amountMoney.amount.toString().replace("n", ""))
+      result.refund.processingFee = []
+
+
       medexPayment.refund = JSON.stringify(result.refund);
       medexPayment.refundTimeStamp = new Date()
 
