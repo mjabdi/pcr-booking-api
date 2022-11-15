@@ -119,27 +119,29 @@ router.post("/dopayment", async function (req, res, next) {
 
       await booking.save();
 
-      await sendConfirmationEmail(booking);
+      try {
+        await sendConfirmationEmail(booking);
 
-      await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED, booking)
+        await sendAdminNotificationEmail(
+          NOTIFY_TYPE.NOTIFY_TYPE_GYNAE_BOOKED,
+          booking
+        );
 
+        if (booking.smsPush && booking.phone && booking.phone.length > 3) {
+          let _phone = booking.phone;
 
-      if (booking.smsPush && booking.phone && booking.phone.length > 3)
-      {
-          let _phone = booking.phone
-
-          if (_phone.startsWith("07") && _phone.length === 11)
-          {
-              _phone = `+447${_phone.substr(2,10)}`
-          }else if (_phone.startsWith("7") && _phone.length === 10)
-          {
-              _phone = `+447${_phone.substr(1,10)}`
+          if (_phone.startsWith("07") && _phone.length === 11) {
+            _phone = `+447${_phone.substr(2, 10)}`;
+          } else if (_phone.startsWith("7") && _phone.length === 10) {
+            _phone = `+447${_phone.substr(1, 10)}`;
           }
 
-          if (_phone.length === 13 && _phone.startsWith('+447'))
-          {
-              await sendGynaeConfirmationTextMessage(booking, _phone)
+          if (_phone.length === 13 && _phone.startsWith("+447")) {
+            await sendGynaeConfirmationTextMessage(booking, _phone);
           }
+        }
+      } catch (err) {
+        console.log("Error: ", err);
       }
 
 
