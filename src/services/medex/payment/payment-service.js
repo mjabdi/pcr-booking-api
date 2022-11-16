@@ -188,7 +188,7 @@ router.post("/dopayment", async function (req, res, next) {
 
       }
 
-      res.status(200).send({ status: "OK", payment: payment });
+      res.status(200).send({ status: "OK", payment: paymentInfoJson });
     }
 
     else {
