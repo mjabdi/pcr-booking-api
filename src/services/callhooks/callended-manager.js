@@ -23,7 +23,7 @@ const callended = async (body) => {
 
     const {uuid, call_type, from_type, from, to_type, to, start, end, duration, answer_type, answered_by} = body
 
-    if (!uuid || call_type !== 'inbound' || from_type !== 'number' || !from || to_type !== 'number' || !to || !start || answer_type !== 'number' || !answered_by)
+    if (!uuid || call_type !== 'inbound' || from_type !== 'number' || !from || to_type !== 'number' || !to || !start)
     {
         return
     }
