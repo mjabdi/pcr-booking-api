@@ -51,6 +51,8 @@ const callended = async (body) => {
         // await sendTextMessage(from, messageText, config.MedexTwilioNumber)
     }
     else if (to === OVVOIPNo && duration >= minCallDuration){
+        console.log("******** inside OVVOIPNo **************")
+
         let messageText = `Thank you for your enquiry with Optimal Vision , Please do not hesitate to contact us on 02071833725 , should you have any further questions - www.optimalvision.co.uk`
 
         await sendTextMessage(from, messageText, config.OptimalVisionTwilioNumber)
