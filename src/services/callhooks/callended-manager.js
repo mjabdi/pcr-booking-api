@@ -66,8 +66,10 @@ const callended = async (body) => {
         await sendTextMessage(from, messageText, config.MedexTwilioNumber)
     }
     else if (to === WasteRemovalVOIPNo && duration >= minCallDuration){
+        console.log("******** inside WasteRemovalVOIPNo **************")
         let messageText = `Thank you for your enquiry with Waste/Junk and Rubbish removal London , Please do not hesitate to contact us on 07907603848 , or send us a WhatsApp should you have any further questions.`
-        await sendTextMessage(from, messageText, "+447700174944")
+        const result = await sendTextMessage(from, messageText, "+447700174944")
+        console.log(result)
     }    
     else if (to === PaintWorksVOIPNO && duration >= minCallDuration){
         let messageText = `Thank you for your enquiry with Paint Works London, Home of Painting and decorating, Please do not hesitate to contact us on  020 71833809, WhatsApp 07703696456 or send us an email at info@paintworkslondon.co.uk should you have any further questions  www.paintworkslondon.co.uk`
