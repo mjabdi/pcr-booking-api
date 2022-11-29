@@ -17,7 +17,7 @@ const GlaziersVOIPNO = "442080504236"
 
 
 
-const minCallDuration = 15
+const minCallDuration = 0
 
 const callended = async (body) => {
 
