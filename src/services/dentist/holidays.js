@@ -165,7 +165,7 @@ const getDefaultTimeSlots = (date) =>
         }else if (someDateStr === "2022-10-29")
         {
             results = TIME_SLOTS_Saturday_29_OCT;
-        }else if (someDateStr === "2022-11-05" || someDateStr === "2022-11-12" || someDateStr === "2022-11-13")
+        }else if (someDateStr === "2022-11-05" || someDateStr === "2022-11-12" || someDateStr === "2022-11-13" || someDateStr === "2023-01-21"  || someDateStr === "2023-01-22" )
         {
             results = TIME_SLOTS_Saturday_05_NOV;
         }
