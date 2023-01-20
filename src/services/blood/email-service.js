@@ -212,6 +212,9 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     }
 
 
+        content += `<p style="font-weight:500;margin-top:20px; margin-bottom:20px; color:#333"> * You need to enter your date of birth to download the report. </p>`;
+
+
     if (notes)
     {
         content += `<p style="font-weight:700;margin-top:20px; color:#333"> Doctor Notes: </p>`;
