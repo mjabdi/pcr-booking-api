@@ -203,7 +203,7 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     var reportLink = '#';
     if (options._id)
     {
-        reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/download/pdf/downloadpdflabreport?id=${options._id}`;
+        reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/reports/${options._id}`;
     }
 
     if (options._id)
@@ -277,16 +277,24 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
     content += "</div>"
 
+    // const attachmets = [
+    //     {
+    //         path: path.join(config.PdfFolder, "attachments" ,options.filename),
+    //         filename: options.filename
+    //     },
+    //     {
+    //         path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
+    //         filename: "Blood Test Interp Guide.pdf"
+    //     }
+    // ]
+
     const attachmets = [
-        {
-            path: path.join(config.PdfFolder, "attachments" ,options.filename),
-            filename: options.filename
-        },
         {
             path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
             filename: "Blood Test Interp Guide.pdf"
         }
     ]
+
     
     await sendMailBloodReport(email, null, 'Blood Test Report - Medical Express Clinic' , content, attachmets);
 }
