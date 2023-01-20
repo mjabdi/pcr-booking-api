@@ -52,6 +52,22 @@ router.get('/getbloodreportsbybookingid', async function(req, res, next) {
    }
 });
 
+router.get('/getbloodreportbyid', async function(req, res, next) {
+
+    try{
+        const id = ObjectId(req.query.id)
+        const result = await BloodReport.findOne({_id: id})
+
+        res.status(200).send({status: "OK", result : result});
+   }
+   catch(err)
+   {
+       console.log(err);
+       res.status(500).send({status:'FAILED' , error: err.message });
+   }
+});
+
+
 
 router.get('/getarchivedbloodreports', async function(req, res, next) {
 

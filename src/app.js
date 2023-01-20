@@ -256,6 +256,15 @@ app.get("/medicalexpressclinic/book/all/*", function (req, res) {
 });
 
 
+app.use(
+  "/medicalexpressclinic/reports",
+  express.static(path.join(__dirname, "..", "public_report_download_ui"))
+);
+app.get("/medicalexpressclinic/reports/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_report_download_ui", "index.html"));
+});
+
+
 
 app.use(
   "/medicalexpressclinic/admin",
