@@ -34,6 +34,21 @@ const refundsApi = client.refundsApi;
 const DEFAULT_LIMIT = 25
 
 
+router.post('/setclinicnotes' , async function (req,res,next) {
+
+    try{
+        const {bookingId, notes} = req.body;
+        await GynaeBooking.updateOne({_id: bookingId} , {clinicNotes: notes});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 router.post('/sendregformemail' , async function (req,res,next) {
 
     try{

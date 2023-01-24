@@ -37,6 +37,11 @@ const BloodBookingSchema = new mongoose.Schema({
         required: false,
     },
 
+    clinicNotes: {
+        type: String,
+        required: false,
+    },
+
     birthDate: {
         type: String,
         required: true,

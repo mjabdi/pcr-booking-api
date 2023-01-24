@@ -32,6 +32,11 @@ const CorporateBookingSchema = new mongoose.Schema({
         required: false,
     },
 
+    clinicNotes: {
+        type: String,
+        required: false,
+    },
+
     service: {
         type: String,
         required: true

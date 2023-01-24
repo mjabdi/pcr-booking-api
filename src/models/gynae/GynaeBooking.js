@@ -32,6 +32,11 @@ const GynaeBookingSchema = new mongoose.Schema({
         required: false,
     },
 
+    clinicNotes: {
+        type: String,
+        required: false,
+    },
+
     bookingDate: {
         type: String,
         required: true,
