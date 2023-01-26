@@ -33,6 +33,9 @@ const holidays = [
         new Date(2022,11,26,0,0,0,0),
         new Date(2022,11,31,0,0,0,0),
 
+        new Date(2023,2,9,0,0,0,0),
+        new Date(2023,2,10,0,0,0,0),
+
 
 
 
@@ -80,6 +83,16 @@ const TIME_SLOTS_FRIDAY_13 = [
     new TimeSlot('12:30 PM', true),
     new TimeSlot('01:00 PM', true),
 ];
+
+const TIME_SLOTS_FRIDAY_3_Feb = [
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+];
+
 
 
 const TIME_SLOTS_19th = [
@@ -164,6 +177,12 @@ const getDefaultTimeSlots = (date) =>
     {
         results = TIME_SLOTS_FRIDAY_13;
     }
+
+    if (someDateStr === '2023-02-03')
+    {
+        results = TIME_SLOTS_FRIDAY_3_Feb;
+    }
+
 
     const dateStr = dateformat(someDate, 'yyyy-mm-dd');
     const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
