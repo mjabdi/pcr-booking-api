@@ -99,6 +99,20 @@ const TIME_SLOTS_Saturday_05_NOV = [
 ];
 
 
+const TIME_SLOTS_Saturday_18_FEB = [
+    new TimeSlot('09:00 AM', true),
+    new TimeSlot('09:30 AM', true),
+    new TimeSlot('10:00 AM', true),
+    new TimeSlot('10:30 AM', true),
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+];
+
+
 
 
 const isMonday = (date) =>
@@ -168,6 +182,9 @@ const getDefaultTimeSlots = (date) =>
         }else if (someDateStr === "2022-11-05" || someDateStr === "2022-11-12" || someDateStr === "2022-11-13" || someDateStr === "2023-01-21"  || someDateStr === "2023-01-22" )
         {
             results = TIME_SLOTS_Saturday_05_NOV;
+        }else if (someDateStr === "2023-02-18")
+        {
+            results = TIME_SLOTS_Saturday_18_FEB;
         }
         else
         {
