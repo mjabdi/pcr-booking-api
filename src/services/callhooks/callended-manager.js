@@ -41,7 +41,7 @@ const callended = async (body) => {
         await sendTextMessage(from, messageText, config.RyanCarpetTwilioNumber)
     }
     else if (to === DrSiaVOIPNo && duration >= minCallDuration){
-        let messageText = `Thank you for your enquiry with Wimpole Dental Office/London Teeth Whitening, Please do not hesitate to contact us on 02071830357 , should you have any further questions - www.london-teeth-whitening.co.uk`
+        let messageText = `Thank you for your enquiry with Dental Clinic - home of Teeth Whitening, cosmetic dentistry and emergency dentistry , Please do not hesitate to contact us on 02071830357 , should you have any further questions.`
 
         await sendTextMessage(from, messageText, config.DrSIATwilioNumber)
     }
