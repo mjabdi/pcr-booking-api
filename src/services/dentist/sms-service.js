@@ -21,6 +21,7 @@ const sendManualConfirmationSMS = async (options) => {
     text += `\r\nKind Regards,`
     text += `\r\nDr. SIA`
     text += `\r\n02071831906`
+    text += `\r\n20 Wimpole St, London W1G 8GF`
 
     await sendTextMessage(options.phone, text)
 
@@ -40,6 +41,8 @@ const sendPaymentReminderSMS = async (options) => {
     text += `\r\nKind Regards,`
     text += `\r\nDr. SIA`
     text += `\r\n02071831906`
+    text += `\r\n20 Wimpole St, London W1G 8GF`
+
 
     await sendTextMessage(options.phone, text)
 
@@ -56,6 +59,8 @@ const sendPaymentThanksSMS = async (options) => {
     text += `\r\nKind Regards,`
     text += `\r\nDr. SIA`
     text += `\r\n02071831906`
+    text += `\r\n20 Wimpole St, London W1G 8GF`
+
 
     await sendTextMessage(options.phone, text)
 }
