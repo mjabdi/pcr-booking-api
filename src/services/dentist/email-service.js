@@ -199,7 +199,11 @@ const sendConfirmationEmail =  async (options) =>
   
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `<p style="font-weight:600">Wimpole Dental Office</p>`;
+    content += `<p style="font-weight:600">20 Wimpole Street,</p>`;
+    content += `<p style="font-weight:600">London W1G 8GF</p>`;
+    content += `<p style="font-weight:600">02071830357</p>`;
+
     content += `</div>`;
   
   
@@ -359,7 +363,10 @@ const sendManualConfirmationEmail =  async (options) =>
     
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `<p style="font-weight:600">Wimpole Dental Office</p>`;
+    content += `<p style="font-weight:600">20 Wimpole Street,</p>`;
+    content += `<p style="font-weight:600">London W1G 8GF</p>`;
+    content += `<p style="font-weight:600">02071830357</p>`;
     content += `</div>`;
   
   
@@ -430,7 +437,10 @@ const sendPaymentReminderEmail =  async (options) =>
     
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `<p style="font-weight:600">Wimpole Dental Office</p>`;
+    content += `<p style="font-weight:600">20 Wimpole Street,</p>`;
+    content += `<p style="font-weight:600">London W1G 8GF</p>`;
+    content += `<p style="font-weight:600">02071830357</p>`;
     content += `</div>`;
   
   
@@ -498,7 +508,10 @@ const sendPaymentThanksEmail =  async (options) =>
     
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Dental Clinic</p>`;
+    content += `<p style="font-weight:600">Wimpole Dental Office</p>`;
+    content += `<p style="font-weight:600">20 Wimpole Street,</p>`;
+    content += `<p style="font-weight:600">London W1G 8GF</p>`;
+    content += `<p style="font-weight:600">02071830357</p>`;
     content += `</div>`;
   
   
