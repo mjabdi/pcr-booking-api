@@ -28,6 +28,9 @@ const holidays = [
         new Date(2022,11,26,0,0,0,0),
         new Date(2022,11,31,0,0,0,0),
 
+        new Date(2023,3,9,0,0,0,0),
+
+
 
 
 
@@ -147,7 +150,7 @@ const getDefaultTimeSlots = (date) =>
     }
 
 
-    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19'  || dateStr === '2022-12-27')
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19'  || dateStr === '2022-12-27'  || dateStr === '2023-04-07' || dateStr === '2023-04-10')
     const isExceptionWeek = (dateStr === '2022-10-03' || dateStr === '2022-10-04' || dateStr === '2022-10-05' || dateStr === '2022-10-06' || dateStr === '2022-10-08' || dateStr === '2022-10-09')
 
     if (is23Dec || isExceptionWeek)
