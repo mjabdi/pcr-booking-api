@@ -13,6 +13,7 @@ const getNewRef = require('../refgenatator-service');
 const {sendHealthScreeningConfirmationTextMessage} = require('../medex/payment/twilio-service')
 
 const { Client, Environment } = require("square");
+const { getParametersArray } = require('./report-utils');
 const SANDBOX = process.env.NODE_ENV !== "production";
 
 const LIVE_ACCESSTOKEN =
@@ -32,6 +33,46 @@ const refundsApi = client.refundsApi;
 
 
 const DEFAULT_LIMIT = 25
+
+
+router.get('/getreportdata' , async function (req,res,next) {
+
+    try{
+        const {id} = req.query;
+        const booking =  await ScreeningBooking.findOne({_id: id});
+
+        if (booking && booking.reportData)
+        {
+            const reportData = JSON.parse(booking.reportData)
+            res.status(200).send({status : "OK", reportData: reportData, hasData: true });
+        }else{
+
+            const defaultArray = getParametersArray(booking.service)
+            res.status(200).send({status : "OK", reportData: defaultArray, hasData: false });
+        }
+
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+router.post('/setreportdata' , async function (req,res,next) {
+    try{
+        const {bookingId, reportData} = req.body;
+        await ScreeningBooking.updateOne({_id: bookingId} , {reportData: JSON.stringify(reportData)});
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
+
 
 
 router.post('/setclinicnotes' , async function (req,res,next) {

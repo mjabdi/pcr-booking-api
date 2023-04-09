@@ -159,6 +159,12 @@ const ScreeningBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    reportData: {
+        type: String,
+        required: false
+    },
+
+
 });
 
 module.exports = {
