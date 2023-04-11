@@ -14,6 +14,7 @@ const {sendHealthScreeningConfirmationTextMessage} = require('../medex/payment/t
 
 const { Client, Environment } = require("square");
 const { getParametersArray } = require('./report-utils');
+const { createScreeningReportPDF } = require('./pdf-creator');
 const SANDBOX = process.env.NODE_ENV !== "production";
 
 const LIVE_ACCESSTOKEN =
@@ -33,6 +34,41 @@ const refundsApi = client.refundsApi;
 
 
 const DEFAULT_LIMIT = 25
+
+
+router.post('/downloadpdfreport', async function(req, res, next) {
+
+    var id = null;
+    try{
+        id = ObjectId(req.query.id);
+        if (!id)
+            throw new Error();
+
+    }catch(err)
+    {
+        console.error(err.message);
+        res.status(400).send({status:'FAILED' , error: 'id parameter is not in correct format'});
+        return;
+    }
+
+    try{        
+        const booking = await ScreeningBooking.findOne({_id: id})
+        const pdfBuffer = await createScreeningReportPDF(booking, req.body.reportData, "WOMENS_OVER_40_ELITE");
+      
+        res.set( {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=screening-report-form-${booking.fullname}.pdf`,
+            'Content-Transfer-Encoding': 'Binary'
+          }).status(200).send(pdfBuffer);   
+    }
+    catch(err)
+    {
+        res.status(500).send({status:'FAILED' , error: err.message });
+        console.log("ERROR: ", err)
+        return;
+    }
+});
+
 
 
 router.get('/getreportdata' , async function (req,res,next) {

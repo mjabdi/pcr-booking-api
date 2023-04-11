@@ -14,6 +14,32 @@ const getParametersArray = (package) => {
     return params
 }
 
+const getDescriptionForItem = (param, value, package) => {
+    const file = fs.readFileSync(path.resolve(__dirname, `../../motdata/${mapPackageToFilename(package)}.json`)).toString()
+
+    const json = JSON.parse(file)
+
+    const data = json.data
+
+    const found = data.find(item => item.param === param)
+
+    if (found)
+    {
+        if (value === "low")
+        {
+            return {desc: found.desc, low: found.low} 
+        }else if (value === "high")
+        {
+            return {desc: found.desc, high: found.high} 
+        }else if (value === "inRange")
+        {
+            return {desc: found.desc, inRange: found.inRange} 
+        }
+    }
+
+    return "N/A"
+}
+
 
 const mapPackageToFilename = (package) => 
 {
@@ -28,5 +54,6 @@ const mapPackageToFilename = (package) =>
 
 
 module.exports = {
-    getParametersArray: getParametersArray
+    getParametersArray: getParametersArray,
+    getDescriptionForItem: getDescriptionForItem
 }
