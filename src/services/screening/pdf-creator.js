@@ -25,11 +25,11 @@ const createScreeningReportPDF = async (booking, reportData, package) => {
 
     doc.moveTo(20, 120).lineTo(600, 120).dash(5, {space: 5}).strokeColor("#777").stroke() 
 
-    doc.fillColor('black').fontSize(10).font('Courier').text('Name:', 20, 130, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
-    doc.fillColor('black').fontSize(10).font('Courier-Bold').text(booking.fullname, 70, 130, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+    doc.fillColor('black').fontSize(10).font('Times-Roman').text('Name:', 20, 130, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+    doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(booking.fullname, 70, 130, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
 
-    doc.fillColor('black').fontSize(10).font('Courier').text('DOB:', 20, 145, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
-    doc.fillColor('black').fontSize(10).font('Courier-Bold').text(NormalizeDate(booking.birthDate), 70, 145, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+    doc.fillColor('black').fontSize(10).font('Times-Roman').text('DOB:', 20, 145, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+    doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(NormalizeDate(booking.birthDate), 70, 145, {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
 
     doc.moveTo(20, 160).lineTo(600, 160).dash(5, {space: 5}).stroke() 
 
@@ -44,29 +44,29 @@ const createScreeningReportPDF = async (booking, reportData, package) => {
 
         if (reportData[i].value === "low")
         {
-          doc.fillColor('black').fontSize(10).font('Courier-Bold').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
-          doc.fillColor('red').fontSize(10).font('Courier-Bold').text("LOW", 20, start_y + 20 , {characterSpacing : 1, wordSpacing : 1 , align : 'left'} );
+          doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+          doc.fillColor('red').fontSize(10).font('Helvetica-Bold').text("LOW", 20, start_y + 15 , {characterSpacing : 1, wordSpacing : 1 , align : 'left'} );
 
-          doc.fillColor('black').fontSize(10).font('Courier-Bold').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
-            .fillColor('red').fontSize(10).font('Courier-Bold').text(low,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
+          doc.fillColor('black').fontSize(10).font('Helvetica').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
+            .fillColor('red').fontSize(10).font('Helvetica-Bold').text(low,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
 
         }else if (reportData[i].value === "high")
         {
-          doc.fillColor('black').fontSize(10).font('Courier-Bold').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
-          doc.fillColor('red').fontSize(10).font('Courier-Bold').text("HIGH", 20, start_y + 20 , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );        
+          doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+          doc.fillColor('red').fontSize(10).font('Helvetica-Bold').text("HIGH", 20, start_y + 15 , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );        
 
-          doc.fillColor('black').fontSize(10).font('Courier-Bold').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
-            .fillColor('red').fontSize(10).font('Courier-Bold').text(high,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
+          doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
+            .fillColor('red').fontSize(10).font('Helvetica-Bold').text(high,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
 
 
 
         }else if (reportData[i].value === "inRange")
         {
-          doc.fillColor('black').fontSize(10).font('Courier').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
-          doc.fillColor('green').fontSize(10).font('Courier-Bold').text("NORMAL", 20, start_y + 20 , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+          doc.fillColor('black').fontSize(10).font('Times-Roman').text(reportData[i].param, 20, start_y , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
+          doc.fillColor('green').fontSize(10).font('Helvetica-Bold').text("NORMAL", 20, start_y + 15 , {characterSpacing : 1, wordSpacing : 1.2 , align : 'left'} );
 
-          doc.fillColor('black').fontSize(10).font('Courier-Bold').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
-          .fillColor('black').fontSize(10).font('Courier-Bold').text(inRange,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
+          doc.fillColor('black').fontSize(10).font('Helvetica-Bold').text(desc, 20, start_y + 35 , {lineGap:7 ,characterSpacing : 1, wordSpacing : 1.2 , align : 'justify', width: 550, continued: true})
+          .fillColor('black').fontSize(10).font('Helvetica-Bold').text(inRange,  {lineGap:7, characterSpacing : 1, wordSpacing : 1 , align : 'justify', width: 550, continued: false})
 
         }
 
