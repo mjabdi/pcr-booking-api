@@ -93,6 +93,20 @@ const TIME_SLOTS_Saturday_29_OCT = [
     new TimeSlot('01:30 PM', true),
 ];
 
+
+const TIME_SLOTS_11_3PM = [
+    new TimeSlot('11:00 AM', true),
+    new TimeSlot('11:30 AM', true),
+    new TimeSlot('12:00 PM', true),
+    new TimeSlot('12:30 PM', true),
+    new TimeSlot('01:00 PM', true),
+    new TimeSlot('01:30 PM', true),
+    new TimeSlot('02:00 PM', true),
+    new TimeSlot('02:30 PM', true),
+
+];
+
+
 const TIME_SLOTS_Saturday_05_NOV = [
     new TimeSlot('12:30 PM', true),
     new TimeSlot('01:00 PM', true),
