@@ -209,6 +209,9 @@ const getDefaultTimeSlots = (date) =>
         }else if (someDateStr === "2023-03-04" || someDateStr === "2023-03-05")
         {
             results = TIME_SLOTS_Sunday_5March;
+        }else if (someDateStr === "2023-04-23")
+        {
+            results = TIME_SLOTS_11_3PM;
         }
         else
         {
