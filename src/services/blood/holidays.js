@@ -242,7 +242,7 @@ const getDefaultTimeSlots = (date) =>
         results = TIME_SLOTS_NORMAL_LIMITED;
     }
 
-    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19' || dateStr === '2022-12-27' || dateStr === '2023-04-07' || dateStr === '2023-04-10'  )
+    const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19' || dateStr === '2022-12-27' || dateStr === '2023-04-07' || dateStr === '2023-04-10' || dateStr === '2023-05-01' || dateStr === '2023-05-29' )
     if (is23Dec)
     {
         results = TIME_SLOTS_10_14;
