@@ -124,6 +124,13 @@ const DentistBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    smsSent: {
+        type: Boolean,
+        required: false
+    }
+
+
+
 
 });
 

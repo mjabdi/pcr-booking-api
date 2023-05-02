@@ -67,9 +67,16 @@ const sendPaymentThanksSMS = async (options) => {
 
 
 
+const sendReviewSMS = async (options, message) => {
+  let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
+  text += `${message}`;
+  await sendTextMessage(options.phone, text);
+};
+
 
 module.exports = {
     sendManualConfirmationSMS: sendManualConfirmationSMS,
     sendPaymentReminderSMS: sendPaymentReminderSMS,
-    sendPaymentThanksSMS: sendPaymentThanksSMS
+    sendPaymentThanksSMS: sendPaymentThanksSMS,
+    sendReviewSMS: sendReviewSMS
 };

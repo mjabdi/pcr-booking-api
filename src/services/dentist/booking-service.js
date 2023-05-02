@@ -8,9 +8,26 @@ const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
 const {Notification} = require('./../../models/Notification');
 const getNewRef = require('../refgenatator-service');
-const { sendManualConfirmationSMS, sendPaymentReminderSMS } = require('./sms-service');
+const { sendManualConfirmationSMS, sendPaymentReminderSMS, sendReviewSMS } = require('./sms-service');
 
 const DEFAULT_LIMIT = 25
+
+router.post('/sendreviewsms' , async function (req,res,next) {
+
+    try{
+        const {id, message} = req.body;
+        const booking =  await DentistBooking.findOne({_id: id});
+        await sendReviewSMS(booking, message)
+        booking.smsSent = true
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
 
 
 router.post('/sendregformemail' , async function (req,res,next) {
