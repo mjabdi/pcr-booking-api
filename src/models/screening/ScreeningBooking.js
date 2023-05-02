@@ -164,6 +164,11 @@ const ScreeningBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    smsSent: {
+        type: Boolean,
+        required: false
+    },
+
 
 });
 

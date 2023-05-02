@@ -17,7 +17,8 @@ const { sendBloodConfirmationTextMessage } = require('./sms-service');
 const { Client, Environment } = require("square");
 const SANDBOX = process.env.NODE_ENV !== "production";
 
-const axios = require("axios")
+const axios = require("axios");
+const { sendReviewSMS } = require('../screening/sms-service');
 
 const LIVE_ACCESSTOKEN =
   "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt"; // live
@@ -36,6 +37,23 @@ const refundsApi = client.refundsApi;
 
 
 const DEFAULT_LIMIT = 25
+
+router.post('/sendreviewsms' , async function (req,res,next) {
+
+    try{
+        const {id, message} = req.body;
+        const booking =  await BloodBooking.findOne({_id: id});
+        await sendReviewSMS(booking, message)
+        booking.smsSent = true
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
 
 
 router.post('/setclinicnotes' , async function (req,res,next) {

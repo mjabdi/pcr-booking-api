@@ -15,6 +15,7 @@ const {sendHealthScreeningConfirmationTextMessage} = require('../medex/payment/t
 const { Client, Environment } = require("square");
 const { getParametersArray } = require('./report-utils');
 const { createScreeningReportPDF } = require('./pdf-creator');
+const { sendReviewSMS } = require('./sms-service');
 const SANDBOX = process.env.NODE_ENV !== "production";
 
 const LIVE_ACCESSTOKEN =
@@ -34,6 +35,24 @@ const refundsApi = client.refundsApi;
 
 
 const DEFAULT_LIMIT = 25
+
+router.post('/sendreviewsms' , async function (req,res,next) {
+
+    try{
+        const {id, message} = req.body;
+        const booking =  await ScreeningBooking.findOne({_id: id});
+        await sendReviewSMS(booking, message)
+        booking.smsSent = true
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
+
 
 
 router.post('/downloadpdfreport', async function(req, res, next) {

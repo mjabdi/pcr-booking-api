@@ -28,7 +28,18 @@ const sendScreeningConfirmationTextMessage = async (options, to) =>
     await sendTextMessage(to, message) 
 }
 
+const sendReviewSMS = async (options, message) => {
+    let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
+    text += `${message}`;
+
+    // console.log(text)
+
+    await sendTextMessage(options.phone, text);
+  };
+  
+
 
 module.exports = {
     sendScreeningConfirmationTextMessage: sendScreeningConfirmationTextMessage,
+    sendReviewSMS: sendReviewSMS
 };

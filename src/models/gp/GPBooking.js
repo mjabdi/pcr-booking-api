@@ -115,6 +115,12 @@ const GPBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    smsSent: {
+        type: Boolean,
+        required: false
+    },
+
+
 });
 
 module.exports = {

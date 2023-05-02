@@ -10,8 +10,26 @@ const {Notification} = require('./../../models/Notification');
 const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notification-service');
 const getNewRef = require('../refgenatator-service');
 const { sendGPConfirmationTextMessage } = require('./sms-service');
+const { sendReviewSMS } = require('../screening/sms-service');
 
 const DEFAULT_LIMIT = 25
+
+router.post('/sendreviewsms' , async function (req,res,next) {
+
+    try{
+        const {id, message} = req.body;
+        const booking =  await GPBooking.findOne({_id: id});
+        await sendReviewSMS(booking, message)
+        booking.smsSent = true
+        await booking.save()
+        res.status(200).send({status : "OK"});
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(500).send({status:'FAILED' , error: err.message });
+    }
+});
 
 
 router.post('/setclinicnotes' , async function (req,res,next) {
