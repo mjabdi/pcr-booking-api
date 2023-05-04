@@ -52,10 +52,7 @@ const checkAccessToken =  () => {
       }
       else
       {
-          setTimeout(() => {
-            next();
-          }, Math.random() * 10000 + 10000);
-        
+        next()        
       }
     }
   }
