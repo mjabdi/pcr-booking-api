@@ -18,15 +18,15 @@ const sendBloodConfirmationTextMessage = async (options, to) =>
         message += `\r\n- Notes : ${options.notes}`
     }
 
-    if (options.indivisualTests)
+    if (options.IndividualTests)
     {
-        const tests = JSON.parse(options.indivisualTests)
+        const tests = JSON.parse(options.IndividualTests)
         let testsString = ''
         tests.forEach(item => {
             testsString += item.description
             testsString += ' , '
         } )
-        message += `\r\n- Indivisual Tests : ${testsString}`;
+        message += `\r\n- Individual Tests : ${testsString}`;
     }   
     
     if (options.doctorConsultation)

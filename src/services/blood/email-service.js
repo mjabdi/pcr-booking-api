@@ -65,15 +65,15 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Date of Birth : ${options.birthDate ? FormatDateFromString(options.birthDate) : '-'} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
     content += `<li> Package : ${options.packageName ? options.packageName : '-'} </li>`;
-    if (options.indivisualTests)
+    if (options.IndividualTests)
     {
-        const tests = JSON.parse(options.indivisualTests)
+        const tests = JSON.parse(options.IndividualTests)
         let testsString = ''
         tests.forEach(item => {
             testsString += item.description
             testsString += ' , '
         } )
-        content += `<li> Indivisual Tests : ${testsString} </li>`;
+        content += `<li> Individual Tests : ${testsString} </li>`;
     }   
     
     if (options.doctorConsultation)
