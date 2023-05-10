@@ -1,6 +1,7 @@
 
 const {sendTextMessage} = require("../medex/payment/twilio-sender")
 const { FormatDateFromString } = require('../DateFormatter');
+const { sendReviewEmail } = require("./email-service");
 
 
 const sendScreeningConfirmationTextMessage = async (options, to) =>
@@ -29,12 +30,15 @@ const sendScreeningConfirmationTextMessage = async (options, to) =>
 }
 
 const sendReviewSMS = async (options, message) => {
-    let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
-    text += `${message}`;
+    // let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
+    // text += `${message}`;
 
-    // console.log(text)
+    // // console.log(text)
 
-    await sendTextMessage(options.phone, text);
+    // await sendTextMessage(options.phone, text);
+
+    await sendReviewEmail(options)
+
   };
   
 
