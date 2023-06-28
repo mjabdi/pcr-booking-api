@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {GPBooking} = require('../../models/gp/GPBooking');
 const dateformat = require('dateformat');
-const {sendConfirmationEmail, sendRegFormEmail} = require('./email-service');
+const {sendConfirmationEmail, sendRegFormEmail, sendRefundNotificationEmail} = require('./email-service');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const {getDefaultTimeSlots, getHolidays} = require('./holidays');
@@ -11,6 +11,24 @@ const { sendAdminNotificationEmail, NOTIFY_TYPE } = require('../mail-notificatio
 const getNewRef = require('../refgenatator-service');
 const { sendGPConfirmationTextMessage } = require('./sms-service');
 const { sendReviewSMS } = require('../screening/sms-service');
+const { Client, Environment } = require("square");
+
+const SANDBOX = process.env.NODE_ENV !== "production";
+
+const LIVE_ACCESSTOKEN =
+  "EAAAEAxDlhTfsK7_QcWlXIS8mpoNsGyWu6GOtROECsno-txpY1bnzlPtyCscFpMt"; // live
+const SANDBOX_ACCESSTOKEN =
+  "EAAAEHpXroK4v3SCYQTdflulI8A8BlUGdy56BSVPX7-a5nicjp9dyF7ezj8iiFzm"; // sandbox
+
+const LIVE_LOCATION_ID = "L2SBNYPV0XWVJ"; // live
+const SANDBOX_LOCATION_ID = "LBR8YPCPR878R"; // sandbox
+
+const client = new Client({
+  environment: SANDBOX ? Environment.Sandbox : Environment.Production,
+  accessToken: SANDBOX ? SANDBOX_ACCESSTOKEN : LIVE_ACCESSTOKEN,
+});
+
+const refundsApi = client.refundsApi;
 
 const DEFAULT_LIMIT = 25
 
@@ -695,6 +713,9 @@ router.post('/deletebookappointment', async function(req, res, next) {
 
         await GPBooking.updateOne({_id : req.query.id}, {deleted : true});
 
+        await refundPayment(req.query.id)
+
+
         res.status(200).send({status: 'OK'});
 
     }catch(err)
@@ -840,6 +861,55 @@ function checkBookingTime(booking)
 
     return true;
 }
+
+async function refundPayment(bookingId){
+    try {
+        const booking = await GPBooking.findOne({ _id: bookingId });
+
+        if (!booking || !booking.paymentInfo) {
+          return;
+        }
+    
+        if (booking.refund) {
+          return;
+        }
+    
+        const paymentInfo = JSON.parse(booking.paymentInfo);
+    
+        const payload = {
+          idempotencyKey: booking._id.toString(),
+          amountMoney: paymentInfo.totalMoney,
+          paymentId: paymentInfo.id,
+          autocomplete: true,
+        };
+    
+        const { result } = await refundsApi.refundPayment(payload);
+    
+        if (result && result.refund && result.refund.id) {
+          booking.deposit = 0;
+          result.refund.amountMoney.amount = parseInt(result.refund.amountMoney.amount.toString().replace("n", ""))
+          result.refund.processingFee = []
+
+          booking.refund = JSON.stringify(result.refund);
+          booking.OTCCharges = 0;
+          booking.paid = false;
+          booking.prepaid = false;
+          booking.paidBy = ""
+    
+
+          await booking.save();
+    
+          try {
+            await sendRefundNotificationEmail(booking);
+          } catch (err) {
+            console.log(err);
+          }
+        } 
+      } catch (err) {
+        console.log(err);
+      }    
+}
+
 
 
 

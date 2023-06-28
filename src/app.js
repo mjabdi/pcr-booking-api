@@ -206,6 +206,16 @@ app.get("/medicalexpressclinic/book/gp/*", function (req, res) {
 });
 
 app.use(
+  "/medicalexpressclinic/book/gp75",
+  express.static(path.join(__dirname, "..", "public_gp_75"))
+);
+app.get("/medicalexpressclinic/book/gp75/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_gp_75", "index.html"));
+});
+
+
+
+app.use(
   "/medicalexpressclinic/book/std",
   express.static(path.join(__dirname, "..", "public_std"))
 );

@@ -13,6 +13,7 @@ const gynaePaymentService =  require('./../services/gynae/payment-service-new');
 
 const gpTimeService =  require('./../services/gp/time-service');
 const gpBookService =  require('./../services/gp/booking-service');
+const gpPaymentService =  require('./../services/gp/payment-service-new');
 
 const stdTimeService =  require('./../services/std/time-service');
 const stdBookService =  require('./../services/std/booking-service');
@@ -90,6 +91,7 @@ router.use('/gynae/payment', gynaePaymentService);
 /// GP ---------
 router.use('/gp/time', gpTimeService);
 router.use('/gp/book', gpBookService);
+router.use('/gp/payment', gpPaymentService);
 
 
 /// STD ---------

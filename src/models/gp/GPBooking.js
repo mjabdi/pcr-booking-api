@@ -120,6 +120,11 @@ const GPBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    prepaid: {
+        type: Boolean,
+        required: false
+    },
+
 
 });
 
