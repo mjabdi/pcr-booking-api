@@ -125,6 +125,17 @@ const GPBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    gender: {  // F/M
+        type: String,
+        required: false
+    },
+
+    birthDate: {
+        type: String,
+        required: false,
+    },
+
+
 
 });
 

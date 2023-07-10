@@ -124,6 +124,16 @@ const GynaeBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    gender: {  // F/M
+        type: String,
+        default: "F"
+    },
+
+    birthDate: {
+        type: String,
+        required: false,
+    },
+
 
 
 });
