@@ -198,8 +198,8 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     var content = '';
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<p>Dear ${options.name},</p>`;
-    content += `<p>Please find the attached result of your diagnostic test conducted at Medical Express Clinic.</p>`;
-    content += `<p>You can also download your results report by clicking the link below :</p>`;
+    content += `<p>The result of your diagnostic test conducted at Medical Express Clinic is now available.</p>`;
+    content += `<p>You can also access your report by clicking the link below :</p>`;
     var reportLink = '#';
     if (options._id)
     {
@@ -212,7 +212,17 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     }
 
 
-        content += `<p style="font-weight:500;margin-top:20px; margin-bottom:20px; color:#333"> * You need to enter your date of birth to download the report. </p>`;
+        content += `<p style="font-weight:500;margin-top:15px; margin-bottom:20px; color:#777; font-size:0.7em; padding-left:15px;">
+                        <ul>
+                            <li style="color:#444; font-size:0.85em;">
+                                You will need to enter your date of birth to access the report for security purposes.
+                            </li>
+                            <li style="color:#444; font-size:0.85em;">
+                                Any parameters listed as 'Pending' mean that the result is not yet ready and will follow shortly. 
+                            </li>
+                        </ul>     
+        
+                    </p>`;
 
 
     if (notes)
@@ -225,10 +235,10 @@ const sendBloodResultEmail =  async (options, email, notes) =>
 
 
     content += `<p style="text-decoration: underline; font-weight:600;">Interpreting your blood test results:</p>`
-    content += `<p>If your test has been conducted as part of a health screening, sexual health screening package or at the request of a clinician at Medical Express Clinic, please feel free to ask any and all questions at your review appointment with the doctor. </p>`
+    content += `<p>If your test has been conducted as part of a health screening, sexual health screening package or at the request of a clinician at Medical Express Clinic, please feel free to ask any and all questions at your review appointment with the doctor.</p>`
     content += `<p>If you have attended on a self-request basis, you will have confirmed for us to simply send your medical report without comment or review from our doctor, however you may not be able to fully understand the contents of your blood test report.</p>`
     content += `<p>Please note, the following information in this email is not intended as medical advice, or to help in providing a diagnosis, simply to aid in understanding your blood test results: </p>`
-    content += `<p>Blood tests alone are not a substitute for seeing a doctor, particularly if you are feeling unwell or currently experiencing symptoms. You should not make a diagnosis or start any treatment without being under the care of a suitable doctor or a trained healthcare professional. We <strong>strongly</strong> recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems.</p>`
+    content += `<p>Blood tests alone are not a substitute for seeing a doctor, particularly if you are feeling unwell or currently experiencing symptoms. You should not make a diagnosis or start any treatment without being under the care of a suitable doctor or a trained healthcare professional. We strongly recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems.</p>`
     content += `<p>There are many times when test results which are out of range are entirely insignificant but there are other times when they are not. They always need to be interpreted in the context of the rest of your health and this can only be determined with a full clinical history and examination.</p>`
     content += `<p>The name of the test conducted can be found on the left column of your blood test report, with the test result printed just to the right of the test name.</p>`
     content += `<p>The reference range/normal values can be found in the far right hand column and on some of our reports, abnormal results will appear in bold and red.</p>`
