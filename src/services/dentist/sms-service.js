@@ -1,6 +1,7 @@
 
 const {sendTextMessage} = require("./twilio-sender")
 const { FormatDateFromString } = require('../DateFormatter');
+const { sendReviewEmail } = require("./email-service");
 
 
 const sendManualConfirmationSMS = async (options) => {
@@ -68,9 +69,12 @@ const sendPaymentThanksSMS = async (options) => {
 
 
 const sendReviewSMS = async (options, message) => {
-  let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
-  text += `${message}`;
-  await sendTextMessage(options.phone, text);
+//   let text = `Dear ${options.fullname.toUpperCase()},\r\n`;
+//   text += `${message}`;
+//   await sendTextMessage(options.phone, text);
+
+await sendReviewEmail(options, message)
+
 };
 
 

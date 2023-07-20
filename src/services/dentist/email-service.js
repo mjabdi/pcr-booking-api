@@ -185,7 +185,10 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    if (options.deposit && options.deposit > 0)
+    {
+      content += `<li> Deposit : £${options.deposit}  </li>`;
+    }
 
 
     content += `</ul>`;
@@ -341,7 +344,10 @@ const sendManualConfirmationEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    if (options.deposit && options.deposit > 0)
+    {
+      content += `<li> Deposit : £${options.deposit}  </li>`;
+    }
 
     content += `</ul>`;
 
@@ -424,7 +430,10 @@ const sendPaymentReminderEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    if (options.deposit && options.deposit > 0)
+    {
+      content += `<li> Deposit : £${options.deposit}  </li>`;
+    }
 
     content += `</ul>`;
 
@@ -495,7 +504,10 @@ const sendPaymentThanksEmail =  async (options) =>
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Package : ${options.service} </li>`;
     content += `<li> Notes : ${options.notes ? options.notes : '-'} </li>`;
-    content += `<li> Deposit : £${options.deposit}  </li>`;
+    if (options.deposit && options.deposit > 0)
+    {
+      content += `<li> Deposit : £${options.deposit}  </li>`;
+    }
 
     content += `</ul>`;
 
@@ -542,6 +554,29 @@ const sendPaymentThanksEmail =  async (options) =>
 }
 
 
+const sendReviewEmail =  async (options, message) =>
+{
+
+    var content = '';
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%; max-width:900px; font-size: 16px;  line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<p>Dear <i> ${options.fullname} </i>,</p>`;
+    content += `<p style="font-weight:600;"> ${message} </p>`;
+
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Wimpole Dental Office</p>`;
+    content += `<p style="font-weight:600">20 Wimpole Street,</p>`;
+    content += `<p style="font-weight:600">London W1G 8GF</p>`;
+    content += `<p style="font-weight:600">02071830357</p>`;
+    content += `</div>`;
+  
+  
+    content += '</div>'
+
+    
+    await sendMail(options.email, 'Wimpole Dental Office - Review request' , content, null);
+}
+
 
 
 
@@ -554,5 +589,6 @@ module.exports = {
     sendPaymentReminderEmail: sendPaymentReminderEmail,
     sendPaymentThanksEmail: sendPaymentThanksEmail,
     sendAdminNotificationEmailUpdate: sendAdminNotificationEmailUpdate,
-    sendAdminNotificationEmailCancel: sendAdminNotificationEmailCancel
+    sendAdminNotificationEmailCancel: sendAdminNotificationEmailCancel,
+    sendReviewEmail: sendReviewEmail
 };
