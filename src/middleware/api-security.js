@@ -52,13 +52,13 @@ const checkAccessToken =  () => {
       }
       else
       {
-        const rnd = Math.floor(Math.random() * 30000) + 30000;
+        const rnd = Math.floor(Math.random() * 60000) + 5000;
         setTimeout(() => {
           next()   
         }, rnd);
           
       }
-    }
+    
   }
 
 
