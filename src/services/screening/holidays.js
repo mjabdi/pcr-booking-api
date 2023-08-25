@@ -142,7 +142,7 @@ const getDefaultTimeSlots = (date) =>
 
 
     const is23Dec = (dateStr === '2021-12-23' || dateStr === '2021-12-27' || dateStr === '2021-12-28' || dateStr === '2021-12-31' || dateStr === '2022-01-03' || dateStr === "2022-04-18" || dateStr === '2022-05-02' || dateStr === '2022-06-02' || dateStr === '2022-09-19'  || dateStr === '2022-12-27')
-    const isExceptionWeek = (dateStr === '2022-10-03' || dateStr === '2022-10-04' || dateStr === '2022-10-05' || dateStr === '2022-10-06' || dateStr === '2022-10-08' || dateStr === '2022-10-09' || dateStr === '2023-05-01' || dateStr === '2023-05-29' )
+    const isExceptionWeek = (dateStr === '2022-10-03' || dateStr === '2022-10-04' || dateStr === '2022-10-05' || dateStr === '2022-10-06' || dateStr === '2022-10-08' || dateStr === '2022-10-09' || dateStr === '2023-05-01' || dateStr === '2023-05-29' || dateStr === '2023-08-28')
 
     if (is23Dec || isExceptionWeek)
     {
