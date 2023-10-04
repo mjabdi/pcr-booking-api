@@ -655,6 +655,7 @@ router.post('/bookappointment', async function(req, res, next) {
         const booking = new ScreeningBooking(
             {
                 ...req.body,
+                confirmed : true,
                 timeStamp: new Date()
             }
         );
@@ -675,7 +676,7 @@ router.post('/bookappointment', async function(req, res, next) {
 
         await booking.save();
         
-        await sendPatientNotificationEmail(booking);
+        await sendConfirmationEmail(booking);
 
         await sendAdminNotificationEmail(NOTIFY_TYPE.NOTIFY_TYPE_HEALTHSCREENING_BOOKED,booking)
 
