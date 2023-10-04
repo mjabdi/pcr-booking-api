@@ -102,7 +102,7 @@ const sendConfirmationEmailNormal =  async (options) =>
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     // content += `<img style="margin:10px" src="https://www.gynae-clinic.co.uk/public/design/images/gynae-clinic.png" alt="Gynae Clinic - private clinic London">`;
     content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p>Your appointment for Health Screening at the Medical Express Clinic is confirmed by the clinic. We look forward to welcoming you.</p>`;
+    content += `<p>Your appointment for ${options.service} at the Medical Express Clinic is confirmed by the clinic. We look forward to welcoming you.</p>`;
     // content += `<p style="font-size:18px; font-weight:800">‘If you have received this email your appointment is confirmed. Please <u>DON'T CALL</u> the clinic to confirm your appointment.’</p>`;
 
     const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/screening/${options._id}`;
