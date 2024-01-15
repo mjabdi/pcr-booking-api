@@ -31,6 +31,8 @@ const paymentsApi = client.paymentsApi;
 const refundsApi = client.refundsApi;
 
 const DEPOSIT = 75;
+const DEPOSIT_20 = 20;
+
 
 router.post("/dopayment", async function (req, res, next) {
   try {
@@ -158,6 +160,137 @@ router.post("/dopayment", async function (req, res, next) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 });
+
+
+
+router.post("/dopayment20", async function (req, res, next) {
+  try {
+    const personInfo = req.body.personInfo;
+
+    const payload = {
+      sourceId: req.body.nonce,
+      verificationToken: req.body.token,
+      autocomplete: true,
+      locationId: SANDBOX ? SANDBOX_LOCATION_ID : LIVE_LOCATION_ID,
+      amountMoney: {
+        amount: DEPOSIT_20 * 100,
+        currency: "GBP",
+      },
+      idempotencyKey: personInfo.bookingRef,
+    };
+
+    try {
+      validateBookAppointment(personInfo);
+    } catch (err) {
+      console.error(err.message);
+      res.status(400).send({ status: "FAILED", error: err.message });
+      return;
+    }
+
+    // const found = await GPBooking.findOne({
+    //   email: personInfo.email,
+    //   bookingDate: personInfo.bookingDate,
+    //   deleted: { $ne: true },
+    // });
+
+    // if (found) {
+    //   res.status(200).send({
+    //     status: "FAILED",
+    //     error: "Repeated Booking!",
+    //     person: req.body,
+    //   });
+    //   return;
+    // }
+
+    const { result } = await paymentsApi.createPayment(payload);
+
+    const payment = result.payment;
+    console.log(payment);
+    if (payment.status === "COMPLETED") {
+      const {
+        id,
+        createdAt,
+        cardDetails,
+        locationId,
+        orderId,
+        receiptNumber,
+        receiptUrl,
+        totalMoney,
+      } = payment;
+
+      let paymentInfoJson = {
+        id,
+        createdAt,
+        cardDetails,
+        locationId,
+        orderId,
+        receiptNumber,
+        receiptUrl,
+        totalMoney,
+      };
+
+      paymentInfoJson.cardDetails.card.expMonth = parseInt(
+        paymentInfoJson.cardDetails.card.expMonth.toString().replace("n", "")
+      );
+      paymentInfoJson.cardDetails.card.expYear = parseInt(
+        paymentInfoJson.cardDetails.card.expYear.toString().replace("n", "")
+      );
+      paymentInfoJson.totalMoney.amount = parseInt(
+        paymentInfoJson.totalMoney.amount.toString().replace("n", "")
+      );
+
+      const paymentInfo = JSON.stringify(paymentInfoJson);
+
+      const booking = new GPBooking({
+        ...personInfo,
+        paymentInfo: paymentInfo,
+        OTCCharges: DEPOSIT_20,
+        prepaid: true,
+        paidBy: "credit card",
+        paid: true,
+        timeStamp: new Date(),
+      });
+
+      await booking.save();
+
+      try {
+        await sendConfirmationEmail(booking);
+
+        await sendAdminNotificationEmail(
+          NOTIFY_TYPE.NOTIFY_TYPE_GP_BOOKED,
+          booking
+        );
+
+        if (booking.smsPush && booking.phone && booking.phone.length > 3) {
+          let _phone = booking.phone;
+
+          if (_phone.startsWith("07") && _phone.length === 11) {
+            _phone = `+447${_phone.substr(2, 10)}`;
+          } else if (_phone.startsWith("7") && _phone.length === 10) {
+            _phone = `+447${_phone.substr(1, 10)}`;
+          }
+
+          if (_phone.length === 13 && _phone.startsWith("+447")) {
+            await sendGPConfirmationTextMessage(booking, _phone);
+          }
+        }
+      } catch (err) {
+        console.log("Error: ", err);
+      }
+
+
+
+      res.status(200).send({ status: "OK", person: personInfo });
+    } else {
+      res.status(500).send({ status: "FAILED" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+
 
 router.post("/refundpayment", async function (req, res, next) {
   try {
