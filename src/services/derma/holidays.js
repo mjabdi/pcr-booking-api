@@ -1,20 +1,19 @@
 const TimeSlot = require("../../models/TimeSlot");
 const dateformat = require('dateformat');
+const { OffDays } = require("./../../models/medex/OffDays");
 
-const holidays = [
-
-        new Date(2020,11,25,0,0,0,0),
-        new Date(2020,11,26,0,0,0,0),
-        new Date(2021,0,1,0,0,0,0),
-];
-
-const getHolidays = () =>
-{
-    const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-    let result = [...holidays, yesterday];
-   return result;
-}
-
+const getHolidays = async () => {
+  const offDays = await OffDays.find({
+    $or: [{ service: "derma" }, { service: "clinic" }],
+  });
+  offDays.map((el) => el.date);
+  const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  let result = [
+    ...offDays.map((el) => new Date(el.date.getTime() - el.offset * 60000)),
+    yesterday,
+  ];
+  return result;
+};
 
 const TIME_SLOTS_NORMAL = [
     new TimeSlot('10:00 AM', true),
@@ -46,7 +45,7 @@ const TIME_SLOTS_WEEKEND = [
     new TimeSlot('01:30 PM', true),
 ];
 
-const getDefaultTimeSlots = (date) =>
+const getDefaultTimeSlots = async(date) =>
 {
     // console.log(date);
     const someDate = new Date(date);
@@ -85,30 +84,29 @@ const getDefaultTimeSlots = (date) =>
             finalResults.push(new TimeSlot(results[i].time, false));
         }
       
-        else if (isHoliday(date))
-        {
-            finalResults.push(new TimeSlot(results[i].time, false));
-        }
-        else if (isToday && TimePast(results[i].time))
-         {
-             finalResults.push(new TimeSlot(results[i].time, false));
-         }
-         else if (is24Dec && results[i].time.toUpperCase().indexOf('PM') > 0)
-         {
-            finalResults.push(new TimeSlot(results[i].time, false));
-         }
-         else if (is27Dec && results[i].time.toUpperCase().indexOf('PM') > 0 &&  parseInt(results[i].time.substr(0,2)) >= 5 && parseInt(results[i].time.substr(0,2)) !== 12)
-         {
-            finalResults.push(new TimeSlot(results[i].time, false));
-         }
-         else if (is27Dec && results[i].time.toUpperCase().indexOf('AM') > 0 &&  parseInt(results[i].time.substr(0,2)) < 10)
-         {
-            finalResults.push(new TimeSlot(results[i].time, false));
-         }
-         else 
-         {
-             finalResults.push(results[i]);
-         }  
+        const isDateHoliday = await isHoliday(date);
+        if (isDateHoliday) {
+          finalResults.push(new TimeSlot(results[i].time, false));
+        } else if (isToday && TimePast(results[i].time)) {
+          finalResults.push(new TimeSlot(results[i].time, false));
+        } else if (is24Dec && results[i].time.toUpperCase().indexOf("PM") > 0) {
+          finalResults.push(new TimeSlot(results[i].time, false));
+        } else if (
+          is27Dec &&
+          results[i].time.toUpperCase().indexOf("PM") > 0 &&
+          parseInt(results[i].time.substr(0, 2)) >= 5 &&
+          parseInt(results[i].time.substr(0, 2)) !== 12
+        ) {
+          finalResults.push(new TimeSlot(results[i].time, false));
+        } else if (
+          is27Dec &&
+          results[i].time.toUpperCase().indexOf("AM") > 0 &&
+          parseInt(results[i].time.substr(0, 2)) < 10
+        ) {
+          finalResults.push(new TimeSlot(results[i].time, false));
+        } else {
+          finalResults.push(results[i]);
+        }  
 
         }
     return finalResults;
@@ -149,12 +147,16 @@ const isWeekend = (date) =>
     return (date.getDay() === 0 || date.getDay() === 6) /// Weekend
 }
 
-const isHoliday = (date) =>
-{
-    const todayStr = dateformat(new Date(),'yyyy-mm-dd');
-    return (holidays.find(element => dateformat(element,'yyyy-mm-dd') === dateformat(date,'yyyy-mm-dd')) ||  dateformat(date,'yyyy-mm-dd') < todayStr);
-}
-
+const isHoliday = async (date) => {
+  const todayStr = dateformat(new Date(), "yyyy-mm-dd");
+  const holidays = await getHolidays();
+  return (
+    holidays.find(
+      (element) =>
+        dateformat(element, "yyyy-mm-dd") === dateformat(date, "yyyy-mm-dd")
+    ) || dateformat(date, "yyyy-mm-dd") < todayStr
+  );
+};
 
 
 module.exports = {

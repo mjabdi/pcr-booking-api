@@ -42,6 +42,7 @@ const adminBookService =  require('./../services/admin/booking-service');
 
 const MedexUserService = require('./../services/medex/user/user-service')
 const InvoiceService = require('./../services/medex/invoice-service')
+const OffDaysService = require("./../services/medex/offdays-service");
 
 const OptimalVisionBookService =  require('./../services/optimalvision/booking-service')
 const OptimalVisionUserService =  require('./../services/optimalvision/user-service')
@@ -124,6 +125,7 @@ router.use('/corporate/book', corporateBookService);
 /// Medex -----------------------------
 router.use('/medex/user', MedexUserService)
 router.use('/medex/invoice', InvoiceService)
+router.use("/medex/offdays", OffDaysService);
 router.use('/medex/payment', medexPaymentService)
 
 /// Admin

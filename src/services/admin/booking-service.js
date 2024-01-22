@@ -7,7 +7,6 @@ const { BloodBooking } = require("../../models/blood/BloodBooking");
 const { ScreeningBooking } = require("../../models/screening/ScreeningBooking");
 const { CorporateBooking } = require("../../models/corporate/CorporateBooking");
 
-
 const { Booking } = require("../../models/Booking");
 
 const dateformat = require("dateformat");
@@ -21,7 +20,7 @@ const {
   NOTIFY_TYPE,
 } = require("../mail-notification-service");
 const getNewRef = require("../refgenatator-service");
-const {DermaBooking} = require("../../models/derma/DermaBooking");
+const { DermaBooking } = require("../../models/derma/DermaBooking");
 
 const DEFAULT_LIMIT = 25;
 
@@ -182,24 +181,20 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
     const visaCount = await ScreeningBooking.countDocuments({
       bookingDate: dateStr,
       deleted: { $ne: true },
-      service: { $regex : /^VISA MEDICAL/ }
-
+      service: { $regex: /^VISA MEDICAL/ },
     }).exec();
 
-
     const result = [
-      {clinic: "pcr", count: pcrCount},
-      {clinic: "gynae", count: gynaeCount},
-      {clinic: "gp", count: gpCount},
-      {clinic: "std", count: stdCount},
-      {clinic: "blood", count: bloodCount},
-      {clinic: "derma", count: dermaCount},
-      {clinic: "screening", count: (screeningCount - visaCount)},
-      {clinic: "corporate", count: corporateCount},
-      {clinic: "visa", count: visaCount},
-
-
-    ]
+      { clinic: "pcr", count: pcrCount },
+      { clinic: "gynae", count: gynaeCount },
+      { clinic: "gp", count: gpCount },
+      { clinic: "std", count: stdCount },
+      { clinic: "blood", count: bloodCount },
+      { clinic: "derma", count: dermaCount },
+      { clinic: "screening", count: screeningCount - visaCount },
+      { clinic: "corporate", count: corporateCount },
+      { clinic: "visa", count: visaCount },
+    ];
 
     res.status(200).send({ status: "OK", count: result });
   } catch (err) {
@@ -247,12 +242,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const result = await GPBooking.countDocuments({
@@ -276,12 +269,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const gpCount = await GPBooking.countDocuments({
@@ -289,19 +280,19 @@ router.get(
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
-  
+
       const pcrCount = await Booking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
-  
+
       const stdCount = await STDBooking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
-  
+
       const gynaeCount = await GynaeBooking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
@@ -331,34 +322,28 @@ router.get(
         bookingTime: timeStr,
         deleted: { $ne: true },
       }).exec();
-  
 
       const visaCount = await ScreeningBooking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
         deleted: { $ne: true },
-        service: { $regex : /^VISA MEDICAL/ }
-  
+        service: { $regex: /^VISA MEDICAL/ },
       }).exec();
 
-  
       const result = [
-        {clinic: "pcr", count: pcrCount},
-        {clinic: "gynae", count: gynaeCount},
-        {clinic: "gp", count: gpCount},
-        {clinic: "std", count: stdCount},
-        {clinic: "blood", count: bloodCount},
-        {clinic: "derma", count: dermaCount},
-        {clinic: "screening", count: (screeningCount - visaCount)},
-        {clinic: "corporate", count: corporateCount},
-        {clinic: "visa", count: visaCount},
+        { clinic: "pcr", count: pcrCount },
+        { clinic: "gynae", count: gynaeCount },
+        { clinic: "gp", count: gpCount },
+        { clinic: "std", count: stdCount },
+        { clinic: "blood", count: bloodCount },
+        { clinic: "derma", count: dermaCount },
+        { clinic: "screening", count: screeningCount - visaCount },
+        { clinic: "corporate", count: corporateCount },
+        { clinic: "visa", count: visaCount },
+      ];
 
-
-
-      ]
-  
       res.status(200).send({ status: "OK", count: result });
-      } catch (err) {
+    } catch (err) {
       console.log(err);
       res.status(500).send({ status: "FAILED", error: err.message });
     }
@@ -405,9 +390,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
       {
         $match: {
           $and: [
-            {bookingDate: dateStr},
-            {bookingTime: timeStr},
-            {deleted: { $ne: true }},
+            { bookingDate: dateStr },
+            { bookingTime: timeStr },
+            { deleted: { $ne: true } },
           ],
         },
       },
@@ -421,9 +406,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -441,9 +426,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -461,9 +446,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -481,9 +466,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -501,9 +486,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -521,10 +506,10 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {service: { $regex : /^(?!VISA MEDICAL)\w+/ }},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { service: { $regex: /^(?!VISA MEDICAL)\w+/ } },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -542,10 +527,10 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {service: { $regex : /^VISA MEDICAL/ }},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { service: { $regex: /^VISA MEDICAL/ } },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -557,7 +542,6 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
         },
       },
 
-
       {
         $unionWith: {
           coll: "corporatebookings",
@@ -565,9 +549,9 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
             {
               $match: {
                 $and: [
-                  {bookingDate: dateStr},
-                  {bookingTime: timeStr},
-                  {deleted: { $ne: true }},
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
                 ],
               },
             },
@@ -578,9 +562,6 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
           ],
         },
       },
-
-
-
 
       {
         $sort: { timeStamp: 1 },
@@ -720,10 +701,6 @@ router.get("/getallbookings", async function (req, res, next) {
         },
       },
 
-
-
-
-
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
@@ -739,18 +716,17 @@ router.get("/getallbookings", async function (req, res, next) {
 
 router.post("/searchallbookings", async function (req, res, next) {
   try {
-    const {filter} = req.body
+    const { filter } = req.body;
 
-    const regexp = new RegExp(filter,"i")
+    const regexp = new RegExp(filter, "i");
 
-    const condition = {fullname: {$regex: regexp }}
+    const condition = { fullname: { $regex: regexp } };
 
     const result = await Booking.aggregate([
-      { $addFields: { fullname: { $concat: [ "$forename", " ", "$surname" ] } } },
+      { $addFields: { fullname: { $concat: ["$forename", " ", "$surname"] } } },
       {
         $match: {
           $and: [{ deleted: { $ne: true } }, condition],
-          
         },
       },
       {
@@ -763,7 +739,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -780,7 +755,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -797,7 +771,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -814,7 +787,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -831,7 +803,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -848,7 +819,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -866,7 +836,6 @@ router.post("/searchallbookings", async function (req, res, next) {
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -877,17 +846,14 @@ router.post("/searchallbookings", async function (req, res, next) {
         },
       },
 
-
-
       {
         $unionWith: {
           coll: "bloodreports",
           pipeline: [
-            { $addFields: { fullname: "$name"} },
+            { $addFields: { fullname: "$name" } },
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
-                
               },
             },
 
@@ -898,7 +864,6 @@ router.post("/searchallbookings", async function (req, res, next) {
         },
       },
 
-
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
@@ -906,14 +871,13 @@ router.post("/searchallbookings", async function (req, res, next) {
       .limit(100)
       .exec();
 
-      // console.log(result)
-     
+    // console.log(result)
+
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 });
-
 
 router.get("/getdeletedbookings", async function (req, res, next) {
   try {
@@ -1040,9 +1004,6 @@ router.get("/getdeletedbookings", async function (req, res, next) {
           ],
         },
       },
-
-
-
 
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
@@ -1184,14 +1145,10 @@ router.get("/gettodaybookings", async function (req, res, next) {
         },
       },
 
-
-
-
       {
         $sort: { bookingTimeNormalized: 1 },
       },
-    ])
-      .exec();
+    ]).exec();
 
     res.status(200).send(result);
   } catch (err) {
@@ -1346,9 +1303,6 @@ router.get("/getoldbookings", async function (req, res, next) {
           ],
         },
       },
-
-
-
 
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
@@ -1511,9 +1465,6 @@ router.get("/getfuturebookings", async function (req, res, next) {
         },
       },
 
-
-
-
       {
         $sort: { bookingDate: 1, bookingTimeNormalized: 1 },
       },
@@ -1664,9 +1615,6 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
         },
       },
 
-
-
-
       {
         $sort: { timeStamp: -1 },
       },
@@ -1806,9 +1754,6 @@ router.get("/getbookingsbyref", async function (req, res, next) {
         },
       },
 
-
-
-
       {
         $sort: { timeStamp: -1 },
       },
@@ -1826,9 +1771,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
     const result = await Booking.aggregate([
       {
         $match: {
-          $and: [
-            {_id: req.query.id},
-          ],
+          $and: [{ _id: req.query.id }],
         },
       },
       {
@@ -1840,9 +1783,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1858,9 +1799,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1876,9 +1815,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1894,9 +1831,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1912,9 +1847,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1930,9 +1863,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1949,9 +1880,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
           pipeline: [
             {
               $match: {
-                $and: [
-                  {_id: req.query.id},
-                ],
+                $and: [{ _id: req.query.id }],
               },
             },
 
@@ -1962,7 +1891,6 @@ router.get("/getbookingbyid", async function (req, res, next) {
         },
       },
 
-
       {
         $sort: { timeStamp: 1 },
       },
@@ -1971,7 +1899,7 @@ router.get("/getbookingbyid", async function (req, res, next) {
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send({ status: "FAILED", error: err.message });
-    console.log(err)
+    console.log(err);
   }
 });
 
@@ -2029,13 +1957,11 @@ router.post("/bookappointment", async function (req, res, next) {
     });
 
     if (found) {
-      res
-        .status(200)
-        .send({
-          status: "FAILED",
-          error: "Repeated Booking!",
-          person: req.body,
-        });
+      res.status(200).send({
+        status: "FAILED",
+        error: "Repeated Booking!",
+        person: req.body,
+      });
       return;
     }
 
@@ -2044,7 +1970,8 @@ router.post("/bookappointment", async function (req, res, next) {
       timeStamp: new Date(),
     });
 
-    if (!checkBookingTime(booking)) {
+    const isTimeAvailable = await checkBookingTime();
+    if (!isTimeAvailable) {
       const alaram = new Notification({
         timeStamp: new Date(),
         type: "InvalidBooking-GP",
@@ -2275,7 +2202,7 @@ function timePassed(bookingDate) {
   return bookingDate < todayStr;
 }
 
-function checkBookingTime(booking) {
+async function checkBookingTime(booking) {
   const bookingDateStr = booking.bookingDate;
   const bookingTime = booking.bookingTime;
 
@@ -2284,15 +2211,16 @@ function checkBookingTime(booking) {
 
   if (bookingDateStr < todayStr) return false;
 
+  const holidays = await getHolidays();
   if (
-    getHolidays().find(
+    holidays.find(
       (element) => dateformat(element, "yyyy-mm-dd") === bookingDateStr
     )
   ) {
     return false;
   }
 
-  const validTimeSlots = getDefaultTimeSlots(bookingDate);
+  const validTimeSlots = await getDefaultTimeSlots(bookingDate);
 
   // console.log(validTimeSlots);
   // console.log(bookingTime);

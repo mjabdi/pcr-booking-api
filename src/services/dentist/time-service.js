@@ -42,8 +42,9 @@ router.get('/getfirstavaiabledate', function(req, res, next) {
 });
 
 /// Get Fully Booked Days Date
-router.get('/getfullybookeddays', function(req, res, next) {
-    res.send(getHolidays());
+router.get("/getfullybookeddays", async function (req, res, next) {
+  const result = await getHolidays();
+  res.send(result);
 });
 
 
@@ -66,7 +67,7 @@ router.get('/gettimeslots', async function(req, res, next) {
 
     try{
 
-        const defaultTimeSlots = getDefaultTimeSlots(date);     
+        const defaultTimeSlots = await getDefaultTimeSlots(date);     
        
          const result2 = await DentistBooking.aggregate([
             {
