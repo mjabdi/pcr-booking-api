@@ -1970,7 +1970,7 @@ router.post("/bookappointment", async function (req, res, next) {
       timeStamp: new Date(),
     });
 
-    const isTimeAvailable = await checkBookingTime();
+    const isTimeAvailable = await checkBookingTime(booking);
     if (!isTimeAvailable) {
       const alaram = new Notification({
         timeStamp: new Date(),

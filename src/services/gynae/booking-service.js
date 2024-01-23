@@ -241,12 +241,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const result = await GynaeBooking.countDocuments({
@@ -270,12 +268,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const result = await GynaeBooking.countDocuments({
@@ -552,13 +548,11 @@ router.post("/bookappointment", async function (req, res, next) {
     });
 
     if (found) {
-      res
-        .status(200)
-        .send({
-          status: "FAILED",
-          error: "Repeated Booking!",
-          person: req.body,
-        });
+      res.status(200).send({
+        status: "FAILED",
+        error: "Repeated Booking!",
+        person: req.body,
+      });
       return;
     }
 
@@ -567,7 +561,7 @@ router.post("/bookappointment", async function (req, res, next) {
       timeStamp: new Date(),
     });
 
-    const isTimeAvailable = await checkBookingTime();
+    const isTimeAvailable = await checkBookingTime(booking);
     if (!isTimeAvailable) {
       const alaram = new Notification({
         timeStamp: new Date(),

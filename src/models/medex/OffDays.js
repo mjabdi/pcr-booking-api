@@ -11,7 +11,7 @@ const OffDaysSchema = new mongoose.Schema({
   },
   service: {
     type: String,
-    required: true
+    required: true,
   },
   timeStamp: {
     type: Date,

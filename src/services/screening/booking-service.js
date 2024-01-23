@@ -65,12 +65,10 @@ router.post("/downloadpdfreport", async function (req, res, next) {
     if (!id) throw new Error();
   } catch (err) {
     console.error(err.message);
-    res
-      .status(400)
-      .send({
-        status: "FAILED",
-        error: "id parameter is not in correct format",
-      });
+    res.status(400).send({
+      status: "FAILED",
+      error: "id parameter is not in correct format",
+    });
     return;
   }
 
@@ -324,12 +322,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const result = await ScreeningBooking.countDocuments({
@@ -353,12 +349,10 @@ router.get(
       const dateStr = req.query.date;
       const timeStr = req.query.time;
       if (!dateStr || dateStr.length <= 0) {
-        res
-          .status(400)
-          .send({
-            status: "FAILED",
-            error: "datestr query param not present!",
-          });
+        res.status(400).send({
+          status: "FAILED",
+          error: "datestr query param not present!",
+        });
         return;
       }
       const result = await ScreeningBooking.countDocuments({
@@ -703,13 +697,11 @@ router.post("/bookappointment", async function (req, res, next) {
     });
 
     if (found) {
-      res
-        .status(200)
-        .send({
-          status: "FAILED",
-          error: "Repeated Booking!",
-          person: req.body,
-        });
+      res.status(200).send({
+        status: "FAILED",
+        error: "Repeated Booking!",
+        person: req.body,
+      });
       return;
     }
 
@@ -718,7 +710,7 @@ router.post("/bookappointment", async function (req, res, next) {
       confirmed: true,
       timeStamp: new Date(),
     });
-    const isTimeAvailable = await checkBookingTime();
+    const isTimeAvailable = await checkBookingTime(booking);
     if (!isTimeAvailable) {
       const alaram = new Notification({
         timeStamp: new Date(),
@@ -731,8 +723,9 @@ router.post("/bookappointment", async function (req, res, next) {
         .send({ status: "FAILED", error: "FullTime", person: req.body });
       return;
     }
-
+    console.log("save");
     await booking.save();
+    console.log("saved");
 
     await sendConfirmationEmail(booking);
 
@@ -1045,7 +1038,6 @@ const validateBookAppointment = (body) => {
   }
 
   body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
-
   return true;
 };
 
