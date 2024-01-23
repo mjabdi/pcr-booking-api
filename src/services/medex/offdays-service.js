@@ -24,10 +24,11 @@ router.get("/", async function (req, res, next) {
 
 router.post("/add", async function (req, res, next) {
   try {
-    const { date, service } = req.body;
+    const { date, service, offset } = req.body;
     const offDays = new OffDays({
       date: date,
       service: service,
+      offset: offset || 0
     });
     await offDays.save();
     res.status(200).send({ status: "OK" });
