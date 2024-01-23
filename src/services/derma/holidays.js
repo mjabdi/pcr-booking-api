@@ -26,9 +26,9 @@ const getHolidays = async () => {
     startingHourSunday,
     endingHourSunday,
     periodSunday,
-  } = await WorkingHours.findOne({ service: "derma" });
+  } = (await WorkingHours.findOne({ service: "derma" })) || {};
   let notSetDates = [];
-  if (startingHourMonday || endingHourMonday || periodMonday) {
+  if (!startingHourMonday || !endingHourMonday || !periodMonday) {
     for (
       let now = new Date(
         new Date(new Date().setDate(1)).setHours(0, 0, 0)

@@ -28,13 +28,17 @@ const getHolidays = async () => {
     periodSunday,
   } = await WorkingHours.findOne({ service: "blood" });
   let notSetDates = []
-  if(startingHourMonday ||
-    endingHourMonday ||
-    periodMonday){
-      for(let now = new Date(new Date(new Date().setDate(1)).setHours(0,0,0)).getTime(); now < new Date().getTime() + 1000*60*60*24*365 ; now+= 1000*60*60*24*7){
-        notSetDates.push(now)
-      }
+  if (!startingHourMonday || !endingHourMonday || !periodMonday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(1)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
+  }
     if (!startingHourTuesday || !endingHourTuesday || !periodTuesday) {
       for (
         let now = new Date(
