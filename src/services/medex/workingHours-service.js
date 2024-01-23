@@ -20,63 +20,84 @@ router.post("/add", async function (req, res, next) {
   try {
     const {
       service,
-      startingHour,
-      endingHour,
-      period,
-      unavailabelTimes,
-      weekendStartingHour,
-      weekendEndingHour,
-      weekendPeriod,
-      weekendUnavailabelTimes,
+      startingHourMonday,
+      endingHourMonday,
+      periodMonday,
+      startingHourTuesday,
+      endingHourTuesday,
+      periodTuesday,
+      startingHourWednesday,
+      endingHourWednesday,
+      periodWednesday,
+      startingHourThursday,
+      endingHourThursday,
+      periodThursday,
+      startingHourFriday,
+      endingHourFriday,
+      periodFriday,
+      startingHourSaturday,
+      endingHourSaturday,
+      periodSaturday,
+      startingHourSunday,
+      endingHourSunday,
+      periodSunday,
     } = req.body;
 
     if (!service) {
       throw Error("service is reauired");
-    }
-    if (!startingHour) {
-      throw Error("startingHour is reauired");
-    }
-    if (!endingHour) {
-      throw Error("endingHour is reauired");
-    }
-    if (!period) {
-      throw Error("period is reauired");
-    }
-    if (!weekendStartingHour) {
-      throw Error("weekendStartingHour is reauired");
-    }
-    if (!weekendEndingHour) {
-      throw Error("weekendEndingHour is reauired");
-    }
-    if (!weekendPeriod) {
-      throw Error("weekendPeriod is reauired");
     }
     const specificServiceWorkingHours = await WorkingHours.findOne({
       service: service,
     });
     if (specificServiceWorkingHours?._id) {
       await WorkingHours.findByIdAndUpdate(specificServiceWorkingHours?._id, {
-        startingHour: startingHour,
-        endingHour: endingHour,
-        period: period,
-        unavailabelTimes: unavailabelTimes,
-        weekendStartingHour: weekendStartingHour,
-        weekendEndingHour: weekendEndingHour,
-        weekendPeriod: weekendPeriod,
-        weekendUnavailabelTimes: weekendUnavailabelTimes,
+        startingHourMonday: startingHourMonday,
+        endingHourMonday: endingHourMonday,
+        periodMonday: periodMonday,
+        startingHourTuesday: startingHourTuesday,
+        endingHourTuesday: endingHourTuesday,
+        periodTuesday: periodTuesday,
+        startingHourWednesday: startingHourWednesday,
+        endingHourWednesday: endingHourWednesday,
+        periodWednesday: periodWednesday,
+        startingHourThursday: startingHourThursday,
+        endingHourThursday: endingHourThursday,
+        periodThursday: periodThursday,
+        startingHourFriday: startingHourFriday,
+        endingHourFriday: endingHourFriday,
+        periodFriday: periodFriday,
+        startingHourSaturday: startingHourSaturday,
+        endingHourSaturday: endingHourSaturday,
+        periodSaturday: periodSaturday,
+        startingHourSunday: startingHourSunday,
+        endingHourSunday: endingHourSunday,
+        periodSunday: periodSunday,
       });
       res.status(200).send({ status: "OK" });
     } else {
       const offDays = new WorkingHours({
         service: service,
-        startingHour: startingHour,
-        endingHour: endingHour,
-        period: period,
-        unavailabelTimes: unavailabelTimes,
-        weekendStartingHour: weekendStartingHour,
-        weekendEndingHour: weekendEndingHour,
-        weekendPeriod: weekendPeriod,
-        weekendUnavailabelTimes: weekendUnavailabelTimes,
+        startingHourMonday: startingHourMonday,
+        endingHourMonday: endingHourMonday,
+        periodMonday: periodMonday,
+        startingHourTuesday: startingHourTuesday,
+        endingHourTuesday: endingHourTuesday,
+        periodTuesday: periodTuesday,
+        startingHourWednesday: startingHourWednesday,
+        endingHourWednesday: endingHourWednesday,
+        periodWednesday: periodWednesday,
+        startingHourThursday: startingHourThursday,
+        endingHourThursday: endingHourThursday,
+        periodThursday: periodThursday,
+        startingHourFriday: startingHourFriday,
+        endingHourFriday: endingHourFriday,
+        periodFriday: periodFriday,
+        startingHourSaturday: startingHourSaturday,
+        endingHourSaturday: endingHourSaturday,
+        periodSaturday: periodSaturday,
+        startingHourSunday: startingHourSunday,
+        endingHourSunday: endingHourSunday,
+        periodSunday: periodSunday,
       });
       await offDays.save();
       res.status(201).send({ status: "OK" });

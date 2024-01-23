@@ -4,14 +4,115 @@ const { OffDays } = require("./../../models/medex/OffDays");
 const { WorkingHours } = require("./../../models/medex/WorkingHours");
 
 const getHolidays = async () => {
+  const {
+    startingHourMonday,
+    endingHourMonday,
+    periodMonday,
+    startingHourTuesday,
+    endingHourTuesday,
+    periodTuesday,
+    startingHourWednesday,
+    endingHourWednesday,
+    periodWednesday,
+    startingHourThursday,
+    endingHourThursday,
+    periodThursday,
+    startingHourFriday,
+    endingHourFriday,
+    periodFriday,
+    startingHourSaturday,
+    endingHourSaturday,
+    periodSaturday,
+    startingHourSunday,
+    endingHourSunday,
+    periodSunday,
+  } = await WorkingHours.findOne({ service: "optimalvision" });
+  let notSetDates = [];
+  if (startingHourMonday || endingHourMonday || periodMonday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(1)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourTuesday || !endingHourTuesday || !periodTuesday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(2)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourWednesday || !endingHourWednesday || !periodWednesday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(3)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourThursday || !endingHourThursday || !periodThursday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(4)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourFriday || !endingHourFriday || !periodFriday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(5)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourSaturday || !endingHourSaturday || !periodSaturday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(6)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
+  if (!startingHourSunday || !endingHourSunday || !periodSunday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(0)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
+    }
+  }
   const offDays = await OffDays.find({
     $or: [{ service: "optimalvision" }, { service: "clinic" }],
   });
-  offDays.map((el) => el.date);
   const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let result = [
     ...offDays.map((el) => new Date(el.date.getTime() - el.offset * 60000)),
     yesterday,
+    ...notSetDates,
   ];
   return result;
 };
@@ -20,74 +121,97 @@ const getDefaultTimeSlots = async (date) => {
   // console.log(date);
   const someDate = new Date(date);
   //   console.log(someDate);
+  const {
+    startingHourMonday,
+    endingHourMonday,
+    periodMonday,
+    startingHourTuesday,
+    endingHourTuesday,
+    periodTuesday,
+    startingHourWednesday,
+    endingHourWednesday,
+    periodWednesday,
+    startingHourThursday,
+    endingHourThursday,
+    periodThursday,
+    startingHourFriday,
+    endingHourFriday,
+    periodFriday,
+    startingHourSaturday,
+    endingHourSaturday,
+    periodSaturday,
+    startingHourSunday,
+    endingHourSunday,
+    periodSunday,
+  } = await WorkingHours.findOne({ service: "optimalvision" });
+  const results = [];
+  const finalResults = [];
 
-  const result = await WorkingHours.findOne({ service: "optimalvision" });
-
-  const startingHour = result?.startingHour || 10;
-  const endingHour = result?.endingHour || 17;
-  const unavailabelTimes = result?.unavailabelTimes || [];
-  const period = result?.period || 0.5;
-
-  const weekendStartingHour = result?.weekendStartingHour || 10;
-  const weekendEndingHour = result?.weekendEndingHour || 13;
-  const weekendUnavailabelTimes = result?.weekendUnavailabelTimes || [];
-  const weekendPeriod = result?.weekendPeriod || 0.5;
-
-  const normalTimeSlots = [];
-
-  const weekendTimeSlots = [];
-
-  for (let h = startingHour; h <= endingHour; h += period) {
-    const time = `${
-      h < 13
-        ? Math.floor(h).toLocaleString("en-UK", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          })
-        : Math.floor(h - 12).toLocaleString("en-UK", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          })
-    }:${Math.floor((h % 1) * 60).toLocaleString("en-UK", {
-      minimumIntegerDigits: 2,
-      useGrouping: false,
-    })} ${h < 12 ? "AM" : "PM"}`;
-    if (!unavailabelTimes.includes(time)) {
-      normalTimeSlots.push(new TimeSlot(time, true));
+  let startingHour = null;
+  let endingHour = null;
+  let period = null;
+  if (dayOfWeek(someDate) === 1) {
+    [startingHour, endingHour, period] = [
+      startingHourMonday,
+      endingHourMonday,
+      periodMonday,
+    ];
+  } else if (dayOfWeek(someDate) === 2) {
+    [startingHour, endingHour, period] = [
+      startingHourTuesday,
+      endingHourTuesday,
+      periodTuesday,
+    ];
+  } else if (dayOfWeek(someDate) === 3) {
+    [startingHour, endingHour, period] = [
+      startingHourWednesday,
+      endingHourWednesday,
+      periodWednesday,
+    ];
+  } else if (dayOfWeek(someDate) === 4) {
+    [startingHour, endingHour, period] = [
+      startingHourThursday,
+      endingHourThursday,
+      periodThursday,
+    ];
+  } else if (dayOfWeek(someDate) === 5) {
+    [startingHour, endingHour, period] = [
+      startingHourFriday,
+      endingHourFriday,
+      periodFriday,
+    ];
+  } else if (dayOfWeek(someDate) === 6) {
+    [startingHour, endingHour, period] = [
+      startingHourSaturday,
+      endingHourSaturday,
+      periodSaturday,
+    ];
+  } else if (dayOfWeek(someDate) === 0) {
+    [startingHour, endingHour, period] = [
+      startingHourSunday,
+      endingHourSunday,
+      periodSunday,
+    ];
+  }
+  if (startingHour && endingHour && period) {
+    for (let h = startingHour; h <= endingHour; h += period) {
+      const time = `${
+        h < 13
+          ? Math.floor(h).toLocaleString("en-UK", {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            })
+          : Math.floor(h - 12).toLocaleString("en-UK", {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            })
+      }:${Math.floor((h % 1) * 60).toLocaleString("en-UK", {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      })} ${h < 12 ? "AM" : "PM"}`;
+      results.push(new TimeSlot(time, true));
     }
   }
-  for (
-    let h = weekendStartingHour;
-    h <= weekendEndingHour;
-    h += weekendPeriod
-  ) {
-    const time = `${
-      h < 13
-        ? Math.floor(h).toLocaleString("en-UK", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          })
-        : Math.floor(h - 12).toLocaleString("en-UK", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          })
-    }:${Math.floor((h % 1) * 60).toLocaleString("en-UK", {
-      minimumIntegerDigits: 2,
-      useGrouping: false,
-    })} ${h < 12 ? "AM" : "PM"}`;
-    if (!weekendUnavailabelTimes.includes(time)) {
-      weekendTimeSlots.push(new TimeSlot(time, true));
-    }
-  }
-  var results = [];
-  var finalResults = [];
-
-  if (isWeekend(someDate)) {
-    results = weekendTimeSlots;
-  } else {
-    results = normalTimeSlots;
-  }
-
   const dateStr = dateformat(someDate, "yyyy-mm-dd");
   const todayStr = dateformat(new Date(), "yyyy-mm-dd");
   const isToday = dateStr === todayStr;
@@ -106,6 +230,10 @@ const getDefaultTimeSlots = async (date) => {
       }
     }
   return finalResults;
+};
+
+const dayOfWeek = (date) => {
+  return date.getDay();
 };
 
 function TimePast(time) {

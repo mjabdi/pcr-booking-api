@@ -6,37 +6,89 @@ const WorkingHoursSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  startingHour: {
+  startingHourMonday: {
     type: Number,
-    required: true,
+    default: null,
   },
-  endingHour: {
+  endingHourMonday: {
     type: Number,
-    required: true,
+    default: null,
   },
-  period: {
+  periodMonday: {
     type: Number,
-    default: 0.5,
+    default: null,
   },
-  unavailabelTimes: {
-    type: [String],
-    default: [],
-  },
-  weekendStartingHour: {
+  startingHourTuesday: {
     type: Number,
-    required: true,
+    default: null,
   },
-  weekendEndingHour: {
+  endingHourTuesday: {
     type: Number,
-    required: true,
+    default: null,
   },
-  weekendPeriod: {
+  periodTuesday: {
     type: Number,
-    default: 0.5,
+    default: null,
   },
-  weekendUnavailabelTimes: {
-    type: [String],
-    default: [],
+  startingHourWednesday: {
+    type: Number,
+    default: null,
+  },
+  endingHourWednesday: {
+    type: Number,
+    default: null,
+  },
+  periodWednesday: {
+    type: Number,
+    default: null,
+  },
+  startingHourThursday: {
+    type: Number,
+    default: null,
+  },
+  endingHourThursday: {
+    type: Number,
+    default: null,
+  },
+  periodThursday: {
+    type: Number,
+    default: null,
+  },
+  startingHourFriday: {
+    type: Number,
+    default: null,
+  },
+  endingHourFriday: {
+    type: Number,
+    default: null,
+  },
+  periodFriday: {
+    type: Number,
+    default: null,
+  },
+  startingHourSaturday: {
+    type: Number,
+    default: null,
+  },
+  endingHourSaturday: {
+    type: Number,
+    default: null,
+  },
+  periodSaturday: {
+    type: Number,
+    default: null,
+  },
+  startingHourSunday: {
+    type: Number,
+    default: null,
+  },
+  endingHourSunday: {
+    type: Number,
+    default: null,
+  },
+  periodSunday: {
+    type: Number,
+    default: null,
   },
 });
 
