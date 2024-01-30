@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { OldPatients } = require("../../models/medex/OldPatients");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const { Booking } = require("../../models/Booking");
 router.post("/search", async function (req, res, next) {
   try {
@@ -335,7 +337,7 @@ router.post("/search", async function (req, res, next) {
           count: {
             $sum: 1,
           },
-          bookings: {
+          allbookings: {
             $addToSet: "$$ROOT",
           },
           // Include additional fields in the group without affecting uniqueness
@@ -369,6 +371,13 @@ router.post("/search", async function (req, res, next) {
         },
       },
       {
+        $addFields: {
+          bookings: {
+            $sortArray: { input: "$allbookings", sortBy: { timeStamp: -1 } },
+          },
+        },
+      },
+      {
         $project: {
           _id: 0,
           fullname: "$fullname",
@@ -382,6 +391,17 @@ router.post("/search", async function (req, res, next) {
           postCode: 1,
           passportNumber: 1,
           bookings: 1,
+        },
+      },
+      {
+        $addFields: {
+          _id: {
+            $concat: [
+              {
+                $toString: { $trunc: { $multiply: [{ $rand: {} }, 100000000] } },
+              },
+            ],
+          },
         },
       },
     ])
