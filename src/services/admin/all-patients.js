@@ -207,6 +207,9 @@ router.post("/search", async function (req, res, next) {
                 $and: [{ deleted: { $ne: true } }, condition],
               },
             },
+            {
+              $addFields: { clinic: "Old Data" },
+            },
           ],
         },
       },
@@ -215,13 +218,36 @@ router.post("/search", async function (req, res, next) {
           birthDate: {
             $cond: {
               if: {
-                $eq: [{ $type: "$birthDate" }, "date"],
+                $eq: [
+                  {
+                    $type: "$birthDate",
+                  },
+                  "date",
+                ],
               },
               then: "$birthDate",
               else: {
-                $dateFromString: {
-                  dateString: "$birthDate",
-                  format: "%Y-%m-%d",
+                $cond: {
+                  if: {
+                    $eq: [
+                      {
+                        $type: {
+                          $dateFromString: {
+                            dateString: "$birthDate",
+                            format: "%Y-%m-%d",
+                          },
+                        },
+                      },
+                      "date",
+                    ],
+                  },
+                  then: {
+                    $dateFromString: {
+                      dateString: "$birthDate",
+                      format: "%Y-%m-%d",
+                    },
+                  },
+                  else: null,
                 },
               },
             },
