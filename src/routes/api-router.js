@@ -33,6 +33,7 @@ const corporateTimeService = require("./../services/corporate/time-service");
 const corporateBookService = require("./../services/corporate/booking-service");
 
 const adminBookService = require("./../services/admin/booking-service");
+const adminAllPatients = require("./../services/admin/all-patients");
 
 const MedexUserService = require("./../services/medex/user/user-service");
 const InvoiceService = require("./../services/medex/invoice-service");
@@ -114,6 +115,7 @@ router.use("/medex/payment", medexPaymentService);
 
 /// Admin
 router.use("/admin/book", adminBookService);
+router.use("/admin/patients", adminAllPatients);
 
 /// Optimal Vision
 router.use("/optimalvision/book", OptimalVisionBookService);

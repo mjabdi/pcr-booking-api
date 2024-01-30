@@ -717,11 +717,12 @@ router.get("/getallbookings", async function (req, res, next) {
 router.post("/searchallbookings", async function (req, res, next) {
   try {
     const { filter } = req.body;
+    console.log(filter)
 
     const regexp = new RegExp(filter, "i");
-
+    console.log(regexp);
     const condition = { fullname: { $regex: regexp } };
-
+    console.log(condition);
     const result = await Booking.aggregate([
       { $addFields: { fullname: { $concat: ["$forename", " ", "$surname"] } } },
       {
