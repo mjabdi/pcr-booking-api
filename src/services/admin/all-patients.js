@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { OldPatients } = require("../../models/medex/OldPatients");
-const { Booking } = require("../../models/Booking")
+const { Booking } = require("../../models/Booking");
 router.post("/search", async function (req, res, next) {
   try {
     const { filter } = req.body;
     const regexp = new RegExp(filter, "i");
     const condition = { fullname: { $regex: regexp } };
-    console.log(condition)
+    console.log(condition);
     const result = await Booking.aggregate([
       { $addFields: { fullname: { $concat: ["$forename", " ", "$surname"] } } },
       {
@@ -212,6 +212,20 @@ router.post("/search", async function (req, res, next) {
       },
       {
         $addFields: {
+          birthDate: {
+            $cond: {
+              if: {
+                $eq: [{ $type: "$birthDate" }, "date"],
+              },
+              then: "$birthDate",
+              else: {
+                $dateFromString: {
+                  dateString: "$birthDate",
+                  format: "%Y-%m-%d",
+                },
+              },
+            },
+          },
           gender: {
             $toLower: {
               $cond: {
