@@ -310,7 +310,7 @@ router.post("/search", async function (req, res, next) {
             $sum: 1,
           },
           bookings: {
-            $addToSet: "$_id",
+            $addToSet: "$$ROOT",
           },
           // Include additional fields in the group without affecting uniqueness
           title: {
