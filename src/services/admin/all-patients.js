@@ -297,11 +297,6 @@ router.post("/search", async function (req, res, next) {
                 $nin: [null, "", "-"],
               },
             },
-            {
-              gender: {
-                $nin: [null, "", "-"],
-              },
-            },
           ],
         },
       },
@@ -310,7 +305,6 @@ router.post("/search", async function (req, res, next) {
           _id: {
             fullname: "$fullname",
             birthDate: "$birthDate",
-            gender: "$gender",
           },
           count: {
             $sum: 1,
