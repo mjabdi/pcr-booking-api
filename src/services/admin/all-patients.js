@@ -138,7 +138,7 @@ router.post("/search", async function (req, res, next) {
         $unionWith: {
           coll: "bloodreports",
           pipeline: [
-            { $addFields: { fullname: "$name" } },
+            { $addFields: { fullname: "$name", bookingDate: "$testDate" } },
             {
               $match: {
                 $and: [{ deleted: { $ne: true } }, condition],
@@ -398,7 +398,9 @@ router.post("/search", async function (req, res, next) {
           _id: {
             $concat: [
               {
-                $toString: { $trunc: { $multiply: [{ $rand: {} }, 100000000] } },
+                $toString: {
+                  $trunc: { $multiply: [{ $rand: {} }, 100000000] },
+                },
               },
             ],
           },
