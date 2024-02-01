@@ -39,72 +39,72 @@ const getHolidays = async () => {
       notSetDates.push(now);
     }
   }
-    if (!startingHourTuesday || !endingHourTuesday || !periodTuesday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(2)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  if (!startingHourTuesday || !endingHourTuesday || !periodTuesday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(2)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
-    if (!startingHourWednesday || !endingHourWednesday || !periodWednesday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(3)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  }
+  if (!startingHourWednesday || !endingHourWednesday || !periodWednesday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(3)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
-    if (!startingHourThursday || !endingHourThursday || !periodThursday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(4)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  }
+  if (!startingHourThursday || !endingHourThursday || !periodThursday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(4)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
-    if (!startingHourFriday || !endingHourFriday || !periodFriday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(5)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  }
+  if (!startingHourFriday || !endingHourFriday || !periodFriday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(5)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
-    if (!startingHourSaturday || !endingHourSaturday || !periodSaturday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(6)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  }
+  if (!startingHourSaturday || !endingHourSaturday || !periodSaturday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(6)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
-    if (!startingHourSunday || !endingHourSunday || !periodSunday) {
-      for (
-        let now = new Date(
-          new Date(new Date().setDate(0)).setHours(0, 0, 0)
-        ).getTime();
-        now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-        now += 1000 * 60 * 60 * 24 * 7
-      ) {
-        notSetDates.push(now);
-      }
+  }
+  if (!startingHourSunday || !endingHourSunday || !periodSunday) {
+    for (
+      let now = new Date(
+        new Date(new Date().setDate(0)).setHours(0, 0, 0)
+      ).getTime();
+      now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+      now += 1000 * 60 * 60 * 24 * 7
+    ) {
+      notSetDates.push(now);
     }
+  }
   const offDays = await OffDays.find({
     $or: [{ service: "blood" }, { service: "clinic" }],
   });
