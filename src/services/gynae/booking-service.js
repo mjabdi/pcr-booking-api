@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
+const { AllPatients } = require("../../models/medex/AllPatients");
 const dateformat = require("dateformat");
 const {
   sendConfirmationEmail,
@@ -678,7 +679,10 @@ router.post("/changebacktobookingmade", async function (req, res, next) {
 
   try {
     await GynaeBooking.updateOne({ _id: req.query.id }, { status: "booked" });
-
+    await AllPatients.updateMany(
+      { bookings: req.query.id },
+      { $pull: { bookings: req.query.id } }
+    );
     res.status(200).send({ status: "OK" });
   } catch (err) {
     console.log(err);
@@ -701,6 +705,41 @@ router.post("/changetopatientattended", async function (req, res, next) {
       { _id: req.query.id },
       { status: "patient_attended" }
     );
+    if (req.body.patientid) {
+      const patient = await AllPatients.findById(ObjectId(req.body.patientid));
+      if (!patient.bookings.includes(req.query.id)) {
+        patient.bookings.push(req.query.id);
+        await patient.save();
+      }
+    } else {
+      if (
+        (!(req.body.surname && req.body.forename) && !req.body.fullname) ||
+        !req.body.birthDate
+      ) {
+        throw Error("no patient data or patient id!");
+      }
+      const uniqueId = await createUniqueId(
+        req.body?.fullname,
+        req.body?.surname,
+        req.body?.forename,
+        req.body?.birthDate
+      );
+      const patient = await AllPatients.create({
+        bookings: [req.query.id],
+        surname: req.body?.surname,
+        forename: req.body?.forename,
+        fullname: req.body?.fullname,
+        birthDate: req.body?.birthDate,
+        gender: req.body?.gender,
+        title: req.body?.title,
+        email: req.body?.email,
+        phone: req.body?.phone,
+        postCode: req.body?.postCode,
+        passportNumber: req.body?.passportNumber,
+        patientId: uniqueId,
+      });
+      console.log(patient);
+    }
 
     res.status(200).send({ status: "OK" });
   } catch (err) {
@@ -753,6 +792,63 @@ router.post("/undeletebookappointment", async function (req, res, next) {
     return;
   }
 });
+
+async function createUniqueId(fullname, forename, surname, birthDate) {
+  let id = "";
+
+  // Step 1: Add first letter of surname, forename, or last word of fullname
+  if (surname) {
+    id += surname.charAt(0).toLowerCase();
+  } else if (fullname) {
+    const names = fullname.split(" ");
+    const lastWord = names[0];
+    id += lastWord.charAt(0).toLowerCase();
+  } else {
+    // Handle the case where neither surname nor fullname is available
+    return null;
+  }
+
+  if (forename) {
+    id += forename.charAt(0).toLowerCase();
+  } else if (fullname) {
+    const names = fullname.split(" ");
+    const lastWord = names[names.length - 1];
+    id += lastWord.charAt(0).toLowerCase();
+  } else {
+    // Handle the case where neither forename nor fullname is available
+    return null;
+  }
+
+  // Step 2: Add month of birthDate in 2-digit format
+  if (birthDate) {
+    const birthMonth = ("0" + (new Date(birthDate).getMonth() + 1)).slice(-2);
+    id += birthMonth;
+  } else {
+    // Handle the case where birthDate is not available
+    return null;
+  }
+
+  // Step 3: Add last 2 digits of birth year
+  if (birthDate) {
+    const birthYear = new Date(birthDate).getFullYear().toString().slice(-2);
+    id += birthYear;
+  } else {
+    // Handle the case where birthDate is not available
+    return null;
+  }
+
+  // Step 4: Add last 2 digits of the current timestamp year
+  const currentYear = new Date().getFullYear().toString().slice(-2);
+  id += currentYear;
+  const similarPatients = await AllPatients.find({ originalPatientId: id });
+  let count = 0;
+  while (
+    (similarPatients.map((el) => el.patientId) || []).includes(`${id}-${count}`)
+  ) {
+    count++;
+  }
+  return `${id}-${count}`;
+}
 
 const validateBookAppointment = (body) => {
   console.log(body);

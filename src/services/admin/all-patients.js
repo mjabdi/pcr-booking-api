@@ -1,10 +1,289 @@
 const express = require("express");
 const router = express.Router();
-const { OldPatients } = require("../../models/medex/OldPatients");
+const { AllPatients } = require("../../models/medex/AllPatients");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const { Booking } = require("../../models/Booking");
 router.post("/search", async function (req, res, next) {
+  try {
+    const { filter } = req.body;
+    const regexp = new RegExp(filter, "i");
+    const condition = { fullname: { $regex: regexp } };
+    const result = await AllPatients.aggregate([
+      {
+        $match: {
+          $and: [{ deleted: { $ne: true } }, condition],
+        },
+      },
+      {
+        $limit: 100, // Limit the number of results to 100
+      },
+      {
+        $lookup: {
+          from: "bookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "pcrDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "gynaebookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "gynaeDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "gpbookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "gpDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "stdbookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "stdDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "bloodbookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "bloodDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "dermabookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "dermaDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "screeningbookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "screeningDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "corporatebookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "corporateDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "bloodreports",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "bloodreportsDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
+          from: "oldpatients",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "oldPatientsDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $addFields: {
+          pcrDetails: {
+            $map: {
+              input: "$pcrDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "pcr",
+                  },
+                ],
+              },
+            },
+          },
+          gynaeDetails: {
+            $map: {
+              input: "$gynaeDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "gynae",
+                  },
+                ],
+              },
+            },
+          },
+          gpDetails: {
+            $map: {
+              input: "$gpDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "gp",
+                  },
+                ],
+              },
+            },
+          },
+          stdDetails: {
+            $map: {
+              input: "$stdDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "std",
+                  },
+                ],
+              },
+            },
+          },
+          bloodDetails: {
+            $map: {
+              input: "$bloodDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "blood",
+                  },
+                ],
+              },
+            },
+          },
+          dermaDetails: {
+            $map: {
+              input: "$dermaDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "derma",
+                  },
+                ],
+              },
+            },
+          },
+          screeningDetails: {
+            $map: {
+              input: "$screeningDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "screening",
+                  },
+                ],
+              },
+            },
+          },
+          corporateDetails: {
+            $map: {
+              input: "$corporateDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "corporate",
+                  },
+                ],
+              },
+            },
+          },
+          bloodreportsDetails: {
+            $map: {
+              input: "$bloodreportsDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "Blood Result",
+                  },
+                ],
+              },
+            },
+          },
+          oldpatients: {
+            $map: {
+              input: "$oldpatients",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "Old Data",
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          // Merge the results of all $lookup stages into a single array field
+          bookings: {
+            $concatArrays: [
+              "$pcrDetails",
+              "$gynaeDetails",
+              "$gpDetails",
+              "$stdDetails",
+              "$bloodDetails",
+              "$dermaDetails",
+              "$screeningDetails",
+              "$corporateDetails",
+              "$bloodreportsDetails",
+              "$oldPatientsDetails",
+            ],
+            // Add more $lookup arrays as needed
+          },
+          _id: 1,
+          title: 1,
+          forename: 1,
+          surname: 1,
+          fullname: 1,
+          timeStamp: 1,
+          phone: 1,
+          postCode: 1,
+          passportNumber: 1,
+          birthDate: 1,
+          gender: 1,
+          patientId: 1,
+        },
+      },
+    ])
+      .limit(100)
+      .exec();
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+router.post("/oldsearch", async function (req, res, next) {
   try {
     const { filter } = req.body;
     const regexp = new RegExp(filter, "i");
@@ -220,14 +499,24 @@ router.post("/search", async function (req, res, next) {
           birthDate: {
             $cond: {
               if: {
-                $eq: [
+                $and: [
                   {
-                    $type: "$birthDate",
+                    $eq: [
+                      {
+                        $type: "$birthDate",
+                      },
+                      "string",
+                    ],
                   },
-                  "date",
+                  {
+                    $regexMatch: {
+                      input: "$birthDate",
+                      regex: ".*T.*",
+                    },
+                  },
                 ],
               },
-              then: "$birthDate",
+              then: null,
               else: {
                 $cond: {
                   if: {

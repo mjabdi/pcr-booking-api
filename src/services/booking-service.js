@@ -7,6 +7,8 @@ const getNewRef = require("./refgenatator-service");
 const { sendConfirmationEmail, sendAntiBodyEmail } = require("./email-service");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
+const { AllPatients } = require("../models/medex/AllPatients");
+
 const stringSimilarity = require("string-similarity");
 const { GlobalParams } = require("./../models/GlobalParams");
 const { getDefaultTimeSlots, getHolidays } = require("./holidays");
@@ -756,7 +758,10 @@ router.post("/changebacktobookingmade", async function (req, res, next) {
 
   try {
     await Booking.updateOne({ _id: req.query.id }, { status: "booked" });
-
+    await AllPatients.updateMany(
+      { bookings: req.query.id },
+      { $pull: { bookings: req.query.id } }
+    );
     res.status(200).send({ status: "OK" });
   } catch (err) {
     console.log(err);
@@ -992,6 +997,63 @@ router.get("/getteststimereportlast30", async function (req, res, next) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 });
+
+async function createUniqueId(fullname, forename, surname, birthDate) {
+  let id = "";
+
+  // Step 1: Add first letter of surname, forename, or last word of fullname
+  if (surname) {
+    id += surname.charAt(0).toLowerCase();
+  } else if (fullname) {
+    const names = fullname.split(" ");
+    const lastWord = names[0];
+    id += lastWord.charAt(0).toLowerCase();
+  } else {
+    // Handle the case where neither surname nor fullname is available
+    return null;
+  }
+
+  if (forename) {
+    id += forename.charAt(0).toLowerCase();
+  } else if (fullname) {
+    const names = fullname.split(" ");
+    const lastWord = names[names.length - 1];
+    id += lastWord.charAt(0).toLowerCase();
+  } else {
+    // Handle the case where neither forename nor fullname is available
+    return null;
+  }
+
+  // Step 2: Add month of birthDate in 2-digit format
+  if (birthDate) {
+    const birthMonth = ("0" + (new Date(birthDate).getMonth() + 1)).slice(-2);
+    id += birthMonth;
+  } else {
+    // Handle the case where birthDate is not available
+    return null;
+  }
+
+  // Step 3: Add last 2 digits of birth year
+  if (birthDate) {
+    const birthYear = new Date(birthDate).getFullYear().toString().slice(-2);
+    id += birthYear;
+  } else {
+    // Handle the case where birthDate is not available
+    return null;
+  }
+
+  // Step 4: Add last 2 digits of the current timestamp year
+  const currentYear = new Date().getFullYear().toString().slice(-2);
+  id += currentYear;
+  const similarPatients = await AllPatients.find({ originalPatientId: id });
+  let count = 0;
+  while (
+    (similarPatients.map((el) => el.patientId) || []).includes(`${id}-${count}`)
+  ) {
+    count++;
+  }
+  return `${id}-${count}`;
+}
 
 const validateBookAppointment = (body) => {
   if (!body.forename) {
