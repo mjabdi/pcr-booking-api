@@ -779,7 +779,7 @@ router.post("/undeletebookappointment", async function (req, res, next) {
   }
 });
 
-async function createUniqueId(fullname, forename, surname, birthDate) {
+async function createUniqueId(fullname, surname, forename, birthDate) {
   let id = "";
 
   // Step 1: Add first letter of surname, forename, or last word of fullname
