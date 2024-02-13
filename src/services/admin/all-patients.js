@@ -6,9 +6,12 @@ const ObjectId = mongoose.Types.ObjectId;
 const { Booking } = require("../../models/Booking");
 router.post("/search", async function (req, res, next) {
   try {
-    const { filter } = req.body;
+    const { filter, birthDate } = req.body;
     const regexp = new RegExp(filter, "i");
     const condition = { fullname: { $regex: regexp } };
+    if(birthDate){
+      condition.birthDate = new Date(birthDate);
+    }
     const result = await AllPatients.aggregate([
       {
         $match: {
@@ -245,7 +248,7 @@ router.post("/search", async function (req, res, next) {
       {
         $project: {
           // Merge the results of all $lookup stages into a single array field
-          bookings: {
+          allbookings: {
             $concatArrays: [
               "$pcrDetails",
               "$gynaeDetails",
@@ -272,6 +275,13 @@ router.post("/search", async function (req, res, next) {
           birthDate: 1,
           gender: 1,
           patientId: 1,
+        },
+      },
+      {
+        $addFields: {
+          bookings: {
+            $sortArray: { input: "$allbookings", sortBy: { timeStamp: -1 } },
+          },
         },
       },
     ])
