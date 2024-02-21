@@ -3,64 +3,68 @@ const bcrypt = require('bcrypt')
 const SALT_WORK_FACTOR = 10
 
 const UserSchema = new mongoose.Schema({
-  
-    timeStamp: {
-        type: Date,
-        default: Date()
-    },
+  timeStamp: {
+    type: Date,
+    default: Date(),
+  },
 
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
-    forename: {
-        type: String,
-        required: false,
-    },
+  forename: {
+    type: String,
+    required: false,
+  },
 
-    surname: {
-        type: String,
-        required: false,
-    },
+  surname: {
+    type: String,
+    required: false,
+  },
 
-    lastLoginTimeStamp: {
-        type: Date,
-        default: null
-    },
+  lastLoginTimeStamp: {
+    type: Date,
+    default: null,
+  },
 
-    isLocked: {
-        type: Boolean,
-        default: false
-    },
+  isLocked: {
+    type: Boolean,
+    default: false,
+  },
 
-    failedRetries: {
-        type: Number,
-        default: 0
-    },
+  failedRetries: {
+    type: Number,
+    default: 0,
+  },
 
-    password: {
-        type: String,
-        required: true
-    },
+  password: {
+    type: String,
+    required: true,
+  },
 
-    isActive: {
-        type: Boolean,
-        default: false
-    },
-    
-    authToken: {
-        type: String,
-        required: false
-    },
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
 
-    roles: {
-        type: Array,
-        required: false
-    }
+  authToken: {
+    type: String,
+    required: false,
+  },
 
-})
+  roles: {
+    type: Array,
+    required: false,
+  },
+
+  isDoctor: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
 
 UserSchema.pre('save', function(next) {
     var user = this;

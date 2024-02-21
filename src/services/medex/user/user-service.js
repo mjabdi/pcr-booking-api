@@ -43,7 +43,7 @@ router.post('/signin', async function(req, res, next) {
 
         await User.updateOne({_id: user._id}, {authToken: authToken, lastLoginTimeStamp: new Date()})
 
-        res.status(200).send({status: 'OK', token: authToken, roles: user.roles }) 
+        res.status(200).send({status: 'OK', token: authToken, roles: user.roles, isDoctor: user.isDoctor }) 
     }
     catch(err)
     {
@@ -62,7 +62,7 @@ router.post('/checktoken', async function(req, res, next) {
             return
         }
 
-        res.status(200).send({status:'OK', userId: user.username, forename: user.forename, surname: user.surname, roles: user.roles, lastLoginTimeStamp: user.lastLoginTimeStamp})
+        res.status(200).send({status:'OK', userId: user.username, forename: user.forename, surname: user.surname, roles: user.roles, isDoctor: user.isDoctor, lastLoginTimeStamp: user.lastLoginTimeStamp})
     }
     catch(err)
     {
@@ -103,7 +103,7 @@ router.post('/signup', async function(req, res, next) {
 
     try
     {
-        let {username, password, roles} = req.body
+        let { username, password, roles, isDoctor } = req.body;
         username = username.trim().toLowerCase()
         const found = await User.findOne({username: username})
         if (found)
@@ -119,6 +119,7 @@ router.post('/signup', async function(req, res, next) {
             username: username,
             password: password,
             roles: roles,
+            isDoctor: isDoctor,
             isActive: true
         }) 
 
