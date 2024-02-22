@@ -134,6 +134,10 @@ const GPBookingSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    doctorNote: {
+        type: String,
+        required: false
+    }
 
 
 

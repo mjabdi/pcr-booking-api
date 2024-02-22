@@ -1,166 +1,168 @@
 const mongoose = require('mongoose');
 
 const BloodBookingSchema = new mongoose.Schema({
-  
-    timeStamp: {
-        type: Date,
-        default: new Date()
-    },
+  timeStamp: {
+    type: Date,
+    default: new Date(),
+  },
 
-    fullname: {
-        type: String,
-        required: true
-    },    
+  fullname: {
+    type: String,
+    required: true,
+  },
 
-    email: {
-        type: String,
-        required: false
-    },   
+  email: {
+    type: String,
+    required: false,
+  },
 
-    phone: {
-        type: String,
-        required: false
-    },  
+  phone: {
+    type: String,
+    required: false,
+  },
 
-    packageName: {
-        type: String,
-        required: false
-    }, 
+  packageName: {
+    type: String,
+    required: false,
+  },
 
-    indivisualTests: {
-        type: String,
-        required: false
-    },
-    
-    notes: {
-        type: String,
-        required: false,
-    },
+  indivisualTests: {
+    type: String,
+    required: false,
+  },
 
-    clinicNotes: {
-        type: String,
-        required: false,
-    },
+  notes: {
+    type: String,
+    required: false,
+  },
 
-    birthDate: {
-        type: String,
-        required: true,
-    },
+  clinicNotes: {
+    type: String,
+    required: false,
+  },
 
-    bookingDate: {
-        type: String,
-        required: true,
-    },
+  birthDate: {
+    type: String,
+    required: true,
+  },
 
-    bookingTime: {
-        type: String,
-        required: true,
-    },
+  bookingDate: {
+    type: String,
+    required: true,
+  },
 
-    bookingRef: {
-        type: String,
-        required: true,
-    },
+  bookingTime: {
+    type: String,
+    required: true,
+  },
 
-    paid: {
-        type: Boolean,
-        default: false
-    },
+  bookingRef: {
+    type: String,
+    required: true,
+  },
 
-    paidBy: {
-        type: String,
-        required: false
-    },
+  paid: {
+    type: Boolean,
+    default: false,
+  },
 
-    corporate: {
-        type: String,
-        required: false
-    },
-    
-    bookingTimeNormalized : {
-        type: String,
-        required: false
-    },
+  paidBy: {
+    type: String,
+    required: false,
+  },
 
-    status: {
-        type: String,
-        required: false,
-        default: 'booked'
-    },
+  corporate: {
+    type: String,
+    required: false,
+  },
 
-    deleted: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
+  bookingTimeNormalized: {
+    type: String,
+    required: false,
+  },
 
-    referrer: {
-        type: String,
-        required: false,
-    },
+  status: {
+    type: String,
+    required: false,
+    default: "booked",
+  },
 
-    deposit: {
-        type: Number,
-        default: 0
-    },
+  deleted: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 
-    OTCCharges: {
-        type: Number,
-        default: 0
-    },
+  referrer: {
+    type: String,
+    required: false,
+  },
 
-    estimatedPrice: {
-        type: String,
-        default: ''
-    },
+  deposit: {
+    type: Number,
+    default: 0,
+  },
 
-    paymentInfo: {
-        type: String,
-        required: false
-    },
+  OTCCharges: {
+    type: Number,
+    default: 0,
+  },
 
-    refund: {
-        type: String,
-        required: false
-    },
+  estimatedPrice: {
+    type: String,
+    default: "",
+  },
 
-    formData: {
-        type: String,
-        required: false
-    },
+  paymentInfo: {
+    type: String,
+    required: false,
+  },
 
-    doctorConsultation: {
-        type: Boolean,
-        default: false
-    },
+  refund: {
+    type: String,
+    required: false,
+  },
 
-    samplingTimeStamp: {
-        type: Date,
-        required : false
-    },
+  formData: {
+    type: String,
+    required: false,
+  },
 
-    printStatus: {  // preparing - printing - printed
-        type: String,
-        required: false,
-    },
+  doctorConsultation: {
+    type: Boolean,
+    default: false,
+  },
 
-    gender: {  // F/M
-        type: String,
-        required: false
-    },
+  samplingTimeStamp: {
+    type: Date,
+    required: false,
+  },
 
-    smsPush: {
-        type: Boolean,
-        default: false
-    },
+  printStatus: {
+    // preparing - printing - printed
+    type: String,
+    required: false,
+  },
 
-    smsSent: {
-        type: Boolean,
-        required: false
-    },
+  gender: {
+    // F/M
+    type: String,
+    required: false,
+  },
 
+  smsPush: {
+    type: Boolean,
+    default: false,
+  },
 
-
+  smsSent: {
+    type: Boolean,
+    required: false,
+  },
+  doctorNote: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = {

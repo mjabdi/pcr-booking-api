@@ -92,6 +92,10 @@ const BloodReport = mongoose.model('bloodreport', new mongoose.Schema({
     notes: {
         type: String,
         required: false
+    },
+    doctorNote: {
+        type: String,
+        required: false
     }
 
 }));
