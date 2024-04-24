@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ScreeningBookingSchema = new mongoose.Schema({
   timeStamp: {
@@ -164,7 +164,10 @@ const ScreeningBookingSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-
+  paymentType: {
+    type: String,
+    default: "paypal",
+  },
   smsSent: {
     type: Boolean,
     required: false,
@@ -176,5 +179,5 @@ const ScreeningBookingSchema = new mongoose.Schema({
 });
 
 module.exports = {
-        ScreeningBooking : mongoose.model('ScreeningBooking', ScreeningBookingSchema)
-} 
+  ScreeningBooking: mongoose.model("ScreeningBooking", ScreeningBookingSchema),
+};
