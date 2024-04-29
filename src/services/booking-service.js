@@ -1078,7 +1078,7 @@ const validateBookAppointment = (body) => {
   }
 
   if (!body.gender) {
-    throw new Error("gender field not present");
+    throw new Error("sex field not present");
   }
 
   if (!body.email) {
