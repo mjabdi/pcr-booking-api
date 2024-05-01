@@ -116,6 +116,26 @@ router.get("/getarchivedbloodreports", async function (req, res, next) {
   }
 });
 
+router.get("/getarchivedbloodreportsrecent", async function (req, res, next) {
+  try {
+    // const result = await BloodReport.find({status: "matched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+    const result = await BloodReport.find({
+      status: { $ne: "new" },
+      seen: { $eq: true },
+      emailSent: { $ne: true },
+    })
+      .sort({ testDate: -1, timeStamp: -1 })
+      .limit(500)
+      .exec();
+
+    res.status(200).send({ status: "OK", result: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+
 router.get("/getnewmatchedbloodreports", async function (req, res, next) {
   try {
     // const result = await BloodReport.find({status: "matched", seen : {$ne : true}}).sort({testDate:-1, timeStamp:-1}).exec();
@@ -203,6 +223,24 @@ router.get("/getsentbloodreports", async function (req, res, next) {
       emailSent: { $eq: true },
     })
       .sort({ testDate: -1, timeStamp: -1 })
+      .exec();
+
+    res.status(200).send({ status: "OK", result: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+router.get("/getsentbloodreportsrecent", async function (req, res, next) {
+  try {
+    // const result = await BloodReport.find({status: "unmatched", seen : {$eq : true}}).sort({testDate:-1,timeStamp:-1}).exec();
+    const result = await BloodReport.find({
+      status: { $ne: "new" },
+      emailSent: { $eq: true },
+    })
+      .sort({ testDate: -1, timeStamp: -1 })
+      .limit(500)
       .exec();
 
     res.status(200).send({ status: "OK", result: result });
