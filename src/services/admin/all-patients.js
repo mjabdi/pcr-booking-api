@@ -229,15 +229,15 @@ router.post("/search", async function (req, res, next) {
               },
             },
           },
-          oldpatients: {
+          oldPatientsDetails: {
             $map: {
-              input: "$oldpatients",
+              input: "$oldPatientsDetails",
               as: "doc",
               in: {
                 $mergeObjects: [
                   "$$doc",
                   {
-                    clinic: "Old Data",
+                    clinic: "Legacy",
                   },
                 ],
               },
