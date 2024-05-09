@@ -509,7 +509,7 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
                 $and: [
                   { bookingDate: dateStr },
                   { bookingTime: timeStr },
-                  { service: { $regex: /^(?!VISA MEDICAL)\w+/ } },
+                  { service: { $regex: /^(?!VISA MEDICAL).*/ } },
                   { deleted: { $ne: true } },
                 ],
               },
