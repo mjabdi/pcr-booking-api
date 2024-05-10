@@ -8,6 +8,7 @@ const NOTIFY_TYPE_BLOOD_BOOKED = 5;
 const NOTIFY_TYPE_DERMATOLOGY_BOOKED = 6;
 const NOTIFY_TYPE_HEALTHSCREENING_BOOKED = 7;
 const NOTIFY_TYPE_CORPORATE_BOOKED = 8;
+const NOTIFY_TYPE_PAEDIATRICIAN_BOOKED = 9;
 
 const MailTo =
   process.env.NODE_ENV === "production"
@@ -70,7 +71,8 @@ function createSubject(notifyType) {
         return "New Booking for HEALTH SCREENING";
     case NOTIFY_TYPE_CORPORATE_BOOKED:
         return "New Booking for CORPORATE";
-    
+    case NOTIFY_TYPE_PAEDIATRICIAN_BOOKED:
+        return "New Booking for PAEDIATRICIAN";
     default:
       return "";
   }
@@ -89,13 +91,14 @@ function createMessage(notifyType, booking) {
     case NOTIFY_TYPE_GYNAE_CANCELED:
       return `You have a new <strong>canceled</strong> appointment for <strong>Gynae</strong> with REF#: <strong>${booking.bookingRef}</strong>`;
     case NOTIFY_TYPE_DERMATOLOGY_BOOKED:
-        return `You have a new booking for <strong>DERMATOLOGY</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+      return `You have a new booking for <strong>DERMATOLOGY</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
     case NOTIFY_TYPE_HEALTHSCREENING_BOOKED:
-          return `You have a new booking for <strong>HEALTH SCREENING</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+      return `You have a new booking for <strong>HEALTH SCREENING</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
     case NOTIFY_TYPE_CORPORATE_BOOKED:
-          return `You have a new booking for <strong>CORPORATE</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
-  
-          
+      return `You have a new booking for <strong>CORPORATE</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+    case NOTIFY_TYPE_PAEDIATRICIAN_BOOKED:
+      return `You have a new booking for <strong>PAEDIATRICIAN</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+
     default:
       return "";
   }
@@ -104,7 +107,7 @@ function createMessage(notifyType, booking) {
 module.exports = {
   sendAdminNotificationEmail: sendAdminNotificationEmail,
   NOTIFY_TYPE: {
-    NOTIFY_TYPE_GP_BOOKED,   
+    NOTIFY_TYPE_GP_BOOKED,
     NOTIFY_TYPE_GYNAE_BOOKED,
     NOTIFY_TYPE_STD_BOOKED,
     NOTIFY_TYPE_BLOOD_BOOKED,
@@ -112,7 +115,6 @@ module.exports = {
     NOTIFY_TYPE_DERMATOLOGY_BOOKED,
     NOTIFY_TYPE_HEALTHSCREENING_BOOKED,
     NOTIFY_TYPE_CORPORATE_BOOKED,
-
-
+    NOTIFY_TYPE_PAEDIATRICIAN_BOOKED,
   },
 };

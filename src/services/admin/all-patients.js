@@ -47,6 +47,14 @@ router.post("/search", async function (req, res, next) {
       },
       {
         $lookup: {
+          from: "paediatricianbookings",
+          localField: "bookings",
+          foreignField: "_id",
+          as: "paediatricianDetails", // output array field containing the joined data
+        },
+      },
+      {
+        $lookup: {
           from: "stdbookings",
           localField: "bookings",
           foreignField: "_id",
@@ -140,6 +148,20 @@ router.post("/search", async function (req, res, next) {
                   "$$doc",
                   {
                     clinic: "gp",
+                  },
+                ],
+              },
+            },
+          },
+          paediatricianDetails: {
+            $map: {
+              input: "$paediatricianDetails",
+              as: "doc",
+              in: {
+                $mergeObjects: [
+                  "$$doc",
+                  {
+                    clinic: "paediatrician",
                   },
                 ],
               },
@@ -253,6 +275,7 @@ router.post("/search", async function (req, res, next) {
               "$pcrDetails",
               "$gynaeDetails",
               "$gpDetails",
+              "$paediatricianDetails",
               "$stdDetails",
               "$bloodDetails",
               "$dermaDetails",
@@ -337,6 +360,22 @@ router.post("/oldsearch", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },

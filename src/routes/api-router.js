@@ -15,6 +15,10 @@ const gpTimeService = require("./../services/gp/time-service");
 const gpBookService = require("./../services/gp/booking-service");
 const gpPaymentService = require("./../services/gp/payment-service-new");
 
+const paediatricianTimeService = require("./../services/paediatrician/time-service");
+const paediatricianBookService = require("./../services/paediatrician/booking-service");
+const paediatricianPaymentService = require("./../services/paediatrician/payment-service-new");
+
 const stdTimeService = require("./../services/std/time-service");
 const stdBookService = require("./../services/std/booking-service");
 
@@ -83,6 +87,11 @@ router.use("/gynae/payment", gynaePaymentService);
 router.use("/gp/time", gpTimeService);
 router.use("/gp/book", gpBookService);
 router.use("/gp/payment", gpPaymentService);
+
+/// Paediatrician ---------
+router.use("/paediatrician/time", paediatricianTimeService);
+router.use("/paediatrician/book", paediatricianBookService);
+router.use("/paediatrician/payment", paediatricianPaymentService);
 
 /// STD ---------
 router.use("/std/time", stdTimeService);

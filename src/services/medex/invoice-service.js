@@ -8,6 +8,7 @@ const { MedexCode } = require('./../../models/medex/MedexCode')
 
 const {BloodBooking} = require("./../../models/blood/BloodBooking")
 const {GPBooking} = require("./../../models/gp/GPBooking")
+const {PaediatricianBooking} = require("./../../models/paediatrician/PaediatricianBooking");
 const {GynaeBooking} = require("./../../models/gynae/GynaeBooking")
 const {ScreeningBooking} = require("./../../models/screening/ScreeningBooking")
 const {STDBooking} = require("./../../models/std/STDBooking")
@@ -43,15 +44,16 @@ router.post('/calculateinvoicereports', async function (req, res, next) {
         let resultMap = new Map()
 
         const clinics = [
-            {table: "bookings", clinic: "pcr"},
-            {table: "gynaebookings", clinic: "gynae"},
-            {table: "gpbookings", clinic: "gp"},
-            {table: "stdbookings", clinic: "std"},
-            {table: "bloodbookings", clinic: "blood"},
-            {table: "screeningbookings", clinic: "screening"},
-            {table: "corporatebookings", clinic: "corporate"},
-            {table: "dermabookings", clinic: "derma"}
-        ]
+          { table: "bookings", clinic: "pcr" },
+          { table: "gynaebookings", clinic: "gynae" },
+          { table: "gpbookings", clinic: "gp" },
+          { table: "paediatricianbookings", clinic: "paediatrician" },
+          { table: "stdbookings", clinic: "std" },
+          { table: "bloodbookings", clinic: "blood" },
+          { table: "screeningbookings", clinic: "screening" },
+          { table: "corporatebookings", clinic: "corporate" },
+          { table: "dermabookings", clinic: "derma" },
+        ];
 
         for (var i = 0; i < clinics.length; i++) {
             const res = await Invoice.aggregate([
@@ -84,6 +86,7 @@ router.post('/calculateinvoicereports', async function (req, res, next) {
                 pcr : (resultMap[dateStr] ? resultMap[dateStr].pcr || 0 : 0) + (clinic === "pcr" ? fee : 0),
                 gynae : (resultMap[dateStr] ? resultMap[dateStr].gynae || 0 : 0) + (clinic === "gynae" ? fee : 0),
                 gp : (resultMap[dateStr] ? resultMap[dateStr].gp || 0 : 0) + (clinic === "gp" ? fee : 0),
+                paediatrician : (resultMap[dateStr] ? resultMap[dateStr].paediatrician || 0 : 0) + (clinic === "paediatrician" ? fee : 0),
                 std : (resultMap[dateStr] ? resultMap[dateStr].std || 0 : 0) + (clinic === "std" ? fee : 0),
                 blood : (resultMap[dateStr] ? resultMap[dateStr].blood || 0 : 0) + (clinic === "blood" ? fee : 0),
                 screening : (resultMap[dateStr] ? resultMap[dateStr].screening || 0 : 0) + (clinic === "screening" ? fee : 0),
@@ -176,15 +179,16 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
         search.until.setHours(23, 59, 59, 99)
 
         const clinics = [
-            {table: "bookings", clinic: "pcr"},
-            {table: "gynaebookings", clinic: "gynae"},
-            {table: "gpbookings", clinic: "gp"},
-            {table: "stdbookings", clinic: "std"},
-            {table: "bloodbookings", clinic: "blood"},
-            {table: "screeningbookings", clinic: "screening"},
-            {table: "corporatebookings", clinic: "corporate"},
-            {table: "dermabookings", clinic: "derma"}
-        ]
+          { table: "bookings", clinic: "pcr" },
+          { table: "gynaebookings", clinic: "gynae" },
+          { table: "gpbookings", clinic: "gp" },
+          { table: "paediatricianbookings", clinic: "paediatrician" },
+          { table: "stdbookings", clinic: "std" },
+          { table: "bloodbookings", clinic: "blood" },
+          { table: "screeningbookings", clinic: "screening" },
+          { table: "corporatebookings", clinic: "corporate" },
+          { table: "dermabookings", clinic: "derma" },
+        ];
 
         let invoicesArray = []
 
@@ -247,15 +251,16 @@ router.post('/searchallinvoicesbyname', async function (req, res, next) {
         const regexp2 = new RegExp(search.name.replace(" ","  "),"i")
 
         const clinics = [
-            {table: "bookings", clinic: "pcr"},
-            {table: "gynaebookings", clinic: "gynae"},
-            {table: "gpbookings", clinic: "gp"},
-            {table: "stdbookings", clinic: "std"},
-            {table: "bloodbookings", clinic: "blood"},
-            {table: "screeningbookings", clinic: "screening"},
-            {table: "corporatebookings", clinic: "corporate"},
-            {table: "dermabookings", clinic: "derma"}
-        ]
+          { table: "bookings", clinic: "pcr" },
+          { table: "gynaebookings", clinic: "gynae" },
+          { table: "gpbookings", clinic: "gp" },
+          { table: "paediatricianbookings", clinic: "paediatrician" },
+          { table: "stdbookings", clinic: "std" },
+          { table: "bloodbookings", clinic: "blood" },
+          { table: "screeningbookings", clinic: "screening" },
+          { table: "corporatebookings", clinic: "corporate" },
+          { table: "dermabookings", clinic: "derma" },
+        ];
 
         let invoicesArray = []
         for (var i = 0; i < clinics.length; i++) {
@@ -320,6 +325,11 @@ const findBooking = async (id) => {
     if (booking)
     {
         return booking
+    }
+
+    booking = await PaediatricianBooking.findOne({ _id: id });
+    if (booking) {
+      return booking;
     }
 
     booking = await GynaeBooking.findOne({_id: id})
