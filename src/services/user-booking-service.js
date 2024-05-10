@@ -124,6 +124,26 @@ router.post("/getalluserbookings", async function (req, res, next) {
       },
       {
         $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [
+                  { email: email },
+                  { email: email.toLowerCase() },
+                  { email: email.toUpperCase() },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
           coll: "stdbookings",
           pipeline: [
             {
@@ -182,7 +202,6 @@ router.post("/getalluserbookings", async function (req, res, next) {
           ],
         },
       },
-
 
       {
         $sort: { timeStamp: -1 },

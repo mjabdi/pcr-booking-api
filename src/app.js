@@ -82,6 +82,14 @@ app.get("/medicalexpressclinic/user/edit/gp/*", function (req, res) {
 });
 
 app.use(
+  "/medicalexpressclinic/user/edit/paediatrician/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get("/medicalexpressclinic/user/edit/paediatrician/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+});
+
+app.use(
   "/medicalexpressclinic/user/edit/corporate/",
   express.static(path.join(__dirname, "..", "public_admin"))
 );
@@ -147,8 +155,6 @@ app.get("/medicalexpressclinic/user/form/derma/*", function (req, res) {
 });
 
 
-
-
 app.use(
   "/medicalexpressclinic/user/form/gp/",
   express.static(path.join(__dirname, "..", "public_admin"))
@@ -156,6 +162,17 @@ app.use(
 app.get("/medicalexpressclinic/user/form/gp/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
 });
+
+app.use(
+  "/medicalexpressclinic/user/form/paediatrician/",
+  express.static(path.join(__dirname, "..", "public_admin"))
+);
+app.get(
+  "/medicalexpressclinic/user/form/paediatrician/*",
+  function (req, res) {
+    res.sendFile(path.join(__dirname, "..", "public_admin", "index.html"));
+  }
+);
 
 app.use(
   "/medicalexpressclinic/user/form/screening/",
@@ -222,7 +239,15 @@ app.get("/medicalexpressclinic/book/gp20/*", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "public_gp_20", "index.html"));
 });
 
-
+app.use(
+  "/medicalexpressclinic/book/paediatrician",
+  express.static(path.join(__dirname, "..", "public_paediatrician"))
+);
+app.get("/medicalexpressclinic/book/paediatrician/*", function (req, res) {
+  res.sendFile(
+    path.join(__dirname, "..", "public_paediatrician", "index.html")
+  );
+});
 
 app.use(
   "/medicalexpressclinic/book/std",

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { GPBooking } = require("../../models/gp/GPBooking");
+const { PaediatricianBooking } = require("../../models/paediatrician/PaediatricianBooking");
 const { GynaeBooking } = require("../../models/gynae/GynaeBooking");
 const { STDBooking } = require("../../models/std/STDBooking");
 const { BloodBooking } = require("../../models/blood/BloodBooking");
@@ -144,6 +145,11 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       deleted: { $ne: true },
     }).exec();
 
+    const paediatricianCount = await PaediatricianBooking.countDocuments({
+      bookingDate: dateStr,
+      deleted: { $ne: true },
+    }).exec();
+
     const pcrCount = await Booking.countDocuments({
       bookingDate: dateStr,
       deleted: { $ne: true },
@@ -189,6 +195,7 @@ router.get("/getallbookingscountbydatestr", async function (req, res, next) {
       { clinic: "pcr", count: pcrCount },
       { clinic: "gynae", count: gynaeCount },
       { clinic: "gp", count: gpCount },
+      { clinic: "paediatrician", count: paediatricianCount },
       { clinic: "std", count: stdCount },
       { clinic: "blood", count: bloodCount },
       { clinic: "derma", count: dermaCount },
@@ -282,6 +289,12 @@ router.get(
         deleted: { $ne: true },
       }).exec();
 
+      const paediatricianCount = await PaediatricianBooking.countDocuments({
+        bookingDate: dateStr,
+        bookingTime: timeStr,
+        deleted: { $ne: true },
+      }).exec();
+
       const pcrCount = await Booking.countDocuments({
         bookingDate: dateStr,
         bookingTime: timeStr,
@@ -335,6 +348,7 @@ router.get(
         { clinic: "pcr", count: pcrCount },
         { clinic: "gynae", count: gynaeCount },
         { clinic: "gp", count: gpCount },
+        { clinic: "paediatrician", count: paediatricianCount },
         { clinic: "std", count: stdCount },
         { clinic: "blood", count: bloodCount },
         { clinic: "derma", count: dermaCount },
@@ -436,6 +450,26 @@ router.get("/getallbookingsbydatestrandtime", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: dateStr },
+                  { bookingTime: timeStr },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },
@@ -623,6 +657,22 @@ router.get("/getallbookings", async function (req, res, next) {
       },
       {
         $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
           coll: "stdbookings",
           pipeline: [
             {
@@ -762,6 +812,22 @@ router.post("/searchallbookings", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },
@@ -927,6 +993,22 @@ router.get("/getdeletedbookings", async function (req, res, next) {
       },
       {
         $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $eq: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
           coll: "stdbookings",
           pipeline: [
             {
@@ -1061,6 +1143,22 @@ router.get("/gettodaybookings", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, { bookingDate: today }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },
@@ -1205,6 +1303,25 @@ router.get("/getoldbookings", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $lt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },
@@ -1366,6 +1483,25 @@ router.get("/getfuturebookings", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { deleted: { $ne: true } },
+                  { bookingDate: { $gt: today } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },
@@ -1537,6 +1673,22 @@ router.get("/getrecentbookingsall", async function (req, res, next) {
       },
       {
         $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ deleted: { $ne: true } }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
           coll: "stdbookings",
           pipeline: [
             {
@@ -1676,6 +1828,22 @@ router.get("/getbookingsbyref", async function (req, res, next) {
       },
       {
         $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $or: [{ bookingRef: ref }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
           coll: "stdbookings",
           pipeline: [
             {
@@ -1807,6 +1975,22 @@ router.get("/getbookingbyid", async function (req, res, next) {
 
             {
               $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "paediatricianbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ _id: req.query.id }],
+              },
+            },
+
+            {
+              $addFields: { clinic: "paediatrician" },
             },
           ],
         },

@@ -25,7 +25,7 @@ const AllPatientsSchema = new mongoose.Schema({
     type: String,
     enum: ["male", "female", ""],
     required: true,
-    default: ""
+    default: "",
   },
   title: {
     type: String,
@@ -60,7 +60,7 @@ const AllPatientsSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: function () {
-      return this.patientId.split('-')[0];
+      return this.patientId.split("-")[0];
     },
   },
   bookings: {
@@ -73,6 +73,7 @@ const AllPatientsSchema = new mongoose.Schema({
       "DermaBooking",
       "GynaeBooking",
       "GPBooking",
+      "PaediatricianBooking",
       "ScreeningBooking",
       "STDBooking",
       "Booking",

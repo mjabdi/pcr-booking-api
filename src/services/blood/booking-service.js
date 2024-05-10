@@ -124,7 +124,8 @@ router.get("/getarchivedbloodreportsrecent", async function (req, res, next) {
       seen: { $eq: true },
       emailSent: { $ne: true },
     })
-      .sort({ testDate: -1, timeStamp: -1 }).limit(500)
+      .sort({ testDate: -1, timeStamp: -1 })
+      .limit(500)
       .exec();
 
     res.status(200).send({ status: "OK", result: result });
@@ -133,6 +134,7 @@ router.get("/getarchivedbloodreportsrecent", async function (req, res, next) {
     res.status(500).send({ status: "FAILED", error: err.message });
   }
 });
+
 
 router.get("/getnewmatchedbloodreports", async function (req, res, next) {
   try {
