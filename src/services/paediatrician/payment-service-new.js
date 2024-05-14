@@ -32,7 +32,7 @@ const client = new Client({
 const paymentsApi = client.paymentsApi;
 const refundsApi = client.refundsApi;
 
-const DEPOSIT = 75;
+const DEPOSIT = 125;
 const DEPOSIT_20 = 20;
 
 
