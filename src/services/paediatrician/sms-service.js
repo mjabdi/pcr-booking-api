@@ -17,10 +17,10 @@ const sendPaediatricianConfirmationTextMessage = async (options, to) => {
   }
 
   message += `\r\nFollow this link if you need to modify your booking details, rearrange your appointment or cancel your booking :`;
-  message += `\r\nhttps://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/paediatrician/${options._id}`;
+  message += `\r\nhttps://www.travelpcrtest.com/medicalexpressclinic/user/edit/paediatrician/${options._id}`;
 
   message += `\r\n\r\nAlso, please complete patient registration form online before attending the clinic by following this link :`;
-  message += `\r\nhttps://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/paediatrician/${options._id}`;
+  message += `\r\nhttps://www.travelpcrtest.com/medicalexpressclinic/user/form/paediatrician/${options._id}`;
 
   message += "\r\n\nKind Regards,\r\nMedical Express Clinic\r\n02074991991";
   await sendTextMessage(to, message);

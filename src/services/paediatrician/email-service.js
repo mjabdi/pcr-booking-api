@@ -31,8 +31,8 @@ const sendConfirmationEmail =  async (options) =>
     content += `<p>Dear ${options.fullname},</p>`;
     content += `<p>Thank you for booking your appointment for Paediatrician GP at the Medical Express Clinic. We look forward to welcoming you.</p>`;
 
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/paediatrician/${options._id}`;
-    const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/paediatrician/${options._id}`;
+    const targetForm = `https://www.travelpcrtest.com/medicalexpressclinic/user/form/paediatrician/${options._id}`;
+    const target = `https://www.travelpcrtest.com/medicalexpressclinic/user/edit/paediatrician/${options._id}`;
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
 
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend the clinic for your appointment. You will now also be able to register and access your patient portal by visiting the link on our website homepage. This will have details of all of your past and future appointments, and allow you to directly book appointments with the clinic without the need to re-enter all of your personal information. </p>`;
@@ -120,7 +120,7 @@ const sendRegFormEmail =  async (options) =>
     content += `<p> Please complete patient registration form online by following this link : </p>`;
 
     const butonStyle = `box-shadow: 0px 1px 0px 0px #f0f7fa;background:linear-gradient(to bottom, #f29141 5%, #f68529 100%);background-color:#f68529;border-radius:6px;border:1px solid #f68529;display:inline-block;cursor:pointer;color:#ffffff;font-family:Arial;font-size:15px;font-weight:bold;padding:6px 24px;text-decoration:none;text-shadow:0px -1px 0px #5b6178;`
-    const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/paediatrician/${options._id}`;
+    const targetForm = `https://www.travelpcrtest.com/medicalexpressclinic/user/form/paediatrician/${options._id}`;
     
     content += `<p> <a href="${targetForm}" style="${butonStyle}" target="_blank"> Complete Registration Form </a></p>`;
   
