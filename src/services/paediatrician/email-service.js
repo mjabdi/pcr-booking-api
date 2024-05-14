@@ -29,7 +29,7 @@ const sendConfirmationEmail =  async (options) =>
     var content = '';
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<p>Dear ${options.fullname},</p>`;
-    content += `<p>Thank you for booking your appointment for Paediatrician at the Medical Express Clinic. We look forward to welcoming you.</p>`;
+    content += `<p>Thank you for booking your appointment for Paediatrician GP at the Medical Express Clinic. We look forward to welcoming you.</p>`;
 
     const targetForm = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/form/paediatrician/${options._id}`;
     const target = `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/paediatrician/${options._id}`;
@@ -103,7 +103,7 @@ const sendConfirmationEmail =  async (options) =>
 
     await sendMail(
       options.email,
-      "Paediatrician Appointment Confirmation - Medical Express Clinic",
+      "Paediatrician GP Appointment Confirmation - Medical Express Clinic",
       content,
       event
     );
@@ -152,7 +152,7 @@ const sendRegFormEmail =  async (options) =>
     
     await sendMail(
       options.email,
-      "Registration Form for Paediatrician Visit - Medical Express Clinic",
+      "Registration Form for Paediatrician GP Visit - Medical Express Clinic",
       content,
       null
     );
@@ -196,7 +196,7 @@ const sendRefundNotificationEmail =  async (options) =>
     
     await sendMail(
       options.email,
-      "Refund Deposit Notification (Paediatrician) - Medical Express Clinic",
+      "Refund Deposit Notification (Paediatrician GP) - Medical Express Clinic",
       content,
       null
     );

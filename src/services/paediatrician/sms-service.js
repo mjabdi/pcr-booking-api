@@ -4,7 +4,7 @@ const { FormatDateFromString } = require('../DateFormatter');
 
 
 const sendPaediatricianConfirmationTextMessage = async (options, to) => {
-  let message = `Dear ${options.fullname.toUpperCase()},\r\n\nThank you for booking your appointment for Paediatrician at the Medical Express Clinic. We look forward to welcoming you.\r\n\n`;
+  let message = `Dear ${options.fullname.toUpperCase()},\r\n\nThank you for booking your appointment for Paediatrician GP at the Medical Express Clinic. We look forward to welcoming you.\r\n\n`;
   message += `Your booking number is "${options.bookingRef}", please have this number handy when you attend the clinic for your appointment.`;
   message += `\r\n\r\nBelow is your booking information :`;
   message += `\r\n- Appointment Time : ${FormatDateFromString(

@@ -72,7 +72,7 @@ function createSubject(notifyType) {
     case NOTIFY_TYPE_CORPORATE_BOOKED:
         return "New Booking for CORPORATE";
     case NOTIFY_TYPE_PAEDIATRICIAN_BOOKED:
-        return "New Booking for PAEDIATRICIAN";
+        return "New Booking for PAEDIATRICIAN GP";
     default:
       return "";
   }
@@ -97,7 +97,7 @@ function createMessage(notifyType, booking) {
     case NOTIFY_TYPE_CORPORATE_BOOKED:
       return `You have a new booking for <strong>CORPORATE</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
     case NOTIFY_TYPE_PAEDIATRICIAN_BOOKED:
-      return `You have a new booking for <strong>PAEDIATRICIAN</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
+      return `You have a new booking for <strong>PAEDIATRICIAN GP</strong> with REF#: <strong>${booking.bookingRef}</strong> at <strong>${booking.bookingDate} , ${booking.bookingTime}</strong>`;
 
     default:
       return "";

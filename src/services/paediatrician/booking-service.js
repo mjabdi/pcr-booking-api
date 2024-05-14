@@ -540,7 +540,7 @@ router.post("/bookappointment", async function (req, res, next) {
       const alaram = new Notification({
         timeStamp: new Date(),
         type: "InvalidBooking-Paediatrician",
-        text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (Paediatrician)`,
+        text: `An attempt to book on ${booking.bookingDate} at ${booking.bookingTime} Blocked by the system (Paediatrician GP)`,
       });
       await alaram.save();
       res
