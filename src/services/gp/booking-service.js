@@ -847,6 +847,9 @@ const validateBookAppointment = (body) => {
   if (!body.bookingRef) {
     throw new Error("bookingRef field not present");
   }
+  if (!body.package) {
+    throw new Error("package field not present");
+  }
 
   body.bookingTimeNormalized = NormalizeTime(body.bookingTime);
 

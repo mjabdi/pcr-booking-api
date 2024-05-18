@@ -68,7 +68,9 @@ router.get('/gettimeslots', async function(req, res, next) {
 
     try{
 
-        const defaultTimeSlots = await getDefaultTimeSlots(date);     
+        const pack = req.query?.package
+        
+        const defaultTimeSlots = await getDefaultTimeSlots(date, pack);  
        
          const result2 = await GPBooking.aggregate([
             {

@@ -30,21 +30,25 @@ const client = new Client({
 const paymentsApi = client.paymentsApi;
 const refundsApi = client.refundsApi;
 
-const DEPOSIT = 75;
+
 const DEPOSIT_20 = 20;
 
 
 router.post("/dopayment", async function (req, res, next) {
   try {
     const personInfo = req.body.personInfo;
-
+    const packages = [    
+    { id: "15_minutes", text: "15-minutes GP", price: 75 },
+    { id: "extended", text: "Extended GP", price: 125 },
+    { id: "follow_up", text: "Follow-up GP", price: 50 },]
+    const deposit = packages.find(el => el.id === req.body.package)?.price
     const payload = {
       sourceId: req.body.nonce,
       verificationToken: req.body.token,
       autocomplete: true,
       locationId: SANDBOX ? SANDBOX_LOCATION_ID : LIVE_LOCATION_ID,
       amountMoney: {
-        amount: DEPOSIT * 100,
+        amount: deposit * 100,
         currency: "GBP",
       },
       idempotencyKey: personInfo.bookingRef,
@@ -115,7 +119,7 @@ router.post("/dopayment", async function (req, res, next) {
       const booking = new GPBooking({
         ...personInfo,
         paymentInfo: paymentInfo,
-        OTCCharges: DEPOSIT,
+        OTCCharges: deposit,
         prepaid: true,
         paidBy: "credit card",
         paid: true,

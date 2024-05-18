@@ -135,7 +135,7 @@ function getFirstDayOfMonth(dayOfWeek) {
   return result;
 };
 
-const getDefaultTimeSlots = async (date) => {
+const getDefaultTimeSlots = async (date, pack) => {
   // console.log(date);
   const someDate = new Date(date);
   //   console.log(someDate);
@@ -168,51 +168,52 @@ const getDefaultTimeSlots = async (date) => {
   let startingHour = null;
   let endingHour = null;
   let period = null;
-  if (dayOfWeek(someDate) === 1) {
-    [startingHour, endingHour, period] = [
-      startingHourMonday,
-      endingHourMonday,
-      periodMonday,
-    ];
-  } else if (dayOfWeek(someDate) === 2) {
-    [startingHour, endingHour, period] = [
-      startingHourTuesday,
-      endingHourTuesday,
-      periodTuesday,
-    ];
-  } else if (dayOfWeek(someDate) === 3) {
-    [startingHour, endingHour, period] = [
-      startingHourWednesday,
-      endingHourWednesday,
-      periodWednesday,
-    ];
-  } else if (dayOfWeek(someDate) === 4) {
-    [startingHour, endingHour, period] = [
-      startingHourThursday,
-      endingHourThursday,
-      periodThursday,
-    ];
-  } else if (dayOfWeek(someDate) === 5) {
-    [startingHour, endingHour, period] = [
-      startingHourFriday,
-      endingHourFriday,
-      periodFriday,
-    ];
-  } else if (dayOfWeek(someDate) === 6) {
-    [startingHour, endingHour, period] = [
-      startingHourSaturday,
-      endingHourSaturday,
-      periodSaturday,
-    ];
-  } else if (dayOfWeek(someDate) === 0) {
-    [startingHour, endingHour, period] = [
-      startingHourSunday,
-      endingHourSunday,
-      periodSunday,
-    ];
-  }
+
+    if (dayOfWeek(someDate) === 1) {
+      [startingHour, endingHour, period] = [
+        startingHourMonday,
+        endingHourMonday,
+        periodMonday,
+      ];
+    } else if (dayOfWeek(someDate) === 2) {
+      [startingHour, endingHour, period] = [
+        startingHourTuesday,
+        endingHourTuesday,
+        periodTuesday,
+      ];
+    } else if (dayOfWeek(someDate) === 3) {
+      [startingHour, endingHour, period] = [
+        startingHourWednesday,
+        endingHourWednesday,
+        periodWednesday,
+      ];
+    } else if (dayOfWeek(someDate) === 4) {
+      [startingHour, endingHour, period] = [
+        startingHourThursday,
+        endingHourThursday,
+        periodThursday,
+      ];
+    } else if (dayOfWeek(someDate) === 5) {
+      [startingHour, endingHour, period] = [
+        startingHourFriday,
+        endingHourFriday,
+        periodFriday,
+      ];
+    } else if (dayOfWeek(someDate) === 6) {
+      [startingHour, endingHour, period] = [
+        startingHourSaturday,
+        endingHourSaturday,
+        periodSaturday,
+      ];
+    } else if (dayOfWeek(someDate) === 0) {
+      [startingHour, endingHour, period] = [
+        startingHourSunday,
+        endingHourSunday,
+        periodSunday,
+      ];
+    }
   if (startingHour && endingHour && period) {
-    for (let h = startingHour; h <= endingHour; h += period) {
+    for (let h = startingHour; h <= endingHour; h +=   pack === "extended" ? period : .25 ) {
       const time = `${
         h < 13
           ? Math.floor(h).toLocaleString("en-UK", {

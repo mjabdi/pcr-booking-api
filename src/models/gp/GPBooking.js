@@ -130,6 +130,11 @@ const GPBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    package: {
+        type: String,
+        required: true
+    },
+
     birthDate: {
         type: String,
         required: false,
