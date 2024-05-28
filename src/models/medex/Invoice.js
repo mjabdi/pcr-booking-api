@@ -56,6 +56,14 @@ const InvoiceSchema = new mongoose.Schema({
     notes: {
         type: String,
         required: false
+    },
+    corporate: {
+        type: String,
+        required: false
+    },
+    corporateAddress: {
+        type: String,
+        required: false
     }
 
 })
