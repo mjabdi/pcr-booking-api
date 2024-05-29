@@ -357,9 +357,9 @@ const findBooking = async (id) => {
 router.post('/createinvoice', async function (req, res, next) {
 
     try {
-        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes } = req.body
+        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes, corporate, corporateAddress } = req.body
 
-        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes }
+        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes, corporate, corporateAddress }
 
         if (!validateInvoice(payload)) {
             res.status(400).send({ status: 'FAILED', error: 'INVALID-DATA' })
@@ -400,9 +400,9 @@ router.post('/createinvoice', async function (req, res, next) {
 router.post('/updateinvoice', async function (req, res, next) {
     try {
         const { invoiceNumber } = req.query
-        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes } = req.body
+        let { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes, corporate, corporateAddress } = req.body
 
-        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes }
+        const payload = { name, date, dateAttended, items, grandTotal, bookingId, address, postCode, notes, corporate, corporateAddress }
 
         if (!validateInvoice(payload)) {
             res.status(400).send({ status: 'FAILED', error: 'INVALID-DATA' })

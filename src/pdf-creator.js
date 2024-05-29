@@ -1510,7 +1510,7 @@ const createPDFForInvoice = async (id) => {
       .fillColor("black")
       .fontSize(12)
       .font("Times-Bold")
-      .text(`${invoice.name.toUpperCase()}`, startX, startY + 80, {
+      .text(`${ invoice.corporate ? invoice.corporate.toUpperCase() : invoice.name.toUpperCase()}`, startX, startY + 80, {
         width: 615,
         align: "left",
         characterSpacing: 0.8,
@@ -1523,11 +1523,11 @@ const createPDFForInvoice = async (id) => {
       .fontSize(10)
       .font("Times-Bold")
       .text(
-        `${invoice.address ? invoice.address.toUpperCase() : ""}`,
+        `${ invoice.corporateAddress ? invoice.corporateAddress : invoice.address ? invoice.address.toUpperCase() : ""}`,
         startX,
         startY + 100,
         {
-          width: 615,
+          width: 300,
           align: "left",
           characterSpacing: 0.8,
           wordSpacing: 1,
@@ -1541,7 +1541,11 @@ const createPDFForInvoice = async (id) => {
       .fontSize(10)
       .font("Times-Bold")
       .text(
-        `${invoice.postCode ? invoice.postCode.toUpperCase() : ""}`,
+        `${
+          invoice.corporateAddress ? '' : invoice.postCode
+            ? invoice.postCode.toUpperCase()
+            : ""
+        }`,
         // startX,
         // startY + 115,
         {
