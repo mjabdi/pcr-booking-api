@@ -1596,7 +1596,7 @@ const createPDFForInvoice = async (id) => {
       .fontSize(10)
       .font("Times-Bold")
       .text(
-        `${dateformat(invoice.date, "dd mmmm yyyy")}`,
+        `${dateformat(invoice.dateAttended, "dd mmmm yyyy")}`,
         startX + 90,
         startY + 180,
         {
