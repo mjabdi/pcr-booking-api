@@ -131,6 +131,7 @@ router.post("/dopayment", async function (req, res, next) {
         "HEALTH SCREENING  / HEALTH ADVANCED PLUS MOT",
         "HEALTH SCREENING  / HEALTH ELITE MOT",
         "HEALTH SCREENING  / MEN'S HEALTH ELITE MOT",
+        "ALLERGY SCREENING  / SKIN PRICK TESTING",
       ];
       const isConfirmationNeeded = servicesNeedConfirmation.includes(
         personInfo.service
@@ -415,6 +416,7 @@ router.post("/dopaymentusingklarna", async function (req, res, next) {
         "HEALTH SCREENING  / HEALTH ADVANCED PLUS MOT",
         "HEALTH SCREENING  / HEALTH ELITE MOT",
         "HEALTH SCREENING  / MEN'S HEALTH ELITE MOT",
+        "ALLERGY SCREENING  / SKIN PRICK TESTING",
       ];
       const isConfirmationNeeded = servicesNeedConfirmation.includes(
         personInfo.service
