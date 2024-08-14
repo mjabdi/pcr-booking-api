@@ -11,11 +11,11 @@ const { STDBooking } = require("./models/std/STDBooking");
 const { Invoice } = require("./models/medex/Invoice");
 
 const dateformat = require("dateformat");
-const {BloodBooking} = require("./models/blood/BloodBooking");
-const {DermaBooking} = require("./models/derma/DermaBooking");
-const {ScreeningBooking} = require("./models/screening/ScreeningBooking");
-const {CorporateBooking} = require("./models/corporate/CorporateBooking");
-
+const { BloodBooking } = require("./models/blood/BloodBooking");
+const { DermaBooking } = require("./models/derma/DermaBooking");
+const { ScreeningBooking } = require("./models/screening/ScreeningBooking");
+const { CorporateBooking } = require("./models/corporate/CorporateBooking");
+const { Corporate } = require("./models/corporate/Corporate");
 
 function NormalizeDate(date) {
   return `${date.substr(8, 2)}/${date.substr(5, 2)}/${date.substr(0, 4)}`;
@@ -28,7 +28,6 @@ function NormalizeAddress(address) {
 const createPDFForCovid1Form = async (id) => {
   try {
     const booking = await Booking.findOne({ _id: id });
-
     booking.birthDate = NormalizeDate(booking.birthDate);
     booking.bookingDate = NormalizeDate(booking.bookingDate);
     booking.address = NormalizeAddress(booking.address);
@@ -612,7 +611,6 @@ const createPDFForGPRegistration = async (id) => {
   }
 };
 
-
 const createPDFForPaediatricianRegistration = async (id) => {
   try {
     const booking = await PaediatricianBooking.findOne({ _id: id });
@@ -755,7 +753,6 @@ const createPDFForPaediatricianRegistration = async (id) => {
   }
 };
 
-
 const createPDFForSTDRegistration = async (id) => {
   try {
     const booking = await STDBooking.findOne({ _id: id });
@@ -897,7 +894,6 @@ const createPDFForSTDRegistration = async (id) => {
     throw err;
   }
 };
-
 
 const createPDFForBloodRegistration = async (id) => {
   try {
@@ -1325,7 +1321,6 @@ const createPDFForScreeningRegistration = async (id) => {
   }
 };
 
-
 const createPDFForCorporateRegistration = async (id) => {
   try {
     const booking = await CorporateBooking.findOne({ _id: id });
@@ -1468,15 +1463,10 @@ const createPDFForCorporateRegistration = async (id) => {
   }
 };
 
-
-
-
-
-
 const createPDFForInvoice = async (id) => {
   try {
     const invoice = await Invoice.findOne({ _id: id });
-
+    const corporates = await Corporate.find({});
     if (!invoice) return;
 
     const doc = new PDFDocument();
@@ -1510,20 +1500,41 @@ const createPDFForInvoice = async (id) => {
       .fillColor("black")
       .fontSize(12)
       .font("Times-Bold")
-      .text(`${ invoice.corporate ? invoice.corporate.toUpperCase() : invoice.name.toUpperCase()}`, startX, startY + 80, {
-        width: 615,
-        align: "left",
-        characterSpacing: 0.8,
-        wordSpacing: 1,
-        lineGap: 2,
-      });
+      .text(
+        `${
+          invoice.corporate
+            ? corporates
+                .find((el) => el._id == String(invoice.corporate))
+                ?.name?.toUpperCase()
+            : invoice.name
+            ? invoice.name.toUpperCase()
+            : ""
+        }`,
+        startX,
+        startY + 80,
+        {
+          width: 615,
+          align: "left",
+          characterSpacing: 0.8,
+          wordSpacing: 1,
+          lineGap: 2,
+        }
+      );
 
     doc
       .fillColor("black")
       .fontSize(10)
       .font("Times-Bold")
       .text(
-        `${ invoice.corporateAddress ? invoice.corporateAddress : invoice.address ? invoice.address.toUpperCase() : ""}`,
+        `${
+          invoice.corporate
+            ? corporates
+                .find((el) => el._id == String(invoice.corporate))
+                ?.address?.toUpperCase()
+            : invoice.address
+            ? invoice.address.toUpperCase()
+            : ""
+        }`,
         startX,
         startY + 100,
         {
@@ -1535,16 +1546,19 @@ const createPDFForInvoice = async (id) => {
         }
       );
 
-      doc.moveDown(0.3)
+    doc.moveDown(0.3);
     doc
       .fillColor("black")
       .fontSize(10)
       .font("Times-Bold")
       .text(
         `${
-          invoice.corporateAddress ? '' : invoice.postCode
-            ? invoice.postCode.toUpperCase()
-            : ""
+          // invoice.corporateAddress
+          //   ? ""
+          //   : invoice.postCode
+          //   ? invoice.postCode.toUpperCase()
+          // : 
+            ""
         }`,
         // startX,
         // startY + 115,
@@ -1572,13 +1586,18 @@ const createPDFForInvoice = async (id) => {
       .fillColor("black")
       .fontSize(10)
       .font("Times-Bold")
-      .text(`Name of Patient: ${invoice.name.toUpperCase()}`, startX, startY + 160, {
-        width: 615,
-        align: "left",
-        characterSpacing: 0.8,
-        wordSpacing: 1,
-        lineGap: 2,
-      });
+      .text(
+        `Name of Patient: ${invoice.name.toUpperCase()}`,
+        startX,
+        startY + 160,
+        {
+          width: 615,
+          align: "left",
+          characterSpacing: 0.8,
+          wordSpacing: 1,
+          lineGap: 2,
+        }
+      );
 
     doc
       .fillColor("black")
@@ -1679,7 +1698,7 @@ const createPDFForInvoice = async (id) => {
         }
       );
 
-    let pageNumber = 1
+    let pageNumber = 1;
     doc.on("pageAdded", () => {
       pageNumber++;
       doc.image("assets/certificate-template.png", 0, 0, {
@@ -1689,12 +1708,11 @@ const createPDFForInvoice = async (id) => {
       });
     });
 
-    if (invoice.notes && invoice.notes.trim().length > 0)
-    {
-        invoice.items.push({
-            description: `notes$:_${invoice.notes}`,
-            price: invoice.grandTotal,
-          });
+    if (invoice.notes && invoice.notes.trim().length > 0) {
+      invoice.items.push({
+        description: `notes$:_${invoice.notes}`,
+        price: invoice.grandTotal,
+      });
     }
 
     invoice.items.push({
@@ -1734,8 +1752,7 @@ const createPDFForInvoice = async (id) => {
         item_startY -= 500;
       }
 
-      if (item.description.indexOf('notes$:_') === 0)
-      {
+      if (item.description.indexOf("notes$:_") === 0) {
         doc
           .fillColor("black")
           .fontSize(8)
@@ -1746,11 +1763,8 @@ const createPDFForInvoice = async (id) => {
             characterSpacing: 0.8,
             wordSpacing: 1,
             lineGap: 1,
-          })
-         ;
-      }
-      else
-      {
+          });
+      } else {
         let fontSize = 9;
         let font = "Courier";
         if (item.description === "Grand Total") {
@@ -1758,7 +1772,7 @@ const createPDFForInvoice = async (id) => {
           fontSize = 12;
           doc.rect(startX, item_startY - 10, 470, 30).stroke();
         }
-  
+
         doc
           .fillColor("black")
           .fontSize(fontSize)
@@ -1770,7 +1784,7 @@ const createPDFForInvoice = async (id) => {
             wordSpacing: 0.5,
             lineGap: 2,
           });
-  
+
         doc
           .fillColor("black")
           .fontSize(fontSize)
@@ -1791,7 +1805,6 @@ const createPDFForInvoice = async (id) => {
             }
           );
       }
-
     });
 
     item_startY += 70;

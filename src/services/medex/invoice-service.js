@@ -13,7 +13,7 @@ const {GynaeBooking} = require("./../../models/gynae/GynaeBooking")
 const {ScreeningBooking} = require("./../../models/screening/ScreeningBooking")
 const {STDBooking} = require("./../../models/std/STDBooking")
 const {Booking} = require("./../../models/Booking")
-
+const {CorporateBooking} = require("../../models/corporate/CorporateBooking");
 
 
 
@@ -21,7 +21,8 @@ const uuid = require('uuid-random')
 const mongoose = require('mongoose');
 const { randomBytes } = require('crypto');
 const { GlobalParams } = require('../../models/GlobalParams');
-const dateformat = require("dateformat")
+const dateformat = require("dateformat");
+
 
 router.get('/getinvoicereports', async function (req, res, next) {
     try{
@@ -417,7 +418,14 @@ router.post('/updateinvoice', async function (req, res, next) {
         }
 
         await Invoice.updateOne({ invoiceNumber: invoiceNumber }, payload)
-
+        const corporateBooking = await CorporateBooking.findById(invoice.bookingId)
+        if (!corporateBooking) {
+          res
+            .status(400)
+            .send({ status: "FAILED", error: "INVALID-INVOICE-BOOKING-NUMBER" });
+          return;
+        }
+        await corporateBooking.updateOne({ corporate: corporate });
         res.status(200).send({ status: 'OK' })
     }
     catch (err) {

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const CorporateBookingSchema = new mongoose.Schema({
   timeStamp: {
     type: Date,
@@ -67,8 +67,10 @@ const CorporateBookingSchema = new mongoose.Schema({
   },
 
   corporate: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Corporate",
     required: false,
+    default: null,
   },
 
   bookingTimeNormalized: {
@@ -124,5 +126,5 @@ const CorporateBookingSchema = new mongoose.Schema({
 });
 
 module.exports = {
-        CorporateBooking : mongoose.model('CorporateBooking', CorporateBookingSchema)
-} 
+  CorporateBooking: mongoose.model("CorporateBooking", CorporateBookingSchema),
+};
