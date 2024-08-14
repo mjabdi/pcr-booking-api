@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { CorporateBooking } = require("../../models/corporate/CorporateBooking");
+const { Invoice } = require("../../models/medex/Invoice");
+const { Corporate } = require("../../models/corporate/Corporate");
 const dateformat = require("dateformat");
 const { sendConfirmationEmail, sendRegFormEmail } = require("./email-service");
 const mongoose = require("mongoose");
@@ -421,6 +423,7 @@ router.post("/addnewbooking", async function (req, res, next) {
       email,
       notes,
       service,
+      corporate,
       birthDate,
     } = req.body;
 
@@ -439,6 +442,7 @@ router.post("/addnewbooking", async function (req, res, next) {
       phone,
       email,
       notes,
+      corporate,
       service,
       birthDate,
     };
@@ -510,8 +514,9 @@ router.post("/bookappointment", async function (req, res, next) {
     }
 
     await booking.save();
-
-    await sendConfirmationEmail(booking);
+    if (booking.email && booking.email.length > 3) {
+      await sendConfirmationEmail(booking);
+    }
 
     await sendAdminNotificationEmail(
       NOTIFY_TYPE.NOTIFY_TYPE_CORPORATE_BOOKED,
@@ -550,7 +555,17 @@ router.post("/updatebookappointment", async function (req, res, next) {
       _id: req.body.bookingId,
     });
 
-    await sendConfirmationEmail(newBooking);
+    const foundedInvoice = await Invoice.findOne({
+      bookingId: req.body.bookingId,
+    });
+    if (foundedInvoice) {
+      await foundedInvoice.updateOne({
+        corporate: req.body.person.corporate || null,
+      });
+    }
+    if (newBooking.email && newBooking.email.length > 3) {
+      await sendConfirmationEmail(newBooking);
+    }
 
     res.status(200).send({ status: "OK" });
   } catch (err) {
@@ -581,8 +596,9 @@ router.post("/updatebookappointmenttime", async function (req, res, next) {
 
     const booking = await CorporateBooking.findOne({ _id: req.body.bookingId });
 
-    await sendConfirmationEmail(booking);
-
+    if (booking.email && booking.email.length > 3) {
+      await sendConfirmationEmail(booking);
+    }
     res.status(200).send({ status: "OK" });
   } catch (err) {
     console.log(err);
@@ -660,6 +676,7 @@ router.post("/changetopatientattended", async function (req, res, next) {
         title: req.body?.title,
         email: req.body?.email,
         phone: req.body?.phone,
+        corporate: req.body?.corporate,
         postCode: req.body?.postCode,
         passportNumber: req.body?.passportNumber,
         patientId: uniqueId,
@@ -707,6 +724,54 @@ router.post("/undeletebookappointment", async function (req, res, next) {
   try {
     await CorporateBooking.updateOne({ _id: req.query.id }, { deleted: false });
 
+    res.status(200).send({ status: "OK" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+    return;
+  }
+});
+
+router.get("/getcorporates", async function (req, res, next) {
+  try {
+    const result = await Corporate.find({ deleted: { $ne: true } });
+    res.status(200).send({ result: result });
+  } catch (err) {
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+router.post("/addcorporate", async function (req, res, next) {
+  try {
+    const name = req.body.name?.trim();
+    const address = req.body.address?.trim();
+    const email = req.body.email?.trim();
+
+    if (!name || !address) {
+      return res
+        .status(400)
+        .send({ status: "FAILED", error: "Name and address are required" });
+    }
+
+    await Corporate.create({ name: name, address: address, email: email });
+    res.status(200).send({ status: "OK" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ status: "FAILED", error: err.message });
+  }
+});
+
+router.post("/removecorporate", async function (req, res, next) {
+  try {
+    req.query.id = ObjectId(req.query.id);
+  } catch (err) {
+    console.error(err);
+    res.status(400).send({ status: "FAILED", error: err.message });
+    return;
+  }
+
+  try {
+    await Corporate.updateOne({ _id: req.query.id }, { deleted: true });
     res.status(200).send({ status: "OK" });
   } catch (err) {
     console.log(err);
@@ -779,9 +844,9 @@ const validateBookAppointment = (body) => {
     throw new Error("fullname field not present");
   }
 
-  if (!body.email) {
-    throw new Error("email field not present");
-  }
+  // if (!body.email) {
+  //   throw new Error("email field not present");
+  // }
 
   if (!body.phone) {
     throw new Error("phone field not present");
