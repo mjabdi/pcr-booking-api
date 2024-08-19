@@ -5,6 +5,7 @@ const { Invoice } = require('./../../models/medex/Invoice')
 const { BloodCode } = require('./../../models/medex/BloodCode')
 const { MedexCode } = require('./../../models/medex/MedexCode')
 
+const { ObjectId } = require("mongodb");
 
 const {BloodBooking} = require("./../../models/blood/BloodBooking")
 const {GPBooking} = require("./../../models/gp/GPBooking")
@@ -191,43 +192,49 @@ router.post('/searchallinvoicesbydate', async function (req, res, next) {
           { table: "dermabookings", clinic: "derma" },
         ];
 
-        let invoicesArray = []
+        let invoicesArray = [];
 
-        let filteredClinics = search.clinic === 'all' ? [...clinics] : clinics.filter(e => e.clinic === search.clinic)
-        const condition =  !search.corporate ? [
-            { "timeStamp": { $gte: search.from } },
-            { "timeStamp": { $lte: search.until } }
-        ] : 
-        [
-            { "timeStamp": { $gte: search.from } },
-            { "timeStamp": { $lte: search.until } },                            
-            { "booking.corporate": search.corporate }  
-        ]
+        let filteredClinics =
+          search.clinic === "all"
+            ? [...clinics]
+            : clinics.filter((e) => e.clinic === search.clinic);
+        const condition = [
+          { timeStamp: { $gte: search.from } },
+          { timeStamp: { $lte: search.until } },
+        ];
+
+        console.log(search)
+
+        if (search.corporate) {
+          condition.push({
+            "corporate": new ObjectId(search.corporate),
+          });
+        }
 
         for (var i = 0; i < filteredClinics.length; i++) {
-            const res = await Invoice.aggregate([
-                {
-                    "$lookup": {
-                        "from": filteredClinics[i].table,
-                        "localField": "bookingId",
-                        "foreignField": "_id",
-                        "as": "booking"
-                    }
-                },
-                { "$unwind": "$booking" },
-                {
-                    "$match": {
-                        "$and": condition
-                    }
-                },
-                {
-                    $addFields: { clinic: filteredClinics[i].clinic },
-                },
-            
-            ]);
+          const res = await Invoice.aggregate([
+            {
+              $lookup: {
+                from: filteredClinics[i].table,
+                localField: "bookingId",
+                foreignField: "_id",
+                as: "booking",
+              },
+            },
+            { $unwind: "$booking" },
+            {
+              $match: {
+                $and: condition,
+              },
+            },
+            {
+              $addFields: { clinic: filteredClinics[i].clinic },
+            },
+          ]);
 
-            invoicesArray = [...invoicesArray, ...res]
+          invoicesArray = [...invoicesArray, ...res];
         }
+
 
         const invoices = [...invoicesArray].sort((a, b) => a.timeStamp - b.timeStamp)
 
