@@ -18,11 +18,11 @@ const config = require("config")
 
 
 const faq = [
-  {
-    question: "When will I get my results?",
-    answer:
-      "Please note, as samples are referred to an external laboratory, Medical Express Clinic cannot guarantee turnaround times.  Turnaround times are listed on the website as a guide only however in over 98% of cases, results are returned to patients within the listed timeframe.",
-  },
+//   {
+//     question: "When will I get my results?",
+//     answer:
+//       "Please note, as samples are referred to an external laboratory, Medical Express Clinic cannot guarantee turnaround times.  Turnaround times are listed on the website as a guide only however in over 98% of cases, results are returned to patients within the listed timeframe.",
+//   },
   {
     question:
       "I just booked my appointment online, should I call the clinic to confirm my appointment?",
@@ -39,11 +39,11 @@ const faq = [
     answer:
       "Yes, please feel free to book an appointment at your selected date at time, when you attend you can discuss with clinic staff the options that are available and suitable.",
   },
-//   {
-//     question: "How and when will I get my results?",
-//     answer:
-//       "We will email results to you as and when we receive them from the laboratory. This ensures that you receive your test results as soon as they are ready, but it may mean that some parameters will be returned as 'Pending' in interim reports or that you receive several results. It's nothing to worry about and not an indication that there are problems, some tests simply take a longer time for a result to be produced.",
-//   },
+  {
+    question: "How and when will I get my results?",
+    answer:
+      "We will email results to you as and when we receive them from the laboratory. This ensures that you receive your test results as soon as they are ready, but it may mean that some parameters will be returned as 'Pending' in interim reports or that you receive several results. It's nothing to worry about and not an indication that there are problems, some tests simply take a longer time for a result to be produced.",
+  },
 ];
 
 
