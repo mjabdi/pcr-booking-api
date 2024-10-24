@@ -31,7 +31,7 @@ const getHolidays = async () => {
   if (!startingHourMonday || !endingHourMonday || !periodMonday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(1)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(1)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -42,7 +42,7 @@ const getHolidays = async () => {
   if (!startingHourTuesday || !endingHourTuesday || !periodTuesday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(2)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(2)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -53,7 +53,7 @@ const getHolidays = async () => {
   if (!startingHourWednesday || !endingHourWednesday || !periodWednesday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(3)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(3)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -64,7 +64,7 @@ const getHolidays = async () => {
   if (!startingHourThursday || !endingHourThursday || !periodThursday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(4)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(4)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -75,7 +75,7 @@ const getHolidays = async () => {
   if (!startingHourFriday || !endingHourFriday || !periodFriday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(5)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(5)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -86,7 +86,7 @@ const getHolidays = async () => {
   if (!startingHourSaturday || !endingHourSaturday || !periodSaturday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(6)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(6)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
@@ -97,7 +97,7 @@ const getHolidays = async () => {
   if (!startingHourSunday || !endingHourSunday || !periodSunday) {
     for (
       let now = new Date(
-        new Date(getFirstDayOfMonth(0)[0]).setHours(0, 0, 0)
+        new Date(getFirstDayOfMonth(0)[0]).setHours(12, 0, 0)
       ).getTime();
       now < new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
       now += 1000 * 60 * 60 * 24 * 7
