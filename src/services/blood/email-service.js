@@ -204,122 +204,128 @@ const sendRegFormEmail =  async (options) =>
 
 const sendBloodResultEmail =  async (options, email, notes) =>
 {
+  var content = "";
+  content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`;
+  content += `<p>Dear ${options.name},</p>`;
+  content += `<p>The result of your diagnostic test conducted at Medical Express Clinic is now available which you can access by clicking the link below :</p>`;
+  var reportLink = "#";
+  if (options._id) {
+    reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/reports/${options._id}`;
+  }
 
-    var content = '';
-    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
-    content += `<p>Dear ${options.name},</p>`;
-    content += `<p>The result of your diagnostic test conducted at Medical Express Clinic is now available.</p>`;
-    content += `<p>You can also access your report by clicking the link below :</p>`;
-    var reportLink = '#';
-    if (options._id)
-    {
-        reportLink = `https://londonmedicalclinic.co.uk/medicalexpressclinic/reports/${options._id}`;
-    }
+  if (options._id) {
+    content += `<p style="text-align:center;color:rgb(51,51,51);font-family:sans-serif;font-size:2em;"> <a href="${reportLink}" target="_blank">Download Report</a> </p>`;
+  }
 
-    if (options._id)
-    {
-        content += `<p> <a href="${reportLink}" target="_blank"> Download Blood Report </a> </p>`;
-    }
-
-
-        content += `<p style="font-weight:500;margin-top:15px; margin-bottom:20px; color:#777; font-size:0.7em; padding-left:15px;">
+  content += `<p style="font-weight:500;margin-top:15px; margin-bottom:20px; color:#777; font-size:0.7em; padding-left:15px;">
                         <ul>
-                            <li style="color:#444; font-size:0.85em;">
-                                You will need to enter your date of birth to access the report for security purposes.
+                            <li style="color:#ff0000; font-size:0.85em;">
+                                You will need to enter your date of birth to access the report for privacy purposes. 
                             </li>
-                            <li style="color:#444; font-size:0.85em;">
-                                Any parameters listed as 'Pending' mean that the result is not yet ready and will follow shortly. 
+                            </br>
+                            <li style="color:#ff0000; font-size:0.85em;">
+                                If you have any issues accessing your report please email <a to="mailto='info@medicalexpressclinic.co.uk'">info@medicalexpressclinic.co.uk</a> with your 9 digit booking code.
+                            </li>
+                            </br>
+                            <li style="color:#ff0000; font-size:0.85em;">
+                                Any parameters listed as <b>'Pending'</b> mean that this result is not yet ready and will follow shortly. 
+                                A pending result is nothing to worry about and does <b>not</b> mean that this result is expected to return as abnormal. 
                             </li>
                         </ul>     
         
                     </p>`;
 
-
-    if (notes)
-    {
-        content += `<p style="font-weight:700;margin-top:20px; color:#333"> Doctor Notes: </p>`;
-        content += `<div style="margin-top:-10px; padding:10px;border:1px solid #ddd;text-align: left">`;
-        content += `<p style="font-weight:700;font-size:16px"> ${notes} </p>`;
-        content += `</div>`
-    }
-
-
-    content += `<p style="text-decoration: underline; font-weight:600;">Interpreting your blood test results:</p>`
-    content += `<p>If your test has been conducted as part of a health screening, sexual health screening package or at the request of a clinician at Medical Express Clinic, please feel free to ask any and all questions at your review appointment with the doctor.</p>`
-    content += `<p>If you have attended on a self-request basis, you will have confirmed for us to simply send your medical report without comment or review from our doctor, however you may not be able to fully understand the contents of your blood test report.</p>`
-    content += `<p>Please note, the following information in this email is not intended as medical advice, or to help in providing a diagnosis, simply to aid in understanding your blood test results: </p>`
-    content += `<p>Blood tests alone are not a substitute for seeing a doctor, particularly if you are feeling unwell or currently experiencing symptoms. You should not make a diagnosis or start any treatment without being under the care of a suitable doctor or a trained healthcare professional. We strongly recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems.</p>`
-    content += `<p>There are many times when test results which are out of range are entirely insignificant but there are other times when they are not. They always need to be interpreted in the context of the rest of your health and this can only be determined with a full clinical history and examination.</p>`
-    content += `<p>The name of the test conducted can be found on the left column of your blood test report, with the test result printed just to the right of the test name.</p>`
-    content += `<p>The reference range/normal values can be found in the far right hand column and on some of our reports, abnormal results will appear in bold and red.</p>`
-
-    content += `<p>Please see the following example reference report (ATTACHED)</p>`
-    content += `<p>Your lab report may also include the following terms: </p>`
-    content += `<ul>`
-    content += `<li> <strong>Negative</strong> which means the disease or substance being tested was <strong>not found</strong></li>`
-    content += `<li> <strong>Positive</strong> which means the disease or substance was <strong>found</strong></li>`
-    content += `<li> <strong>Inconclusive or uncertain,</strong> which means there wasn't enough information in the results to diagnose or rule out a disease. If you get an inconclusive result, you will probably get more tests.</li>`
-
-    content += `<p>If you require more detailed analysis of your blood test result, including possible treatment, further investigations please book an appointment to see our doctor here:</p>`
-
-    content += `<div style="margin-top:20px;margin-bottom:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
-    content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`
-    content += `</div>`
-
-
-    content += `<p> For any issues relating to your experience at the clinic, including delayed results, please email manager@medicalexpressclinic.co.uk and our management team will take action on any issues raised. </p>`
-
-    content += `<div style="padding-top:10px">`;
-    content += `<p style="font-weight:600">Kind Regards,</p>`;
-    content += `<p style="font-weight:600">Medical Express Clinic</p>`;
+  if (notes) {
+    content += `<p style="font-weight:700;margin-top:20px; color:#333"> Doctor Notes: </p>`;
+    content += `<div style="margin-top:-10px; padding:10px;border:1px solid #ddd;text-align: left">`;
+    content += `<p style="font-weight:700;font-size:16px"> ${notes} </p>`;
     content += `</div>`;
-  
-    content += `<div style="padding-top:10px">`;
-    content += `<p style="font-weight:600;color:#000">PLEASE NOTE, THIS IS AN UNATTENDED EMAIL ADDRESS. IF YOU HAVE ANY FURTHER REQUESTS, PLEASE DIRECT THESE TO INFO@MEDICALEXPRESSCLINIC.CO.UK WE WILL NOT REPLY TO ANY EMAILS RECEIVED AT THIS ADDRESS.</p>`;
-    content += `</div>`;
-  
-    content += '</div>'
+  }
 
-    content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
-    // content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
-    content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment.</p>'
-    content += `<br/>`
-    content += `<i>117a Harley Street </i> <br/>`
-    content += `<i>London </i> <br/>`
-    content += `<i>W1G 6AT </i><br/>`
-    content += '<br/>'
-    content += "T - 0207 499 1991 <br/>"
-    content += "F - 0207 486 2615 <br/>"
-    content += '</div>'
+  content += `<p style="text-decoration: underline; font-weight:600;">Interpreting your blood test results:</p>`;
+  content += `<p>If your test has been conducted as part of a health screening, sexual health screening package or at the request of a clinician at Medical Express Clinic, please feel free to ask any and all questions at your review appointment with the doctor.</p>`;
+  content += `<p>If you have attended on a self-request basis, you will have confirmed for us to simply send your medical report without comment or review from our doctor, however you may not be able to fully understand the contents of your blood test report.</p>`;
+  content += `<p><b>Please note, the following information in this email is not intended as medical advice, or to help in providing a diagnosis, simply to aid in understanding your blood test results: </b></p>`;
+  // content += `<p>Blood tests alone are not a substitute for seeing a doctor, particularly if you are feeling unwell or currently experiencing symptoms. You should not make a diagnosis or start any treatment without being under the care of a suitable doctor or a trained healthcare professional. We strongly recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems.</p>`
+  // content += `<p>There are many times when test results which are out of range are entirely insignificant but there are other times when they are not. They always need to be interpreted in the context of the rest of your health and this can only be determined with a full clinical history and examination.</p>`
+  content += `<p>The name of the test conducted can be found on the left column of your blood test report, with the test result printed just to the right of the test name.</p>`;
+  content += `<p>The reference range/normal values can be found in the far right hand column and on some of our reports, abnormal results will appear in bold and red.</p>`;
 
+  // content += `<p>Please see the following example reference report (ATTACHED)</p>`
+  content += `<p>Your lab report may also include the following terms: </p>`;
+  content += `<ul>`;
+  content += `<li> <strong>Not Found/Negative</strong> which means the disease or substance being tested was <strong>not detected</strong></li>`;
+  content += `<li> <strong>Positive/Detected</strong> which means the disease or substance was <strong>found</strong></li>`;
+  content += `<li> <strong>Quantitative Results</strong> will show a number, a unit and a reference range. If the number shown on your report is within the reference range, this constitutes a normal result.</li>`;
+  content += `<li> <strong>Inconclusive or uncertain,</strong> which means there wasn't enough information in the results to diagnose or rule out a disease. If you get an inconclusive result, you will probably get more tests.</li>`;
 
-    content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
-    content += `<p style="font-weight:600;">DISCLAIMER - If you have attended on a self-request basis, please consult with your physician, or other qualified healthcare provider regarding any questions you may have in respect of your blood test report. If you have undergone a consultation with a doctor at Medical Express Clinic, please feel free to request a review appointment to discuss your results.  </p>`
-    content += "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities. </p>"
-      
-    content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`
-    content += "</div>"
+  content += `<p>If you require more detailed analysis of your blood test result, including possible treatment, further investigations please book an appointment to see our doctor here:</p>`;
 
-    // const attachmets = [
-    //     {
-    //         path: path.join(config.PdfFolder, "attachments" ,options.filename),
-    //         filename: options.filename
-    //     },
-    //     {
-    //         path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
-    //         filename: "Blood Test Interp Guide.pdf"
-    //     }
-    // ]
+  content += `<div style="margin-top:20px;margin-bottom:20px;padding:10px;border:2px solid #ddd;border-radius: 8px;max-width: 370px;text-align: center;font-size:18px;">`;
+  content += `<p> <a href="https://londonmedicalclinic.co.uk/medicalexpressclinic/book/gp/" target="_blank" style="color:blue"> Book our private doctor here </a></p>`;
+  content += `</div>`;
 
-    const attachmets = [
-        {
-            path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
-            filename: "Blood Test Interp Guide.pdf"
-        }
-    ]
+  content += `<p>For any issues relating to your experience at the clinic, including delayed results, please email <a mailto="manager@medicalexpressclinic.co.uk">manager@medicalexpressclinic.co.uk</a> and our management team will take action on any issues raised. </p>`;
+  content += `<p>Blood tests alone are not a substitute for seeing a doctor, particularly if you are feeling unwell or currently experiencing symptoms. You should not make a diagnosis or start any treatment without being under the care of a suitable doctor or a trained healthcare professional. We strongly recommend that you seek the attention of a registered medical practitioner if you are experiencing health problems.</p>`;
+  content += `<p>There are many times when test results which are out of range are entirely insignificant but there are other times when they are not. They always need to be interpreted in the context of the rest of your health and this can only be determined with a full clinical history and examination.</p>`;
 
-    
-    await sendMailBloodReport(email, null, 'Blood Test Report - Medical Express Clinic' , content, attachmets);
+  content += `<div style="padding-top:10px">`;
+  content += `<p>Stephen Lingam</p>`;
+  content += `<p>Managing Director</p>`;
+  content += `</div>`;
+
+  // content += `<div style="padding-top:10px">`;
+  // content += `<p style="font-weight:600;color:#000">PLEASE NOTE, THIS IS AN UNATTENDED EMAIL ADDRESS. IF YOU HAVE ANY FURTHER REQUESTS, PLEASE DIRECT THESE TO INFO@MEDICALEXPRESSCLINIC.CO.UK WE WILL NOT REPLY TO ANY EMAILS RECEIVED AT THIS ADDRESS.</p>`;
+  // content += `</div>`;
+
+  content += "</div>";
+
+  content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`;
+  // content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
+  // content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment.</p>'
+  // content += `<br/>`;
+  content += '<p style="font-weight:600">Medical Express Clinic</p>';
+  content += `<i>117a Harley Street</i><br/>`;
+  content += `<i>London</i><br/>`;
+  content += `<i>W1G 6AT</i><br/>`;
+  content += "<br/>";
+  content += "T - 0207 499 1991 <br/>";
+  content += "F - 0207 486 2615 <br/>";
+  content += "</div>";
+
+  content += `<div style="width:100%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`;
+//   content += `<p style="font-weight:600;">DISCLAIMER - If you have attended on a self-request basis, please consult with your physician, or other qualified healthcare provider regarding any questions you may have in respect of your blood test report. If you have undergone a consultation with a doctor at Medical Express Clinic, please feel free to request a review appointment to discuss your results.  </p>`;
+
+  content += `<img style="margin-left:45%" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="logo">`;
+  content +=
+  "<p>This email is confidential and is intended for the addressee only. If you are not the addressee, please delete the email and do not use it in any way. Medical Express (London) Ltd does not accept or assume responsibility for any use of or reliance on this email by anyone, other than the intended addressee to the extent agreed for the matter to which this email relates. Medical Express (London) Ltd is a Private limited Company registered in England under registered number 05078684, with its registered address at 117a Harley Street, London, W1G 6AT. It is authorised and registered with the Care Quality Commission for regulated medical activities.</p>";
+  content += "</div>";
+
+  // const attachmets = [
+  //     {
+  //         path: path.join(config.PdfFolder, "attachments" ,options.filename),
+  //         filename: options.filename
+  //     },
+  //     {
+  //         path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
+  //         filename: "Blood Test Interp Guide.pdf"
+  //     }
+  // ]
+
+  // const attachmets = [
+  //     {
+  //         path: path.join(config.PdfFolder, "attachments" , "blood_test_interp_guide.pdf"),
+  //         filename: "Blood Test Interp Guide.pdf"
+  //     }
+  // ]
+
+  await sendMailBloodReport(
+    email,
+    null,
+    "Blood Test Report - Medical Express Clinic",
+    content,
+    attachmets
+  );
 }
 
 const sendRefundNotificationEmail =  async (options) =>
