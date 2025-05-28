@@ -324,7 +324,7 @@ const sendBloodResultEmail =  async (options, email, notes) =>
     null,
     "Blood Test Report - Medical Express Clinic",
     content,
-    attachmets
+    null
   );
 }
 
